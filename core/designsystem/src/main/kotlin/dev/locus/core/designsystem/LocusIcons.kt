@@ -94,6 +94,11 @@ object LocusIcons {
         moveTo(7.5f, 3f); lineTo(16.5f, 3f); lineTo(16.5f, 21f); lineTo(7.5f, 21f); close()
         moveTo(11f, 18f); lineTo(13f, 18f)
     }
+    /** A camera body with its lens. */
+    val Camera = icon("camera") {
+        moveTo(3.5f, 8f); lineTo(7.5f, 8f); lineTo(9f, 5.5f); lineTo(15f, 5.5f); lineTo(16.5f, 8f); lineTo(20.5f, 8f); lineTo(20.5f, 19f); lineTo(3.5f, 19f); close()
+        moveTo(12f, 10f); arcTo(3.25f, 3.25f, 0f, true, true, 11.99f, 10f); close()
+    }
     val Plug = icon("plug") {
         moveTo(9f, 3.5f); lineTo(9f, 8f); moveTo(15f, 3.5f); lineTo(15f, 8f)
         moveTo(6.5f, 8f); lineTo(17.5f, 8f); lineTo(17.5f, 11f); arcTo(5.5f, 5.5f, 0f, false, true, 6.5f, 11f); close()
@@ -200,7 +205,7 @@ object LocusIcons {
         moveTo(20f, 15f); lineTo(20f, 20f); lineTo(15f, 20f)
         moveTo(9f, 20f); lineTo(4f, 20f); lineTo(4f, 15f)
     }
-    /** A framed picture: share as an image. */
+    /** A framed picture: photos, or share as an image. */
     val Image = icon("image") {
         moveTo(4f, 5f); lineTo(20f, 5f); lineTo(20f, 19f); lineTo(4f, 19f); close()
         moveTo(4f, 16f); lineTo(9f, 11f); lineTo(13f, 15f); lineTo(15.5f, 12.5f); lineTo(20f, 17f)
