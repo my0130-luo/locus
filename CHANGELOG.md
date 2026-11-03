@@ -14,6 +14,19 @@ All notable changes to Locus are recorded here. The format follows [Keep a Chang
 - **Projects are on the design system.** A project's connectors are switch rows you can tap anywhere on, "Allow … without asking?" and "Delete project?" are confirmation sheets, and the projects list, a project's page and the editor show a spinner while they load rather than an empty screen.
 - **The chat transcript is on the design system.** The chat's top bar is the standard one. Follow-up ideas, answer options, the task budget and Activity links are the shared chips; the context bar is a meter; code, tool input and command output sit on the shared code surface; and the copy, regenerate and version buttons under a reply keep a full-size touch target. "Steer" opens a sheet instead of a dialog, and "Saved", "Couldn't save" and "No app can open this" go through the app's one message bar instead of toasts. The live terminal panel follows the app's theme rather than the phone's.
 
+### Fixed
+- **Linux packages list after an uninstall.** For a moment after a package was removed, the list could pair the new package list with the old filter result, so the removed package stayed on screen. The package list and the filtered rows now always come from the same snapshot. This also fixes `LinuxPackagesViewModelTest`, which failed now and then (it failed once in the 0.1.5 release workflow); the Linux view model tests no longer start a real shell or use `Dispatchers.Default`.
+- **A running chat could show as stopped.** When you stopped a task and a new one started in the same chat right away, the old task's cleanup could mark the chat as not running while the new task ran. The check that a newer task holds the chat relied on a compare-and-set that compares by value, and the newer task's state could equal the old one. Taking the chat and that final update now run under one lock. This also fixes `OneRunPerChatTest`, which failed now and then on CI.
+
+### Security
+- **Release supply chain.** See docs/RELEASING.md, "How the workflow signs".
+  - The release workflow builds unsigned APKs in a job with no secrets and read-only access. A separate signing job signs them with apksigner, writes `SHA256SUMS.txt` and publishes. It runs in a `release` environment and runs no project code. Asset names are unchanged. The signed APK is checked to be the unsigned build plus a v2 signature, as before, which is what F-Droid's signature copying needs.
+  - Release APKs and the mapping carry a build provenance attestation: `gh attestation verify <apk> --repo springmusk026/locus`.
+  - Gradle verifies the SHA-256 of every dependency and plugin (`gradle/verification-metadata.xml`). `tools/update-verification-metadata.sh` regenerates the file (CONTRIBUTING.md).
+  - Every workflow pins its actions by commit SHA; Dependabot groups their updates.
+  - A dry-run mode for the release workflow (Run workflow → Dry run) builds and signs with a throwaway key and publishes nothing.
+  - `-Plocus.unsigned=true` builds unsigned release APKs. F-Droid's recipe can use it instead of a `sed` on `build.gradle.kts` (docs/FDROID.md).
+
 ## [0.1.5] - 2026-11-03
 
 A big release: voice mode, a real terminal, Linux you can manage from the Workspace, Telegram remote control, interactive artifacts, remembered approvals, new ways into Locus from the rest of Android, and an opt-in update check. It also closes a long list of security gaps found in review.
@@ -30,6 +43,7 @@ A big release: voice mode, a real terminal, Linux you can manage from the Worksp
 - **Ways into Locus:** launcher shortcuts, Direct Share, a quick settings tile, a home-screen widget, "Ask Locus" on selected text, the default assistant role, and automation intents for Tasker and scripts.
 - **Opt-in update check:** off by default; when on, Locus finds a new release, verifies the APK and hands it to Android's installer.
 - **Privacy:** after a task reads your private data, opening a new site with anything in the address asks first, so a PIN can't leave in a short link.
+
 
 ### Security
 - **Private data can't leave in a short link without asking.** See docs/design/taint.md, "Disclosure".
@@ -151,6 +165,7 @@ A big release: voice mode, a real terminal, Linux you can manage from the Worksp
 - **Logos in Library.** Connectors from the MCP catalogue show their brand logo, custom servers their first letter, GitHub imports GitHub's logo and each built-in helper its own mark. Library's icons have TalkBack labels.
 
 ## [0.1.4] - 2026-11-02
+
 
 ### Security
 - **Helpers now keep the limits of the run that started them.** A helper (sub-agent) started by a workflow run wasn't held to the workflow's tools or its approval points, so it could do things the workflow doesn't allow without asking. Now every run-level limit is one `RunScope`: read-only, the chat's and project's limits, the workflow's scope, taint and loaded skills' manifests. A helper inherits all of it, and an `agent_send` continuation keeps it. Where limits combine, the strictest answer wins, so a helper is never less restricted than its parent. A helper's call outside the workflow asks you with the same reason as the parent's would, and a helper of a scheduled run refuses it.
