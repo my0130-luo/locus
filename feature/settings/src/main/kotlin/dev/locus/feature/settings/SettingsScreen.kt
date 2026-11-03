@@ -39,6 +39,8 @@ fun SettingsRoute(
     onUseMcpTemplate: (String) -> Unit = {},
     onOpenAgentSetup: () -> Unit = {},
     onRunSetup: () -> Unit = {},
+    /** Opens the Linux health screen (Self-test and Storage link to it). */
+    onOpenLinux: () -> Unit = {},
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -52,6 +54,7 @@ fun SettingsRoute(
         onCheckMcp = { viewModel.checkMcpServers() },
         onOpenAgentSetup = onOpenAgentSetup,
         onRunSetup = onRunSetup,
+        onOpenLinux = onOpenLinux,
         onSaveProvider = viewModel::saveProvider,
         onSetFallbacks = { viewModel.setFallbackModels(it) },
         onDeleteProvider = viewModel::deleteProvider,
@@ -61,6 +64,7 @@ fun SettingsRoute(
         onSetTaskBudget = { viewModel.setTaskBudget(it) },
         onSetReflect = { viewModel.setReflectAfterTasks(it) },
         onSetHelperReports = { viewModel.setSubagentReportsContinue(it) },
+        onSetHelperTimeout = { viewModel.setHelperTimeoutMinutes(it) },
         onSetHelper = viewModel::setHelperModel,
         onSetAutoTitle = { viewModel.setAutoTitle(it) },
         onSetModelCatalog = { viewModel.setModelCatalog(it) },
@@ -76,6 +80,13 @@ fun SettingsRoute(
         onListModels = viewModel::listModels,
         chatGpt = ChatGptActions(viewModel::signInChatGpt, viewModel::signOutChatGpt, { viewModel.discardChatGpt(it) }),
         telegram = viewModel.telegramActions,
+        gguf = GgufActions(
+            import = { viewModel.importGguf(it) },
+            cancelImport = { viewModel.cancelGgufImport() },
+            dismissImport = { viewModel.dismissGgufImport() },
+            delete = { viewModel.deleteGguf(it) },
+            unload = { viewModel.unloadModel() },
+        ),
         onModelAction = { id, action ->
             when (action) {
                 "download" -> viewModel.downloadModel(id)
@@ -90,7 +101,7 @@ fun SettingsRoute(
 }
 
 /** The pages inside Settings. Every [SettingsDestination] is one of them, by the same name. */
-internal enum class SettingsPage { Hub, Models, Extras, Agent, Permissions, Integrations, Ssh, Network, Battery, Voice, Automation, Backup, About, Diagnostics }
+internal enum class SettingsPage { Hub, Models, Extras, Agent, Permissions, Integrations, Ssh, Network, Battery, Voice, Automation, Backup, About, Diagnostics, SelfTest, Storage }
 
 /** The page a link to [destination] opens; the hub for none. */
 internal fun settingsPageFor(destination: SettingsDestination?): SettingsPage =
@@ -99,11 +110,12 @@ internal fun settingsPageFor(destination: SettingsDestination?): SettingsPage =
 /**
  * Where back goes from [page] when Settings opened on [start]: null leaves Settings. A page a link
  * opened goes back to the link's screen, not to a hub the user never saw; Diagnostics goes back to
- * About, where it's opened from.
+ * About, and Self-test and Storage to Diagnostics, where they're opened from.
  */
 internal fun settingsBack(page: SettingsPage, start: SettingsPage): SettingsPage? = when {
     page == SettingsPage.Hub || page == start -> null
     page == SettingsPage.Diagnostics -> SettingsPage.About
+    page == SettingsPage.SelfTest || page == SettingsPage.Storage -> SettingsPage.Diagnostics
     else -> SettingsPage.Hub
 }
 
@@ -125,6 +137,7 @@ internal fun SettingsScreen(
     onSetTaskBudget: (dev.locus.core.model.TaskBudget) -> Unit = {},
     onSetReflect: (Boolean) -> Unit = {},
     onSetHelperReports: (Boolean) -> Unit = {},
+    onSetHelperTimeout: (Int) -> Unit = {},
     onSetHelper: (String?, String) -> Unit = { _, _ -> },
     onSetAutoTitle: (Boolean) -> Unit = {},
     onSetModelCatalog: (Boolean) -> Unit = {},
@@ -141,8 +154,10 @@ internal fun SettingsScreen(
     onListModels: (ProviderConfig, String?, (Result<List<dev.locus.core.llm.RemoteModel>>) -> Unit) -> Unit = { _, _, _ -> },
     onOpenAgentSetup: () -> Unit = {},
     onRunSetup: () -> Unit = {},
+    onOpenLinux: () -> Unit = {},
     chatGpt: ChatGptActions = ChatGptActions.None,
     telegram: TelegramActions = TelegramActions.None,
+    gguf: GgufActions = GgufActions.None,
 ) {
     val start = settingsPageFor(initialPage)
     var pageName by rememberSaveable { mutableStateOf(start.name) }
@@ -168,6 +183,7 @@ internal fun SettingsScreen(
                 onModelAction = onModelAction, onListModels = onListModels, chatGpt = chatGpt,
                 onSetModelCatalog = onSetModelCatalog,
                 onSetFallbacks = onSetFallbacks,
+                gguf = gguf,
             )
             SettingsPage.Extras -> ExtrasSettings(
                 state, onBack = back,
@@ -176,7 +192,7 @@ internal fun SettingsScreen(
             )
             SettingsPage.Agent -> AgentSettings(
                 state, onBack = back, onSaveInstructions = onSaveInstructions, onOpenAgentSetup = onOpenAgentSetup, onSetTaskBudget = onSetTaskBudget,
-                onSetHelperReports = onSetHelperReports,
+                onSetHelperReports = onSetHelperReports, onSetHelperTimeout = onSetHelperTimeout,
             )
             SettingsPage.Permissions -> PermissionsSettings(
                 state, onBack = back, onSetPolicy = onSetPolicy,
@@ -191,7 +207,22 @@ internal fun SettingsScreen(
             SettingsPage.Automation -> AutomationRoute(onBack = back)
             SettingsPage.Backup -> BackupRoute(onBack = back)
             SettingsPage.About -> AboutSettings(onBack = back, onRunSetup = onRunSetup, onOpenDiagnostics = { pageName = SettingsPage.Diagnostics.name })
-            SettingsPage.Diagnostics -> DiagnosticsRoute(onBack = back)
+            SettingsPage.Diagnostics -> DiagnosticsRoute(
+                onBack = back,
+                onOpenSelfTest = { pageName = SettingsPage.SelfTest.name },
+                onOpenStorage = { pageName = SettingsPage.Storage.name },
+            )
+            SettingsPage.SelfTest -> SelfTestRoute(
+                onBack = back,
+                onOpenStorage = { pageName = SettingsPage.Storage.name },
+                onOpenModels = { pageName = SettingsPage.Models.name },
+                onOpenLinux = onOpenLinux,
+            )
+            SettingsPage.Storage -> StorageRoute(
+                onBack = back,
+                onOpenModels = { pageName = SettingsPage.Models.name },
+                onOpenLinux = onOpenLinux,
+            )
         }
     }
 }

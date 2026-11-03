@@ -65,6 +65,30 @@ object FileTrees {
     }
 
     /**
+     * The bytes of the regular files at or below [root], never following a link: a link counts as
+     * nothing and nothing it points at is entered, so a link Linux planted (`/workspace/x ->
+     * /data/data/dev.locus`) can't make a folder look bigger or make the walk leave it. Unreadable
+     * entries are skipped. [onFile] runs before each entry is counted; a caller stops a long walk by
+     * throwing from it (a coroutine's `ensureActive`). 0 when nothing is at [root].
+     */
+    fun size(root: File, onFile: () -> Unit = {}): Long {
+        val path = root.toPath()
+        if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) return 0
+        var total = 0L
+        // walkFileTree without FOLLOW_LINKS reports a link as a file (even a link to a folder), with its own attributes.
+        Files.walkFileTree(path, object : SimpleFileVisitor<Path>() {
+            override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
+                onFile()
+                if (attrs.isRegularFile) total += attrs.size()
+                return FileVisitResult.CONTINUE
+            }
+
+            override fun visitFileFailed(file: Path, exc: IOException): FileVisitResult = FileVisitResult.CONTINUE
+        })
+        return total
+    }
+
+    /**
      * Writes [bytes] to [relative] (a `/`-separated path) below [root] without following a link, for
      * files Locus manages inside a tree Linux can write (the rootfs's `/etc/resolv.conf`). No folder on
      * the way may be a link, and whatever is at the name (a link included) is replaced by a new regular
@@ -90,9 +114,12 @@ object FileTrees {
         val target = dir.resolve(parts.last())
         val temp = dir.resolve(".${parts.last()}.locus-${System.nanoTime()}-${(0..0xffff).random()}")
         try {
-            // CREATE_NEW is O_CREAT|O_EXCL: it fails rather than follow a link planted at the temporary name.
-            Files.newOutputStream(temp, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE).use { it.write(bytes) }
-            // rename(2) replaces the entry at the name, a link included; it never writes through one.
+            // O_CREAT|O_EXCL|O_NOFOLLOW: it fails rather than follow a link planted at the temporary name, and
+            // NoFollowFiles checks where the new file really is (a folder swapped for a link since the
+            // check above) before writing a byte.
+            NoFollowFiles.create(root, temp, bytes)
+            // rename(2) replaces the entry at the name, a link included; it never writes through one. A
+            // folder swapped for a link now makes it fail (the temporary file isn't at the link's target).
             Files.move(temp, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
         } catch (e: IOException) {
             runCatching { Files.deleteIfExists(temp) }
