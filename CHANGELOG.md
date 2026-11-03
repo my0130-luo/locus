@@ -146,6 +146,12 @@ All notable changes to Locus are recorded here. The format follows [Keep a Chang
   - Requests to the model are built exactly as before.
 
 ### Fixed
+- **A chat never runs two agents at once.**
+  - Two starts arriving together could both start an agent on one chat, for example a Telegram message and a tap, a helper's report and a queued message, or the widget and the intent API. Taking a chat is now a single atomic step: exactly one start wins, and the others are refused or queued.
+  - A run gives up the chat only if it still holds it, and only after its cleanup. A finishing run can no longer free a newer run's chat or mark it as stopped.
+  - Scheduled runs and branch switches hold the chat too. Sending a message in a scheduled run's chat now queues it instead of starting a second, writable agent beside the read-only one.
+  - A message sent just as a turn ended is no longer left waiting in the queue. It starts the next turn.
+- **Telegram and the intent API report the right task's result.** Before, they returned the chat's last reply. The Telegram chat is reused for every remote task, so a task that stopped without a reply (budget, Stop, a refusal or an error) could send back the previous task's answer. Each run now has an id. The caller gets that run's own final reply, or a line saying how it ended ("Stopped: …", "The model declined…"). An intent-API run that didn't finish now reports FAILED instead of DONE with no text. A scheduled task that stops at its budget or step limit is recorded as stopped, with no mid-task reply shown as its answer.
 - **A model stream can no longer fill the phone's memory.** One SSE line (8 MB), one event (16 MB), a whole stream (64 MB), a tool call's arguments (8 MB) and a text or thinking block (16 MB) now have limits, far above any real reply. Past one, the stream fails with a clear error that the run retries and then reports, instead of growing until Locus is killed. See docs/design/stream-timeouts.md.
 - **A reply Anthropic served with a fallback model is priced as that model.** With `fallbacks: "default"`, a declined request is answered by another model in the same request. Locus priced and labelled the reply as the requested model, and ignored the billed declined attempt. Now:
   - The reply records the model that answered (from `usage.iterations`) and notes the model it fell back from.
