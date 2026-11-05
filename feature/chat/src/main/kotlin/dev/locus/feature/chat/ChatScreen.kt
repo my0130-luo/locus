@@ -1565,6 +1565,12 @@ private fun ApprovalCard(
                 }
             }
         }
+        // Where it can't be offered, one line says why, so a missing "Don't ask again" isn't a mystery.
+        if (request.remember == null) {
+            request.rememberNote?.let { note ->
+                SupportingText(note, modifier = Modifier.padding(start = Spacing.sm, top = Spacing.xs))
+            }
+        }
         // A site the address gates asked about: allow it until this task ends, never longer (docs/design/taint.md).
         request.siteForTask?.let { host ->
             SideOrBelow(Modifier.fillMaxWidth(), main = {
@@ -1709,7 +1715,7 @@ private fun ContextMeter(tokens: ChatTokens, onClick: () -> Unit) {
 private fun TokensSheet(tokens: ChatTokens, provider: ChatProvider?, canCompact: Boolean, onCompact: () -> Unit, onShowSent: () -> Unit, onDismiss: () -> Unit) {
     LocusSheet(
         title = "Context and tokens",
-        subtitle = provider?.let { "${it.name} · ${it.model}" },
+        subtitle = provider?.let { "${it.name} · ${dev.locus.core.model.ModelNames.short(it.model)}" },
         onDismiss = onDismiss,
         action = "Summarise now".takeIf { canCompact },
         onAction = onCompact,
