@@ -163,10 +163,9 @@ class McpClients @Inject constructor(
             else -> ConnectorKeys.resolve(connector, secrets, origins)
         }
         val transport = StreamableHttpClientTransport(http, connector.baseUrl) {
-            when (connector.auth.type) {
-                "bearer", "oauth" -> header("Authorization", "Bearer $secret")
-                "header" -> header(connector.auth.name, secret)
-                "query" -> parameter(connector.auth.name, secret)
+            if (secret != null) {
+                ConnectorKeys.header(connector.auth, secret)?.let { (name, value) -> header(name, value) }
+                if (connector.auth.type == "query") parameter(connector.auth.name, secret)
             }
         }
         val client = Client(Implementation(name = "locus", version = "0.1.0"))
@@ -209,6 +208,13 @@ class McpClients @Inject constructor(
      * so its tool annotations are trusted.
      */
     fun trusted(id: String): Boolean = home.connector(id)?.let { McpTemplates.official(it) != null } ?: false
+
+    /** [id]'s name as the user sees it in Library ("Home Assistant"), or the id made readable when it's gone. */
+    fun displayName(id: String): String = home.connector(id)?.name?.takeIf { it.isNotBlank() } ?: McpNames.humanize(id)
+
+    /** [id]'s always-confirm rules when it's a Home Assistant server ([HomeAssistantSafety]); null otherwise. */
+    fun homeAssistantRules(id: String): Connector.HomeAssistantRules? =
+        home.connector(id)?.takeIf(HomeAssistantSafety::applies)?.let { it.homeAssistant ?: Connector.HomeAssistantRules() }
 
     /** Drops a cached connection (or stops a local server), e.g. after the connector or its key changed. */
     suspend fun forget(id: String) {
@@ -321,11 +327,34 @@ private class McpCall(private val clients: McpClients) : Tool {
             .build(),
     )
 
-    override fun describe(args: JsonObject) = "${args.str("connector")} → ${args.str("tool")}"
+    /**
+     * "Home Assistant · Unlock Front door", "GitHub · Create issue": the server's name and what the call
+     * does, in words. The raw connector id, tool name and arguments are in the card's details.
+     */
+    override fun describe(args: JsonObject): String {
+        val id = args.str("connector").orEmpty()
+        val tool = args.str("tool").orEmpty()
+        val server = clients.displayName(id)
+        val what = if (clients.homeAssistantRules(id) != null) HomeAssistantSafety.title(tool, args.arguments()) else McpNames.humanize(tool)
+        return "$server · $what"
+    }
 
-    override suspend fun isObservation(args: JsonObject): Boolean = risk(args).isObservation
+    override suspend fun isObservation(args: JsonObject): Boolean = risk(args).isObservation && homeReason(args) == null
 
-    override suspend fun mustConfirm(args: JsonObject): String? = risk(args).confirmReason(args.str("connector").orEmpty())
+    override suspend fun mustConfirm(args: JsonObject): String? {
+        val id = args.str("connector").orEmpty()
+        val base = risk(args).confirmReason(id)
+        // A Home Assistant server: physical-security calls always ask, with what's at stake on the card.
+        val rules = clients.homeAssistantRules(id) ?: return base
+        val tool = args.str("tool").orEmpty()
+        HomeAssistantSafety.reason(rules, tool, args.arguments())?.let { return it }
+        return base?.let { HomeAssistantSafety.describe(tool, args.arguments()) }
+    }
+
+    private fun homeReason(args: JsonObject): String? =
+        clients.homeAssistantRules(args.str("connector").orEmpty())?.let { HomeAssistantSafety.reason(it, args.str("tool").orEmpty(), args.arguments()) }
+
+    private fun JsonObject.arguments(): JsonObject = this["arguments"] as? JsonObject ?: JsonObject(emptyMap())
 
     /**
      * Arguments that don't fit the tool's schema (from the cached list) are sent back to the model with

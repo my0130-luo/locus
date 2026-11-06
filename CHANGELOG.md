@@ -5,6 +5,19 @@ All notable changes to Locus are recorded here. The format follows [Keep a Chang
 ## [Unreleased]
 
 ### Added
+- **Connect your own services.** Library → Connectors → **Add a service** (also Settings → Integrations → Home & self-hosted services) sets up Miniflux, FreshRSS, Paperless-ngx, Immich, Mastodon and Vikunja.
+  - You enter your server's address and a key. Plain `http://` only works on your home network and shows a warning; other addresses must use https.
+  - **Test connection** makes one harmless request with the key and says what's wrong (refused key, missing permission, wrong address, certificate). It doesn't follow redirects.
+  - The sheet lists what Locus can read, what it changes (asks first) and what it publishes as you. Posting to Mastodon always asks, in Locus only, and is never remembered.
+  - Keys stay in the vault, tied to the address you typed. FreshRSS signs in once and keeps only its token, not your API password.
+  - HTTP connectors can now use Basic authentication and a header prefix (such as `Authorization: Token …`).
+  - Design: [integrations](docs/design/integrations.md). *Not yet tried on the phone.*
+- **Home Assistant.** Add your Home Assistant's built-in MCP server with a long-lived access token. By default Locus only sees the devices you exposed to Assist; **Full access** uses `/api/mcp` and warns first.
+  - These always ask, in Locus only, and can't be remembered: locks, alarms, sirens, garage doors and gates, anything named "security", and heating or cooling set outside a range (16–26° unless you change it). You can add your own entries under **What always asks**.
+  - Its tools are pinned when you add it.
+  - *Not yet tried against a live Home Assistant.*
+- **Todoist and Nextcloud** in the MCP catalogue. Todoist is its hosted server with browser sign-in. Nextcloud is a community server that runs in Locus's Linux with an app password, pinned to one version. *Not yet tried on the phone.*
+- **News digest** task template: every morning, a short summary of unread articles from your Miniflux. *Not yet tried on the phone.*
 - **Calendar edits, reminders, and three phone hand-offs.** Locus can now write to the phone, with the user in the loop:
   - **Calendar:** `calendar_create`, `calendar_update` and `calendar_delete` work on the one calendar picked in the new **Settings → Phone** (only calendars you can write to are listed; the primary one is the default). Calendar access is asked the first time, after Locus says why; if Android won't ask again, Settings → Phone and a sheet point to App info. The approval card lists exactly what's written. Adding or changing an event asks, with "Don't ask again" for that calendar. **Inviting guests always asks and names them**, because the calendar's server emails them; deleting always asks and shows the event. A run that read outside content always asks. Times are in the phone's time zone, with checks. Repeating events (simple RRULEs) can be created, and changed or deleted only as a whole series: Locus refuses to edit one occurrence and says to do that in the calendar app.
   - **Reminders:** `remind_me` shows a Locus notification at a time with Snooze 10 min and Done, and runs no model. On time to the minute if you allow "Alarms & reminders" (Settings → Phone), otherwise within about 10 minutes. Reminders survive a reboot. Scheduled tasks lists them with Cancel. `reminders_list` and `reminder_cancel` too.

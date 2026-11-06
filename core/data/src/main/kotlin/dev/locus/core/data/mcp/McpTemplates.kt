@@ -33,7 +33,28 @@ data class McpTemplate(
     val note: String? = null,
     /** The built-in integration this server can stand in for (Settings → Integrations), if any. */
     val replaces: String? = null,
+    /**
+     * A server the user runs themselves: [url] is empty and the address comes from the user
+     * ([SelfHosted.path] is appended to it). Never "official", so its tool annotations aren't trusted.
+     */
+    val selfHosted: SelfHosted? = null,
+    /** Written by the community, not the vendor: named as such, and its annotations aren't trusted. */
+    val community: Boolean = false,
 ) {
+    /**
+     * The user's own server: the MCP endpoint is their address plus [path] (or [fullPath] when they
+     * ask for full access), and [testPath] is a harmless GET for Test connection.
+     */
+    data class SelfHosted(
+        val path: String,
+        /** e.g. `homeassistant.local:8123`. */
+        val hostHint: String,
+        val testPath: String,
+        /** A wider endpoint offered behind an explicit switch, with [fullWarning]. */
+        val fullPath: String? = null,
+        val fullWarning: String? = null,
+    )
+
     enum class Category(val label: String) {
         CODE("Code & issues"),
         DOCS("Docs & knowledge"),
@@ -44,6 +65,7 @@ data class McpTemplate(
         OBSERVE("Monitoring"),
         PAYMENTS("Payments"),
         SEARCH("Search & web"),
+        HOME("Home & personal"),
         LOCAL("Runs in Linux"),
     }
 
@@ -75,22 +97,59 @@ data class McpTemplate(
         }
     }
 
-    /** A stdio server: [command] run in /workspace; [env] names variables whose values the user pastes. */
-    data class Local(val command: String, val needs: String, val env: List<String> = emptyList())
+    /**
+     * A stdio server: [command] run in /workspace; [env] names variables whose values the user pastes.
+     * [labels] says what each one is in words ("app password"); every variable needs one, so the picker
+     * and the form never show a raw name. [plain] variables aren't secret (an address, a user name) and
+     * are typed unmasked; all of them still go to the vault.
+     */
+    data class Local(
+        val command: String,
+        val needs: String,
+        val env: List<String> = emptyList(),
+        val labels: Map<String, String> = emptyMap(),
+        val plain: Set<String> = emptySet(),
+    ) {
+        fun label(name: String): String = labels[name] ?: name
+    }
 
     val host: String get() = runCatching { URI(url).host.orEmpty() }.getOrDefault("")
+
+    /** Who wrote the server, for the sheet's first line. */
+    val byline: String get() = when {
+        community -> "Community server by ${vendor}"
+        category == Category.LOCAL -> "Reference server from the MCP project"
+        selfHosted != null -> "Built into ${vendor}, on your own server"
+        else -> "Official server by $vendor"
+    }
 
     /** What the user must do to connect, in a few words. */
     val authSummary: String get() = when {
         local != null && local.env.isEmpty() -> "No key needed"
-        local != null -> "Needs ${local.env.joinToString()}"
-        signIn && key != null -> "Sign in, or use ${key.label.lowercase()}"
+        local != null -> "Needs " + words(local.env.map { lowerLabel(local.label(it)) })
+        signIn && key != null -> "Sign in, or use ${article(lowerLabel(key.label))}"
         signIn -> "Sign in with your account"
         key == null -> "No key needed"
         key.optional -> "${key.label} optional"
-        else -> "Needs ${key.label.lowercase()}"
+        else -> "Needs ${article(lowerLabel(key.label))}"
     }
 }
+
+/** "Access token" → "access token"; "API key" keeps its capitals. */
+internal fun lowerLabel(label: String): String {
+    val first = label.substringBefore(' ')
+    return if (first.length > 1 && first.all { it.isUpperCase() || it.isDigit() }) label else label.replaceFirstChar { it.lowercase() }
+}
+
+/** "a token", "an API key"; a label already starting with "your" stays as it is. */
+private fun article(label: String): String = when {
+    label.startsWith("your ") -> label
+    label.first().lowercaseChar() in "aeiou" -> "an $label"
+    else -> "a $label"
+}
+
+/** "a, b and c". */
+private fun words(items: List<String>): String = if (items.size <= 1) items.joinToString() else items.dropLast(1).joinToString(", ") + " and " + items.last()
 
 object McpTemplates {
     val all: List<McpTemplate> = listOf(
@@ -304,6 +363,7 @@ object McpTemplates {
                 command = "npx -y mongodb-mcp-server@latest --readOnly",
                 needs = "Node.js (apk add nodejs npm)",
                 env = listOf("MDB_MCP_CONNECTION_STRING"),
+                labels = mapOf("MDB_MCP_CONNECTION_STRING" to "your database's connection string"),
             ),
             note = "MongoDB's hosted server needs a sign-in Locus can't do, so this one runs in Linux. Remove --readOnly to allow writes.",
         ),
@@ -445,8 +505,74 @@ object McpTemplates {
                 command = "npx -y @brave/brave-search-mcp-server",
                 needs = "Node.js (apk add nodejs npm)",
                 env = listOf("BRAVE_API_KEY"),
+                labels = mapOf("BRAVE_API_KEY" to "a Brave Search API key"),
             ),
             note = "Brave has no hosted server, so this runs in Linux. The built-in Brave Search integration does the same without Linux.",
+        ),
+
+        // ---- Home & personal ----------------------------------------------------------------------
+        McpTemplate(
+            id = "home-assistant",
+            name = "Home Assistant",
+            vendor = "Home Assistant",
+            description = "Check and control the devices you exposed to Assist on your own Home Assistant.",
+            category = McpTemplate.Category.HOME,
+            // Checked against the integration page and the server code (homeassistant/components/mcp_server/http.py,
+            // 2026.11.0): /api/mcp/<api id> serves one LLM API, and only the Assist API ("assist") works without an
+            // admin account. Long-lived tokens are sent as Bearer like any access token (components/http/auth.py).
+            docsUrl = "https://www.home-assistant.io/integrations/mcp_server/",
+            key = McpTemplate.Key(
+                "Long-lived access token",
+                url = "https://www.home-assistant.io/docs/authentication/#your-account-profile",
+                scopes = "a token of a non-administrator user is enough; it sees only what you exposed to Assist",
+            ),
+            selfHosted = McpTemplate.SelfHosted(
+                path = "/api/mcp/assist",
+                hostHint = "homeassistant.local:8123",
+                testPath = "/api/",
+                fullPath = "/api/mcp",
+                fullWarning = "Full access uses /api/mcp: every tool set you enabled, which can include reading all entities, " +
+                    "history and logs and calling any action. It needs an administrator's token.",
+            ),
+            note = "Turn on the Model Context Protocol Server integration in Home Assistant first (Settings → Devices & services). " +
+                "Create the token under your profile → Security → Long-lived access tokens.",
+        ),
+        McpTemplate(
+            id = "todoist",
+            name = "Todoist",
+            vendor = "Doist",
+            description = "Find, add, update and complete your tasks and projects.",
+            category = McpTemplate.Category.HOME,
+            // Checked 2026-11-06: the server's protected-resource metadata names https://todoist.com, whose
+            // RFC 8414 metadata advertises a registration_endpoint, and registering a native client with
+            // Locus's loopback redirect returned 201.
+            docsUrl = "https://github.com/Doist/todoist-ai",
+            url = "https://ai.todoist.net/mcp",
+            signIn = true,
+            note = "Locus opens Todoist's sign-in in your browser. The server asks for read and write access to your tasks.",
+        ),
+        McpTemplate(
+            id = "nextcloud",
+            name = "Nextcloud",
+            vendor = "Chris Coutinho (AGPL-3.0)",
+            description = "Files, notes, calendar, contacts, tasks and Deck on your Nextcloud.",
+            category = McpTemplate.Category.HOME,
+            docsUrl = "https://github.com/cbcoutinho/nextcloud-mcp-server",
+            // Pinned: a community package, so a new release only runs after you change this.
+            local = McpTemplate.Local(
+                command = "uvx nextcloud-mcp-server@0.204.3 run --transport stdio",
+                needs = "uv (apk add uv); the first start downloads its Python packages",
+                env = listOf("NEXTCLOUD_HOST", "NEXTCLOUD_USERNAME", "NEXTCLOUD_PASSWORD"),
+                labels = mapOf(
+                    "NEXTCLOUD_HOST" to "your Nextcloud address",
+                    "NEXTCLOUD_USERNAME" to "user name",
+                    "NEXTCLOUD_PASSWORD" to "app password",
+                ),
+                plain = setOf("NEXTCLOUD_HOST", "NEXTCLOUD_USERNAME"),
+            ),
+            community = true,
+            note = "The address is your server's, with https://. Use an app password from Nextcloud → Settings → Security → " +
+                "Devices & sessions, not your login password: you can revoke it there.",
         ),
 
         // ---- Runs in Linux (reference servers) ----------------------------------------------------
@@ -510,7 +636,9 @@ object McpTemplates {
             ?: byId(connector.id.removeSuffix("-mcp"))?.id
             ?: connector.id.takeIf { connector.kind != "mcp" }
 
-    fun official(connector: Connector): McpTemplate? {
+    fun official(connector: Connector): McpTemplate? = vendorTemplate(connector)?.takeUnless { it.community || it.selfHosted != null }
+
+    private fun vendorTemplate(connector: Connector): McpTemplate? {
         if (connector.kind != "mcp") return null
         connector.local?.let { local ->
             val command = local.command.trim().split(Regex("\\s+"))
@@ -518,6 +646,6 @@ object McpTemplates {
         }
         val uri = runCatching { URI(connector.baseUrl.trim()) }.getOrNull() ?: return null
         if (uri.scheme != "https" || uri.host.isNullOrBlank()) return null
-        return all.firstOrNull { it.local == null && it.host.equals(uri.host, ignoreCase = true) }
+        return all.firstOrNull { it.local == null && it.selfHosted == null && it.host.equals(uri.host, ignoreCase = true) }
     }
 }

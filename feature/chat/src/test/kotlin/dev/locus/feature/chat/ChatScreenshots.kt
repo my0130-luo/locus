@@ -227,6 +227,24 @@ class ChatScreenshots : ScreenshotTest() {
         Chat(Fx.state(waitingItems, run = RunState(running = true, step = 7, approvals = listOf(request)), todos = Fx.runningTodos))
     }
 
+    /** A Home Assistant lock (docs/design/integrations.md): a forced confirmation, in Locus only, never remembered. */
+    @Test
+    fun approvalHomeLock() = snap("chat-approval-home-lock") {
+        val arguments = kotlinx.serialization.json.Json.parseToJsonElement("""{"name":"Front door","domain":["lock"]}""") as kotlinx.serialization.json.JsonObject
+        val reason = checkNotNull(dev.locus.core.data.mcp.HomeAssistantSafety.reason(dev.locus.core.agent.home.Connector.HomeAssistantRules(), "intent__HassTurnOff", arguments))
+        val request = ApprovalRequest(
+            conversationId = "c",
+            callId = "h1",
+            toolName = "mcp_call",
+            risk = ToolRisk.NETWORK,
+            // As McpCall.describe writes it for a server named "Home Assistant".
+            summary = "Home Assistant · ${dev.locus.core.data.mcp.HomeAssistantSafety.title("intent__HassTurnOff", arguments)}\n$reason",
+            argumentsJson = """{"connector":"home-assistant","tool":"intent__HassTurnOff","arguments":$arguments}""",
+            flags = setOf(ApprovalFlag.MUST_CONFIRM),
+        )
+        Chat(Fx.state(waitingItems, run = RunState(running = true, step = 3, approvals = listOf(request))))
+    }
+
     /** A calendar event with guests: the card lists what's written, the guests in caution, and can't be remembered. */
     @Test
     fun approvalCalendarGuests() = snap("chat-approval-calendar-guests", heightDp = 1000) {
