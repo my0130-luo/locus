@@ -125,7 +125,7 @@ internal fun BackupSettings(
                     title = "Include keys and passwords",
                     checked = state.includeVault,
                     onCheckedChange = onIncludeVault,
-                    subtitle = "API keys, sign-ins, SSH and connector secrets. Off: you enter them again after restoring.",
+                    subtitle = "API keys, sign-ins, saved logins, SSH and connector secrets. Off: you enter them again after restoring.",
                     icon = LocusIcons.Key,
                 )
             }
@@ -166,13 +166,18 @@ internal fun BackupSettings(
                     modifier = NotePadding,
                     actionsBelow = failed,
                     actions = {
-                        FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.xs, Alignment.End)) {
-                            TextButton(onClick = onDismissResult) { Text(if (failed) "Dismiss" else "OK") }
-                            if (failed) {
+                        if (failed) {
+                            // Below the text, so the row may take the full width.
+                            FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.xs, Alignment.End)) {
+                                TextButton(onClick = onDismissResult) { Text("Dismiss") }
                                 // "Free some space … Settings → … → Storage": the way to it.
                                 SettingsActionFor(message)
                                 TextButton(onClick = { onDismissResult(); onBackUp() }) { Text("Try again") }
                             }
+                        } else {
+                            // Beside the text: the button alone, at its own width. A full-width row here left the
+                            // message one letter wide.
+                            TextButton(onClick = onDismissResult) { Text("OK") }
                         }
                     },
                 )
@@ -180,7 +185,8 @@ internal fun BackupSettings(
         }
         item {
             SectionNote(
-                "The file is encrypted with your password (AES-256). Locus has no server and can't open a backup without the password, or recover a forgotten one.",
+                "The file is encrypted with your password (AES-256). Locus has no server and can't open a backup without the password, or recover a forgotten one. " +
+                    "Browser sign-ins (cookies) aren't backed up; with keys and passwords included, your saved logins are, so the agent can sign you back in.",
                 NotePadding,
             )
         }
