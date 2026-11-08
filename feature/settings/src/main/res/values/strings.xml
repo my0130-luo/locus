@@ -343,4 +343,26 @@
     <string name="extras_default">Default</string>
     <string name="extras_automatic_label">Automatic</string>
     <string name="extras_save">Save</string>
+    <string name="updates_title">Updates</string>
+    <string name="updates_check_github">Check GitHub for updates</string>
+    <string name="updates_include_beta">Include beta versions</string>
+    <string name="updates_check_now">Check now</string>
+    <string name="updates_checking">Checking for updates</string>
+    <string name="updates_show_again">Show %1$s again</string>
+    <string name="updates_beta">Beta</string>
+    <string name="updates_download_progress">Download progress</string>
+    <string name="updates_cancel">Cancel</string>
+    <string name="updates_install">Install update</string>
+    <string name="updates_download_verify">Download and verify</string>
+    <string name="updates_skip_version">Skip this version</string>
+    <string name="updates_release_page">Release page</string>
+    <string name="updates_release_notes">Release notes</string>
+    <string name="updates_debug_build">Debug build</string>
+    <string name="updates_different_key">Signed with a different key</string>
+    <string name="updates_checksum_mismatch">Checksum didn\'t match</string>
+    <string name="updates_allow_install">Allow Locus to install apps</string>
+    <string name="updates_no_connection">No connection</string>
+    <string name="updates_cancelled">Update cancelled</string>
+    <string name="updates_check_failed">Couldn\'t check for updates</string>
+    <string name="updates_dismiss">Dismiss</string>
 </resources>
