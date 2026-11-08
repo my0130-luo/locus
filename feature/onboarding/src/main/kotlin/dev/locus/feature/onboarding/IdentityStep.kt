@@ -288,6 +288,7 @@ fun PersonaRoute(onBack: () -> Unit, viewModel: OnboardingViewModel = hiltViewMo
 
 // ---- Pieces --------------------------------------------------------------------------------------
 
+@Composable
 private fun PersonaFile.title() = when (this) {
     PersonaFile.IDENTITY -> stringResource(R.string.onb_identity_agent_identity)
     PersonaFile.SOUL -> stringResource(R.string.onb_identity_personality)
