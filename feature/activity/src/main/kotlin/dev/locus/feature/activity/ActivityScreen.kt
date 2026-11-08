@@ -352,13 +352,16 @@ private fun RunHeader(run: Run, expanded: Boolean, inChat: Boolean, modifier: Mo
                 Spacer(Modifier.width(Spacing.xs))
             }
             val critical = Locus.colors.critical
+            val actionCount = stringResource(R.string.activity_action_count, run.actions)
+            val failedCount = if (run.failed > 0) stringResource(R.string.activity_failed_count, run.failed) else null
+            val approvalCount = if (run.asked > 0) stringResource(R.string.activity_approval_count, run.asked) else null
             val counts = buildAnnotatedString {
-                append(stringResource(R.string.activity_action_count, run.actions))
-                if (run.failed > 0) {
+                append(actionCount)
+                failedCount?.let {
                     append(" · ")
-                    withStyle(SpanStyle(color = critical)) { append(stringResource(R.string.activity_failed_count, run.failed)) }
+                    withStyle(SpanStyle(color = critical)) { append(it) }
                 }
-                if (run.asked > 0) append(" · " + stringResource(R.string.activity_approval_count, run.asked))
+                approvalCount?.let { append(" · $it") }
             }
             SupportingText(counts, Modifier.padding(start = Spacing.xs), maxLines = 1)
         }
