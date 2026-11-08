@@ -365,4 +365,20 @@
     <string name="updates_cancelled">Update cancelled</string>
     <string name="updates_check_failed">Couldn\'t check for updates</string>
     <string name="updates_dismiss">Dismiss</string>
+    <string name="phone_alarms_reminders">Alarms &amp; reminders</string>
+    <string name="phone_continue">Continue</string>
+    <string name="phone_not_now">Not now</string>
+    <string name="phone_turned_off_android">Turned off in Android</string>
+    <string name="phone_open_app_info">Open App info</string>
+    <string name="phone_calendar_permission_title">Let Locus change your calendar?</string>
+    <string name="phone_title">Phone</string>
+    <string name="phone_calendar_choose">Calendar Locus may change</string>
+    <string name="phone_checking_calendar">Checking calendar access…</string>
+    <string name="phone_allow_calendar">Allow calendar access</string>
+    <string name="phone_pick_calendar_hint">Then pick the calendar Locus adds events to.</string>
+    <string name="phone_calendar_off">Calendar access is off</string>
+    <string name="phone_no_calendar">No calendar can be changed</string>
+    <string name="phone_reminders">Reminders</string>
+    <string name="phone_exact_timing">Exact timing</string>
+    <string name="phone_notifications">Notifications</string>
 </resources>
