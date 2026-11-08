@@ -68,4 +68,20 @@
     <string name="tasks_ran">Ran</string>
     <string name="tasks_skipped">Skipped</string>
     <string name="tasks_failed">Failed</string>
+    <string name="tasks_source_calendar">Calendar</string>
+    <string name="tasks_source_mail">Mail</string>
+    <string name="tasks_source_app">App</string>
+    <string name="tasks_source_help_calendar">Runs before an entry in your phone’s calendar starts. Locus reads the calendar every 15 minutes and plans a run for the right time; Android can hold it back a few minutes while the phone is idle.</string>
+    <string name="tasks_source_help_ntfy">Runs when a message arrives on an ntfy topic. Anything that can send a web request can post to one, on ntfy.sh or your own server. Locus checks every 15 minutes, or later while the phone is idle; it keeps no connection open.</string>
+    <string name="tasks_source_help_mail">Runs when mail arrives in the agent’s own mailbox. Locus looks for new mail every 15 minutes, or later while the phone is idle, reading only the sender and subject.</string>
+    <string name="tasks_source_help_app">Runs when another app (Tasker, Automate, a script) sends Locus the event below. It arrives at once; Locus’s automation settings and the list below decide who may send it.</string>
+    <string name="tasks_priority_any">Any</string>
+    <string name="tasks_priority_default">Default</string>
+    <string name="tasks_priority_high">High</string>
+    <string name="tasks_priority_urgent">Urgent</string>
+    <string name="tasks_mailbox_setup_note">The agent’s mailbox isn’t set up with an IMAP server. Add it in Settings → Integrations → Email.</string>
+    <string name="tasks_mailbox_needed">Mailbox needed</string>
+    <string name="tasks_5_min">5 min</string>
+    <string name="tasks_15_min">15 min</string>
+    <string name="tasks_6_hours">6 hours</string>
 </resources>
