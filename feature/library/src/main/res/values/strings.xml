@@ -56,7 +56,7 @@
 
     <string name="library_title">Library</string>
     <string name="memory">Memory</string>
-    <string name="skills">Skills</string>
+
     <string name="connectors">Connectors</string>
     <string name="helpers">Helpers</string>
     <string name="couldnt_open_library">Couldn't open the Library</string>
