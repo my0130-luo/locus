@@ -1,5 +1,6 @@
 package dev.locus.feature.library
 
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.layout.Arrangement
@@ -93,11 +94,11 @@ fun LibraryRoute(
     val toolChanges by viewModel.pendingTools.collectAsStateWithLifecycle()
     val pendingConnectors = library?.connectors?.count { it.draft || toolChanges[it.connector.id].orEmpty().isNotEmpty() } ?: 0
     val pendingAgents = library?.agents?.count { it.draft } ?: 0
-    LocusScreen("Library", onBack = onBack) { padding ->
+    LocusScreen(stringResource(R.string.library_title), onBack = onBack) { padding ->
         Column(Modifier.padding(padding).fillMaxSize()) {
         // Plain tab names fit at 360dp; what waits for review is said once, under the tabs.
         Segmented(
-            listOf("Memory", "Skills", "Connectors", "Helpers"),
+            listOf(stringResource(R.string.memory), stringResource(R.string.skills), stringResource(R.string.connectors), stringResource(R.string.helpers)),
             selected = tab,
             onSelect = { tab = it },
             modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.lg, vertical = Spacing.sm),
@@ -112,11 +113,11 @@ fun LibraryRoute(
         when (val s = state) {
             LibraryUiState.Loading -> LoadingState(modifier)
             is LibraryUiState.Failed -> EmptyState(
-                "Couldn't open the Library",
+                stringResource(R.string.couldnt_open_library),
                 s.message,
                 modifier,
                 icon = LocusIcons.Library,
-                action = { Button(onClick = viewModel::retryLoad) { Text("Try again") } },
+                action = { Button(onClick = viewModel::retryLoad) { Text(stringResource(R.string.try_again)) } },
             )
             is LibraryUiState.Ready -> Column(modifier.fillMaxSize()) {
                 val error by viewModel.error.collectAsStateWithLifecycle()
@@ -154,8 +155,8 @@ private fun ActionErrorBanner(error: LibraryError, onDismiss: () -> Unit) {
     ) {
         // "… a GitHub token in Settings → Integrations → GitHub": a button that opens it.
         dev.locus.core.designsystem.SettingsActionFor(error.message)
-        TextButton(onClick = onDismiss) { Text("Dismiss") }
-        error.retry?.let { retry -> TextButton(onClick = retry) { Text("Try again") } }
+        TextButton(onClick = onDismiss) { Text(stringResource(R.string.dismiss)) }
+        error.retry?.let { retry -> TextButton(onClick = retry) { Text(stringResource(R.string.try_again)) } }
     }
 }
 
@@ -171,7 +172,7 @@ private fun MemoryTab(library: Library, viewModel: LibraryViewModel, modifier: M
     var moving by remember { mutableStateOf<MemoryTarget?>(null) }
     if (library.memory.isEmpty() && library.projectMemory.isEmpty()) {
         EmptyState(
-            "Nothing remembered yet",
+            stringResource(R.string.nothing_remembered_yet),
             "As you work together, Locus saves your preferences, facts you share and lessons from tasks here. Chats in a project save to that project's memory. You can edit or delete anything.",
             modifier,
             icon = LocusIcons.Note,
@@ -179,7 +180,7 @@ private fun MemoryTab(library: Library, viewModel: LibraryViewModel, modifier: M
     } else {
         LazyColumn(modifier.fillMaxSize(), contentPadding = listPadding) {
             item { SectionNote("What Locus has learned about you and your work. It reads the index at the start of every chat.") }
-            if (library.projectMemory.isNotEmpty()) item { SectionLabel("General") }
+            if (library.projectMemory.isNotEmpty()) item { SectionLabel(stringResource(R.string.general)) }
             item {
                 if (library.memory.isEmpty()) {
                     SectionNote("Nothing in general memory yet. Notes from chats outside projects go here.")
@@ -209,12 +210,12 @@ private fun MemoryTab(library: Library, viewModel: LibraryViewModel, modifier: M
             subtitle = target.project?.let { "In ${it.projectName}'s memory. Locus reads the summary first and the note when it needs it." }
                 ?: "What Locus remembers. It reads the summary first and the note when it needs it.",
             onDismiss = { editing = null },
-            action = "Save",
+            action = stringResource(R.string.save),
             actionEnabled = content.isNotBlank(),
             onAction = { viewModel.saveMemory(topic.name, summary, content, target.project?.projectId); editing = null },
         ) {
-            OutlinedTextField(summary, { summary = it }, label = { Text("Summary") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-            OutlinedTextField(content, { content = it }, label = { Text("Note") }, minLines = 5, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(summary, { summary = it }, label = { Text(stringResource(R.string.summary)) }, singleLine = true, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(content, { content = it }, label = { Text(stringResource(R.string.note)) }, minLines = 5, modifier = Modifier.fillMaxWidth())
         }
     }
     forgetting?.let { target ->
@@ -222,7 +223,7 @@ private fun MemoryTab(library: Library, viewModel: LibraryViewModel, modifier: M
             title = "Forget “${target.topic.name.replace('-', ' ')}”?",
             body = target.project?.let { "Locus deletes this note from ${it.projectName}'s memory and won't know it in the project's new chats." }
                 ?: "Locus deletes this note from its memory and won't know it in new chats.",
-            action = "Forget",
+            action = stringResource(R.string.forget),
             onDismiss = { forgetting = null },
             onConfirm = { viewModel.forgetMemory(target.topic.name, target.project?.projectId); forgetting = null },
         )
@@ -235,7 +236,7 @@ private fun MemoryTab(library: Library, viewModel: LibraryViewModel, modifier: M
             subtitle = "Chats outside ${project.projectName} can use it then, and so can projects that read general memory. It leaves the project's memory." +
                 if (replaces) " General memory already has a note with this name: it's replaced, and the old version is kept in history." else "",
             onDismiss = { moving = null },
-            action = "Move",
+            action = stringResource(R.string.move),
             actionTone = if (replaces) Tone.Caution else Tone.Brand,
             onAction = { viewModel.moveMemoryToGeneral(project.projectId, target.topic.name); moving = null },
         ) {}
@@ -260,12 +261,12 @@ private fun MemoryCard(
             val origin = topic.provenance?.let { memoryOriginView(it, it.chatId?.let(library.memoryChats::get)) }
             ExpandableRow(
                 title = topic.name.replace('-', ' '),
-                subtitle = topic.summary.ifBlank { "No summary" },
+                subtitle = topic.summary.ifBlank { stringResource(R.string.no_summary) },
                 icon = LocusIcons.Note,
-                iconDescription = if (target.project != null) "Project memory note" else "Memory note",
+                iconDescription = if (target.project != null) stringResource(R.string.project_memory_note) else stringResource(R.string.memory_note),
                 // Only the time fits beside the title; who saved it is in the open row.
                 meta = relativeTime(topic.modified),
-                badge = origin?.warning?.let { "Needs a look" },
+                badge = origin?.warning?.let { stringResource(R.string.needs_a_look) },
                 expandKey = null,
             ) {
                 origin?.let { MemoryOrigin(it, onOpenChat) }
@@ -273,9 +274,9 @@ private fun MemoryCard(
                 // Actions wrap to a second line at a large font instead of running off the card.
                 @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
                 androidx.compose.foundation.layout.FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.sm, Alignment.End), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-                    onMove?.let { move -> TextButton(onClick = { move(target) }) { Text("Move to general") } }
-                    TextButton(onClick = { onEdit(target) }) { Text("Edit") }
-                    TextButton(onClick = { onForget(target) }) { Text("Forget", color = Locus.colors.critical) }
+                    onMove?.let { move -> TextButton(onClick = { move(target) }) { Text(stringResource(R.string.move_to_general)) } }
+                    TextButton(onClick = { onEdit(target) }) { Text(stringResource(R.string.edit)) }
+                    TextButton(onClick = { onForget(target) }) { Text(stringResource(R.string.forget), color = Locus.colors.critical) }
                 }
             }
         }
@@ -293,7 +294,7 @@ private fun MemoryOrigin(origin: MemoryOriginView, onOpenChat: (String) -> Unit)
         origin.chat?.let { chat ->
             Text(
                 "From “${chat.title}”",
-                Modifier.clickable(onClickLabel = "Open the chat") { onOpenChat(chat.id) }.padding(vertical = Spacing.xs),
+                Modifier.clickable(onClickLabel = stringResource(R.string.open_the_chat)) { onOpenChat(chat.id) }.padding(vertical = Spacing.xs),
                 style = LocusType.supporting,
                 color = MaterialTheme.colorScheme.primary,
                 maxLines = 1,
@@ -301,7 +302,7 @@ private fun MemoryOrigin(origin: MemoryOriginView, onOpenChat: (String) -> Unit)
             )
         }
         if (origin.chatGone) {
-            SupportingText("The chat it was saved in has been deleted.")
+            SupportingText(stringResource(R.string.saved_chat_deleted))
         }
         origin.warning?.let { Text(it, style = LocusType.supporting, color = Locus.colors.onCautionContainer) }
     }
@@ -544,7 +545,7 @@ private fun ConnectorsTab(
             subtitle = if (entry.connector.local != null) "Stored encrypted on this phone and given to the server's process when it starts. The AI never sees it."
             else "Stored encrypted on this phone and added to requests to ${entry.connector.host}. The AI never sees it.",
             onDismiss = { secretFor = null },
-            action = "Save",
+            action = stringResource(R.string.save),
             actionEnabled = value.isNotBlank(),
             onAction = { viewModel.setSecret(entry.connector.id, secretName, value); secretFor = null },
         ) {

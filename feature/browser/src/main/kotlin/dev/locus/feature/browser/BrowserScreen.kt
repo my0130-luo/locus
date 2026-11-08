@@ -46,6 +46,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
+import dev.locus.feature.browser.R
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
@@ -184,7 +186,7 @@ fun BrowserRoute(
 @Composable
 internal fun PagePlaceholder() {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        SupportingText("The page shows here", style = LocusType.rowSupporting)
+        SupportingText(stringResource(R.string.browser_page_placeholder), style = LocusType.rowSupporting)
     }
 }
 
@@ -202,6 +204,11 @@ internal fun BrowserScreen(
 ) {
     val state = ui.page
     val feedback = Locus.feedback
+    val loginUpdatedLabel = stringResource(R.string.browser_login_updated)
+    val loginSavedLabel = stringResource(R.string.browser_login_saved)
+    val linkLabel = stringResource(R.string.browser_link_label)
+    val linkCopiedLabel = stringResource(R.string.browser_link_copied)
+    val dataClearedLabel = stringResource(R.string.browser_data_cleared)
     // The approval whose Details sheet is open, by call id: it closes by itself once the request is answered anywhere.
     var detailsFor by rememberSaveable { mutableStateOf(startDetails) }
 
@@ -211,7 +218,7 @@ internal fun BrowserScreen(
             host = SiteOrigin.host(offer.origin),
             username = offer.username,
             isUpdate = offer.isUpdate,
-            onSave = { user -> actions.saveLogin(user); feedback.show(if (offer.isUpdate) "Login updated" else "Login saved", Tone.Live) },
+            onSave = { user -> actions.saveLogin(user); feedback.show(if (offer.isUpdate) loginUpdatedLabel else loginSavedLabel, Tone.Live) },
             onNever = actions.neverSaveLogin,
             onDismiss = actions.dismissLogin,
         )
@@ -225,6 +232,9 @@ internal fun BrowserScreen(
     var handingBack by rememberSaveable { mutableStateOf(startHandBack != null) }
     var menu by rememberSaveable { mutableStateOf(false) }
     val canDrive = ui.userDriving && state.hasPage
+    val waitingAnswerLabel = stringResource(R.string.browser_waiting_answer)
+    val usingPageLabel = stringResource(R.string.browser_using_page)
+    val takeOverLabel = stringResource(R.string.browser_take_over)
     val context = LocalContext.current
     val clipboard = LocalClipboard.current
     val scope = rememberCoroutineScope()
@@ -240,12 +250,12 @@ internal fun BrowserScreen(
     }
 
     LocusScreen(
-        if (ui.standalone) "Your browsing" else "Browser",
+        if (ui.standalone) stringResource(R.string.browser_your_browsing) else stringResource(R.string.browser_title),
         snackbarHost = snackbarHost,
         topBar = {
             BrowserToolbar(
                 onClose = actions.onBack,
-                closeLabel = if (ui.standalone) "Close browser" else "Back to chat",
+                closeLabel = if (ui.standalone) stringResource(R.string.browser_close) else stringResource(R.string.browser_back_to_chat),
                 editing = editing,
                 // A thin progress line while loading, in place of the bar's hairline edge.
                 progress = if (state.loading && !editing) state.progress / 100f else null,
@@ -253,7 +263,7 @@ internal fun BrowserScreen(
                     // Only once a page opened a second tab (a sign-in pop-up, a link to a new tab).
                     if (state.tabs.size > 1) TabCount(state.tabs.size) { showTabs = true }
                     Box {
-                        IconButton(onClick = { menu = true }) { Icon(LocusIcons.More, contentDescription = "More options") }
+                        IconButton(onClick = { menu = true }) { Icon(LocusIcons.More, contentDescription = stringResource(R.string.browser_more_options)) }
                         BrowserMenu(
                             expanded = menu,
                             onDismiss = { menu = false },
@@ -261,8 +271,8 @@ internal fun BrowserScreen(
                             onNavigate = { menu = false; actions.navigate(it) },
                             onCopy = {
                                 menu = false
-                                scope.launch { clipboard.setClipEntry(ClipEntry(ClipData.newPlainText("Link", state.url))) }
-                                feedback.show("Link copied", Tone.Live)
+                                scope.launch { clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(linkLabel, state.url))) }
+                                feedback.show(linkCopiedLabel, Tone.Live)
                             },
                             onOpenElsewhere = {
                                 menu = false
@@ -292,11 +302,11 @@ internal fun BrowserScreen(
                         {
                             if (state.loading) {
                                 IconButton(onClick = { actions.navigate(AgentBrowser.UserNavigation.STOP) }, enabled = canDrive) {
-                                    Icon(LocusIcons.Close, contentDescription = "Stop loading")
+                                    Icon(LocusIcons.Close, contentDescription = stringResource(R.string.browser_stop_loading))
                                 }
                             } else {
                                 IconButton(onClick = { actions.navigate(AgentBrowser.UserNavigation.RELOAD) }, enabled = canDrive) {
-                                    Icon(LocusIcons.Regenerate, contentDescription = "Reload")
+                                    Icon(LocusIcons.Regenerate, contentDescription = stringResource(R.string.browser_reload))
                                 }
                             }
                         }
@@ -318,11 +328,11 @@ internal fun BrowserScreen(
             Box(Modifier.fillMaxWidth().weight(1f)) {
                 when {
                     !state.hasPage -> EmptyState(
-                        if (ui.standalone) "Browse on your own" else "Nothing open yet",
+                        if (ui.standalone) stringResource(R.string.browser_standalone_title) else stringResource(R.string.browser_nothing_open_title),
                         if (ui.standalone) {
-                            "Type an address above. Sites you sign in to here stay signed in for Locus's browser in every chat, until you clear browsing data."
+                            stringResource(R.string.browser_standalone_help)
                         } else {
-                            "Type an address above, or ask Locus to browse. Its page shows here live, and you can take over whenever you like."
+                            stringResource(R.string.browser_agent_help)
                         },
                         icon = LocusIcons.Globe,
                     )
@@ -332,7 +342,7 @@ internal fun BrowserScreen(
                             // Over the WebView's own error page, which is the browser engine's, not ours.
                             Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                                 ErrorState(
-                                    "Couldn't open this page",
+                                    stringResource(R.string.browser_could_not_open),
                                     error,
                                     onRetry = if (ui.userDriving) ({ actions.navigate(AgentBrowser.UserNavigation.RELOAD) }) else null,
                                 )
@@ -394,16 +404,16 @@ internal fun BrowserScreen(
     if (handingBack) {
         var note by rememberSaveable { mutableStateOf(startHandBack.orEmpty()) }
         ConfirmSheet(
-            title = "Hand back to Locus?",
-            message = "Locus carries on from this page. What you typed into the page stays hidden from it.",
-            confirmLabel = "Hand back",
+            title = stringResource(R.string.browser_handoff_title),
+            message = stringResource(R.string.browser_handoff_message),
+            confirmLabel = stringResource(R.string.browser_confirm_hand_back),
             onConfirm = { actions.handBack(note); handingBack = false },
             onDismiss = { handingBack = false },
             content = {
                 OutlinedTextField(
                     note, { note = it }, Modifier.fillMaxWidth(),
-                    label = { Text("Note (optional)") },
-                    placeholder = { Text("e.g. Signed in. Book the 9:40 train.") },
+                    label = { Text(stringResource(R.string.browser_note_optional)) },
+                    placeholder = { Text(stringResource(R.string.browser_note_hint)) },
                     maxLines = 4,
                 )
             },
@@ -422,20 +432,20 @@ internal fun BrowserScreen(
     }
 
     if (showTabs) {
-        LocusSheet(title = "Tabs", subtitle = "Pages Locus's browser has open. Locus works in the selected one.", onDismiss = { showTabs = false }) {
+        LocusSheet(title = stringResource(R.string.browser_tabs), subtitle = stringResource(R.string.browser_tabs_description), onDismiss = { showTabs = false }) {
             CardGroup {
                 state.tabs.forEachIndexed { i, tab ->
                     if (i > 0) GroupDivider()
                     ListRow(
-                        tab.title.ifBlank { "Untitled" },
+                        tab.title.ifBlank { stringResource(R.string.browser_untitled) },
                         subtitle = displayAddress(tab.url),
                         onClick = { actions.selectTab(i); showTabs = false },
                         leading = if (i == state.activeTab) {
-                            { Icon(LocusIcons.Check, contentDescription = "Current tab", tint = Locus.colors.live) }
+                            { Icon(LocusIcons.Check, contentDescription = stringResource(R.string.browser_current_tab), tint = Locus.colors.live) }
                         } else {
                             null
                         },
-                        trailing = { IconButton(onClick = { actions.closeTab(i) }) { Icon(LocusIcons.Close, contentDescription = "Close tab") } },
+                        trailing = { IconButton(onClick = { actions.closeTab(i) }) { Icon(LocusIcons.Close, contentDescription = stringResource(R.string.browser_close_tab)) } },
                     )
                 }
             }
@@ -447,13 +457,13 @@ internal fun BrowserScreen(
     state.dialog?.let { dialog ->
         var answer by remember(dialog) { mutableStateOf(dialog.defaultText) }
         ConfirmSheet(
-            title = state.url.substringAfter("://").substringBefore('/').ifBlank { "This page" } + " says",
+            title = stringResource(R.string.browser_page_says, state.url.substringAfter("://").substringBefore('/').ifBlank { stringResource(R.string.browser_this_page) }),
             message = dialog.message,
-            confirmLabel = "OK",
+            confirmLabel = stringResource(R.string.browser_ok),
             onConfirm = { actions.answerDialog(true, answer) },
             onDismiss = { actions.answerDialog(false, null) },
             content = if (dialog.type == "prompt") {
-                { OutlinedTextField(answer, { answer = it }, Modifier.fillMaxWidth(), singleLine = true, label = { Text("Answer") }) }
+                { OutlinedTextField(answer, { answer = it }, Modifier.fillMaxWidth(), singleLine = true, label = { Text(stringResource(R.string.browser_answer)) }) }
             } else {
                 null
             },
@@ -462,9 +472,9 @@ internal fun BrowserScreen(
 
     if (confirmClear) {
         ConfirmSheet(
-            title = "Clear browsing data?",
-            message = "Signs Locus's browser out of every site and deletes its cookies, storage and history. Your own browser is not affected.",
-            confirmLabel = "Clear",
+            title = stringResource(R.string.browser_clear_data_title),
+            message = stringResource(R.string.browser_clear_data_message),
+            confirmLabel = stringResource(R.string.browser_confirm_clear),
             tone = Tone.Critical,
             busy = clearing,
             error = clearError,
@@ -478,7 +488,7 @@ internal fun BrowserScreen(
                     when {
                         cleared -> {
                             confirmClear = false
-                            feedback.show("Browsing data cleared", Tone.Live)
+                            feedback.show(dataClearedLabel, Tone.Live)
                         }
                         // Still open: say so where the user is looking, next to Try again.
                         confirmClear -> clearError = failed
@@ -499,27 +509,27 @@ private fun ControlBanner(ui: BrowserUi, onTakeOver: () -> Unit, onHandBack: () 
     val state = ui.page
     val modifier = Modifier.padding(Spacing.lg)
     when {
-        state.handoffReason != null -> Banner(state.handoffReason.orEmpty(), Tone.Caution, modifier, title = "Your turn") {
+        state.handoffReason != null -> Banner(state.handoffReason.orEmpty(), Tone.Caution, modifier, title = stringResource(R.string.browser_your_turn_title)) {
             // "Done", the word browser_ask_user's own description tells the model to use ("…, then tap Done"); it opens the same hand-back sheet.
-            Button(onClick = onHandBack) { Text("Done") }
+            Button(onClick = onHandBack) { Text(stringResource(R.string.browser_done)) }
         }
         state.userControl -> Banner(
             if (state.agentWaiting) {
-                "Locus is waiting for you. It sees nothing of this page until you hand it back, and never what you type."
+                stringResource(R.string.browser_user_control_waiting)
             } else {
-                "Locus is paused on this page. It sees nothing of it until you hand it back, and never what you type."
+                stringResource(R.string.browser_user_control_paused)
             },
             Tone.Caution,
             modifier,
-            title = "You have control",
-        ) { Button(onClick = onHandBack) { Text("Hand back") } }
+            title = stringResource(R.string.browser_control_title),
+        ) { Button(onClick = onHandBack) { Text(stringResource(R.string.browser_hand_back)) } }
         // While Locus waits for an answer the card above takes this place: nothing is browsing then.
         ui.agentDriving && state.hasPage && !ui.waitingForAnswer -> Banner(
-            "Take over to scroll, type or sign in yourself. Locus waits until you hand back.",
+            stringResource(R.string.browser_takeover_help),
             Tone.Live,
             modifier,
-            title = "Locus is browsing",
-        ) { Button(onClick = onTakeOver) { Text("Take over") } }
+            title = stringResource(R.string.browser_browsing_title),
+        ) { Button(onClick = onTakeOver) { Text(stringResource(R.string.browser_take_over)) } }
     }
 }
 
@@ -630,20 +640,20 @@ internal fun ColumnScope.BrowserMenuItems(
             HorizontalDivider(color = Locus.colors.hairline, thickness = Stroke.hairline)
         }
         DropdownMenuItem(
-            text = { Text("Back") },
+            text = { Text(stringResource(R.string.browser_back)) },
             leadingIcon = { Icon(LocusIcons.ChevronLeft, null) },
             enabled = canDrive && state.canGoBack,
             onClick = { onNavigate(AgentBrowser.UserNavigation.BACK) },
         )
         DropdownMenuItem(
-            text = { Text("Forward") },
+            text = { Text(stringResource(R.string.browser_forward)) },
             leadingIcon = { Icon(LocusIcons.ChevronRight, null) },
             enabled = canDrive && state.canGoForward,
             onClick = { onNavigate(AgentBrowser.UserNavigation.FORWARD) },
         )
-        DropdownMenuItem(text = { Text("Copy link") }, leadingIcon = { Icon(LocusIcons.Copy, null) }, enabled = state.hasPage && state.url.isNotBlank(), onClick = onCopy)
+        DropdownMenuItem(text = { Text(stringResource(R.string.browser_copy_link)) }, leadingIcon = { Icon(LocusIcons.Copy, null) }, enabled = state.hasPage && state.url.isNotBlank(), onClick = onCopy)
         DropdownMenuItem(
-            text = { Text("Open in another app") },
+            text = { Text(stringResource(R.string.browser_open_external)) },
             leadingIcon = { Icon(LocusIcons.OpenExternal, null) },
             enabled = state.hasPage && isWebAddress(state.url),
             onClick = onOpenElsewhere,
@@ -651,9 +661,9 @@ internal fun ColumnScope.BrowserMenuItems(
         HorizontalDivider(color = Locus.colors.hairline, thickness = Stroke.hairline)
         // The browser's own data: the logins Locus can fill here, and clearing its cookies and history.
         if (onSavedLogins != null) {
-            DropdownMenuItem(text = { Text("Saved logins") }, leadingIcon = { Icon(LocusIcons.Key, null) }, onClick = onSavedLogins)
+            DropdownMenuItem(text = { Text(stringResource(R.string.browser_saved_logins)) }, leadingIcon = { Icon(LocusIcons.Key, null) }, onClick = onSavedLogins)
         }
-        DropdownMenuItem(text = { Text("Clear browsing data") }, leadingIcon = { Icon(LocusIcons.Trash, null) }, onClick = onClear)
+        DropdownMenuItem(text = { Text(stringResource(R.string.browser_clear_data)) }, leadingIcon = { Icon(LocusIcons.Trash, null) }, onClick = onClear)
     }
 }
 
@@ -686,7 +696,7 @@ private fun openElsewhere(context: Context, url: String): String? = try {
     context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addCategory(Intent.CATEGORY_BROWSABLE).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     null
 } catch (_: ActivityNotFoundException) {
-    "No app on this phone opens web links."
+    context.getString(R.string.browser_no_web_app)
 }
 
 /** "booking.com/hotel/…" for "https://www.booking.com/hotel/…": what a person reads in an address bar. */
@@ -703,7 +713,7 @@ private fun TabCount(count: Int, onClick: () -> Unit) {
                 .sizeIn(minWidth = IconSize.medium, minHeight = IconSize.medium)
                 // design-exception: the tab-switcher glyph is an icon drawn in code; its corner scales with the icon, not a surface radius
                 .border(Stroke.bold, MaterialTheme.colorScheme.onSurface, RoundedCornerShape(IconSize.medium / 4))
-                .semantics { contentDescription = "$count tabs" },
+                .semantics { contentDescription = stringResource(R.string.browser_tabs_count, count) },
             contentAlignment = Alignment.Center,
         ) {
             Text(count.toString(), Modifier.padding(horizontal = Spacing.xs), style = LocusType.chip, color = MaterialTheme.colorScheme.onSurface)

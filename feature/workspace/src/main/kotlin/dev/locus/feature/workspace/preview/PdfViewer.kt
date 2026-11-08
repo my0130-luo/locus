@@ -47,6 +47,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -60,6 +61,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.core.graphics.createBitmap
+import dev.locus.feature.workspace.R
 import dev.locus.core.designsystem.EmptyState
 import dev.locus.core.designsystem.LocusIcons
 import dev.locus.core.designsystem.LocusType
@@ -169,6 +171,7 @@ private sealed interface PdfState {
 @Composable
 internal fun PdfViewer(file: File, modifier: Modifier = Modifier, onPageCount: (Int) -> Unit = {}) {
     var password by remember(file) { mutableStateOf<String?>(null) }
+    val oomMessage = stringResource(R.string.preview_pdf_memory_error)
     val work = LocalPreviewDispatchers.current
     val state by produceState<PdfState>(PdfState.Loading, file, password) {
         value = PdfState.Loading
@@ -181,7 +184,7 @@ internal fun PdfViewer(file: File, modifier: Modifier = Modifier, onPageCount: (
             } catch (e: Exception) {
                 PdfState.Failed(e.message ?: e.javaClass.simpleName)
             } catch (_: OutOfMemoryError) {
-                PdfState.Failed("Not enough memory to open this PDF.")
+                PdfState.Failed(oomMessage)
             }
         }
     }
@@ -192,14 +195,14 @@ internal fun PdfViewer(file: File, modifier: Modifier = Modifier, onPageCount: (
     when (val s = state) {
         PdfState.Loading -> Box(modifier.fillMaxSize())
         is PdfState.Failed -> EmptyState(
-            "Can't open this PDF",
-            "It may be damaged or not a PDF. Try Open with to use another app.\n(${s.message})",
+            stringResource(R.string.preview_pdf_open_failed_title),
+            stringResource(R.string.preview_pdf_open_failed_body, s.message),
             modifier,
             icon = LocusIcons.File,
         )
         is PdfState.NeedsPassword -> PasswordPrompt(s.wrong, modifier) { password = it }
         is PdfState.Ready -> if (s.doc.pageCount == 0) {
-            EmptyState("Empty PDF", "This PDF has no pages.", modifier, icon = LocusIcons.File)
+            EmptyState(stringResource(R.string.preview_pdf_empty_title), stringResource(R.string.preview_pdf_empty_body), modifier, icon = LocusIcons.File)
         } else {
             PdfPages(s.doc, modifier)
         }
@@ -210,8 +213,8 @@ internal fun PdfViewer(file: File, modifier: Modifier = Modifier, onPageCount: (
 private fun PasswordPrompt(wrong: Boolean, modifier: Modifier, onSubmit: (String) -> Unit) {
     if (Build.VERSION.SDK_INT < 35) {
         EmptyState(
-            "Password-protected PDF",
-            "This Android version can't open protected PDFs here. Use Open with to view it in another app.",
+            stringResource(R.string.preview_pdf_password_title),
+            stringResource(R.string.preview_pdf_unsupported_password),
             modifier,
             icon = LocusIcons.Key,
         )
@@ -219,8 +222,8 @@ private fun PasswordPrompt(wrong: Boolean, modifier: Modifier, onSubmit: (String
     }
     var text by remember { mutableStateOf("") }
     EmptyState(
-        "Password-protected PDF",
-        if (wrong) "That password didn't work. Try again." else "Enter the password to view this PDF.",
+        stringResource(R.string.preview_pdf_password_title),
+        if (wrong) stringResource(R.string.preview_pdf_wrong_password) else stringResource(R.string.preview_pdf_enter_password),
         modifier,
         icon = LocusIcons.Key,
         action = {
@@ -229,11 +232,11 @@ private fun PasswordPrompt(wrong: Boolean, modifier: Modifier, onSubmit: (String
                     text,
                     { text = it },
                     singleLine = true,
-                    label = { Text("Password") },
+                    label = { Text(stringResource(R.string.preview_pdf_password_label)) },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 )
-                Button(onClick = { onSubmit(text) }, enabled = text.isNotEmpty()) { Text("Open") }
+                Button(onClick = { onSubmit(text) }, enabled = text.isNotEmpty()) { Text(stringResource(R.string.preview_pdf_open)) }
             }
         },
     )
@@ -336,9 +339,9 @@ private fun PdfPage(doc: PdfDocument, index: Int, renderWidth: Int) {
         Box(Modifier.fillMaxWidth().aspectRatio(doc.aspect[index].coerceIn(0.1f, 10f)).background(Color.White)) {
             val bitmap = shown
             if (bitmap != null) {
-                Image(bitmap.asImageBitmap(), contentDescription = "Page ${index + 1}", modifier = Modifier.fillMaxSize())
+                Image(bitmap.asImageBitmap(), contentDescription = stringResource(R.string.preview_pdf_page, index + 1), modifier = Modifier.fillMaxSize())
             } else if (failed) {
-                Text("Couldn't render this page", style = LocusType.mono, color = Color.DarkGray, modifier = Modifier.align(Alignment.Center)) // design-exception: ink on the white page above
+                Text(stringResource(R.string.preview_pdf_render_failed), style = LocusType.mono, color = Color.DarkGray, modifier = Modifier.align(Alignment.Center)) // design-exception: ink on the white page above
             }
         }
         SupportingText("${index + 1} / ${doc.pageCount}", style = LocusType.mono, modifier = Modifier.padding(top = Spacing.xs))

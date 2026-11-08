@@ -1,5 +1,6 @@
 package dev.locus.feature.onboarding
 
+import dev.locus.feature.onboarding.R
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -14,6 +15,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,34 +54,33 @@ import dev.locus.core.ondevice.ModelState
 
 @Composable
 internal fun ColumnScope.ProviderStep(state: OnboardingUiState, viewModel: OnboardingViewModel) {
-    StepHeading("Choose a model", "Locus talks to the AI model you pick, with your own key. Or run Gemma on this phone, offline.")
+    StepHeading(stringResource(R.string.onboarding_choose_model), stringResource(R.string.onboarding_choose_model_body))
 
     if (state.providers.isNotEmpty()) {
-        SectionLabel("Your models")
+        SectionLabel(stringResource(R.string.onboarding_your_models))
         CardGroup {
             state.providers.forEachIndexed { i, p ->
                 if (i > 0) GroupDivider(Insets.iconRow)
                 val isDefault = p.id == state.defaultProvider?.id
                 ListRow(
                     p.name,
-                    subtitle = p.model.ifBlank { "No model chosen" },
+                    subtitle = p.model.ifBlank { stringResource(R.string.onboarding_no_model_chosen) },
                     onClick = { viewModel.useExisting(p.id) },
                     leading = { ProviderBadge(p.name, p.baseUrl, p.format == ApiFormat.ON_DEVICE, size = IconSize.tile, model = p.model) },
-                    trailing = { if (isDefault) StatusPill("Default", Tone.Brand) },
+                    trailing = { if (isDefault) StatusPill(stringResource(R.string.onboarding_default), Tone.Brand) },
                 )
             }
         }
         // What the two buttons below do (docs/design/onboarding-quick-start.md).
         SupportingText(
-            "That's all Locus needs. Quick start opens Home now; naming your agent, Linux, SSH machines and connectors " +
-                "wait there as cards you can finish or dismiss. Continue full setup goes through them now.",
+            stringResource(R.string.onboarding_quick_start_explanation),
             style = LocusType.rowSupporting,
         )
     }
 
     val draft = viewModel.provider
     if (draft == null) {
-        SectionLabel(if (state.providers.isEmpty()) "Where should it run?" else "Add another")
+        SectionLabel(if (state.providers.isEmpty()) stringResource(R.string.onboarding_where_run) else stringResource(R.string.onboarding_add_another))
         CardGroup {
             viewModel.presets.forEachIndexed { i, preset ->
                 if (i > 0) GroupDivider(Insets.iconRow)
@@ -96,7 +97,7 @@ internal fun ColumnScope.ProviderStep(state: OnboardingUiState, viewModel: Onboa
         return
     }
 
-    SectionLabel(draft.preset.name, action = "Change", onAction = { viewModel.pickPreset(null) })
+    SectionLabel(draft.preset.name, action = stringResource(R.string.onboarding_change), onAction = { viewModel.pickPreset(null) })
     LocusCard {
         Column(verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(Spacing.md)) {
             val localNetwork = rememberLocalNetworkGate()
@@ -105,8 +106,8 @@ internal fun ColumnScope.ProviderStep(state: OnboardingUiState, viewModel: Onboa
                 onClick = { if (draft.onDevice) viewModel.saveProvider() else localNetwork.run(draft.baseUrl, viewModel::saveProvider) },
                 enabled = draft.canSave && !viewModel.providerSave.running,
                 modifier = Modifier.fillMaxWidth(),
-            ) { Text("Save and use") }
-            JobStatus(viewModel.providerSave, "Saving…")
+            ) { Text(stringResource(R.string.onboarding_save_and_use)) }
+            JobStatus(viewModel.providerSave, stringResource(R.string.onb_identity_saving))
         }
     }
     SupportingText(draft.preset.note)
@@ -122,7 +123,7 @@ private fun RemoteFields(viewModel: OnboardingViewModel, localNetwork: LocalNetw
         OutlinedTextField(
             draft.baseUrl,
             { v -> viewModel.editProvider { it.copy(baseUrl = v.trim()) } },
-            label = { Text("Base URL") },
+            label = { Text(stringResource(R.string.onboarding_base_url)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
             modifier = Modifier.fillMaxWidth(),
@@ -133,26 +134,26 @@ private fun RemoteFields(viewModel: OnboardingViewModel, localNetwork: LocalNetw
         OutlinedTextField(
             draft.key,
             { v -> viewModel.editProvider { it.copy(key = v) } },
-            label = { Text("API key") },
+            label = { Text(stringResource(R.string.onboarding_api_key)) },
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            supportingText = { Text("Stored encrypted on this phone. Only sent to ${draft.baseUrl.substringAfter("://").substringBefore('/').ifBlank { "the provider" }}.") },
+            supportingText = { Text(stringResource(R.string.onboarding_provider_key_stored, draft.baseUrl.substringAfter("://").substringBefore('/').ifBlank { "the provider" })) },
             modifier = Modifier.fillMaxWidth(),
         )
     }
     OutlinedTextField(
         draft.model,
         { v -> viewModel.editProvider { it.copy(model = v.trim(), contextWindow = null) } },
-        label = { Text("Model") },
-        placeholder = { Text("Pick from the list or type an ID") },
+        label = { Text(stringResource(R.string.onboarding_model)) },
+        placeholder = { Text(stringResource(R.string.onboarding_model_placeholder)) },
         singleLine = true,
-        supportingText = draft.contextWindow?.let { { Text("Context window: ${compactCount(it.toLong())} tokens", style = MonoCaption) } },
+        supportingText = draft.contextWindow?.let { { Text(stringResource(R.string.onboarding_context_window_detail, compactCount(it.toLong())), style = MonoCaption) } },
         modifier = Modifier.fillMaxWidth(),
     )
     Row(verticalAlignment = Alignment.CenterVertically) {
-        OutlinedButton(onClick = { localNetwork.run(draft.baseUrl, viewModel::loadModels) }, enabled = draft.canListModels && !viewModel.modelList.running) { Text("Load models") }
-        JobStatus(viewModel.modelList, "Loading…", Modifier.padding(start = Spacing.md).weight(1f))
+        OutlinedButton(onClick = { localNetwork.run(draft.baseUrl, viewModel::loadModels) }, enabled = draft.canListModels && !viewModel.modelList.running) { Text(stringResource(R.string.onboarding_load_models)) }
+        JobStatus(viewModel.modelList, stringResource(R.string.onboarding_loading), Modifier.padding(start = Spacing.md).weight(1f))
     }
     val models = viewModel.remoteModels
     if (models.isNotEmpty()) {
@@ -188,25 +189,25 @@ private fun ChatGptSignInFields(viewModel: OnboardingViewModel) {
     if (draft.signedIn) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             JobStatus(viewModel.chatGptSignIn, "", Modifier.weight(1f))
-            TextButton(onClick = { uriHandler.openUri(ChatGptErrors.USAGE_URL) }) { Text("Manage usage") }
+            TextButton(onClick = { uriHandler.openUri(ChatGptErrors.USAGE_URL) }) { Text(stringResource(R.string.onboarding_manage_usage)) }
         }
     } else {
-        SupportingText("Use your ChatGPT Plus or Pro plan instead of an API key. Usage counts toward your plan's limits.")
+        SupportingText(stringResource(R.string.onboarding_chatgpt_plan))
         ContinueWithChatGptButton(onClick = viewModel::signInChatGpt, busy = viewModel.chatGptSignIn.running)
         Row(verticalAlignment = Alignment.CenterVertically) {
-            JobStatus(viewModel.chatGptSignIn, "Finish signing in in the browser…", Modifier.weight(1f))
-            if (viewModel.chatGptSignIn.running) TextButton(onClick = viewModel::cancelChatGptSignIn) { Text("Cancel") }
+            JobStatus(viewModel.chatGptSignIn, stringResource(R.string.onboarding_chatgpt_signing_in), Modifier.weight(1f))
+            if (viewModel.chatGptSignIn.running) TextButton(onClick = viewModel::cancelChatGptSignIn) { Text(stringResource(R.string.onboarding_cancel)) }
         }
     }
     if (viewModel.chatGptWelcome) {
         LocusSheet(
-            title = "You're using your ChatGPT plan",
-            subtitle = "Locus's requests to this model now use your ChatGPT plan. You can review and manage that usage in ChatGPT settings.",
+            title = stringResource(R.string.onboarding_chatgpt_welcome_title),
+            subtitle = stringResource(R.string.onboarding_chatgpt_welcome_body),
             onDismiss = viewModel::dismissChatGptWelcome,
-            action = "Got it",
+            action = stringResource(R.string.onboarding_got_it),
             onAction = viewModel::dismissChatGptWelcome,
         ) {
-            TextButton(onClick = { uriHandler.openUri(ChatGptErrors.USAGE_URL) }) { Text("Manage usage") }
+            TextButton(onClick = { uriHandler.openUri(ChatGptErrors.USAGE_URL) }) { Text(stringResource(R.string.onboarding_manage_usage)) }
         }
     }
 }
@@ -215,7 +216,7 @@ private fun ChatGptSignInFields(viewModel: OnboardingViewModel) {
 private fun OnDevicePicker(state: OnboardingUiState, viewModel: OnboardingViewModel) {
     val draft = viewModel.provider ?: return
     SupportingText(
-        "Runs entirely on this phone: no internet, no key, nothing leaves the device. Smaller than cloud models, so best for everyday tasks. You can keep setting up while it downloads.",
+        stringResource(R.string.onboarding_ondevice_body),
     )
     state.onDeviceModels.forEach { (m, modelState) ->
         Column(Modifier.fillMaxWidth().clickable { viewModel.editProvider { it.copy(model = m.id) } }) {
@@ -230,25 +231,25 @@ private fun OnDevicePicker(state: OnboardingUiState, viewModel: OnboardingViewMo
             // Under the text, past the radio button's touch target.
             Column(Modifier.padding(start = Sizes.touchTarget)) {
                 when (modelState) {
-                    ModelState.NotDownloaded -> TextButton(onClick = { viewModel.downloadModel(m.id) }) { Text("Download") }
+                    ModelState.NotDownloaded -> TextButton(onClick = { viewModel.downloadModel(m.id) }) { Text(stringResource(R.string.onboarding_download)) }
                     is ModelState.Downloading -> {
-                        Meter(meterFraction(modelState.bytes, modelState.total), tone = Tone.Live, contentDescription = "Downloaded")
+                        Meter(meterFraction(modelState.bytes, modelState.total), tone = Tone.Live, contentDescription = stringResource(R.string.onboarding_downloaded))
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text("${modelState.bytes / 1_000_000} / ${modelState.total / 1_000_000} MB", Modifier.weight(1f), style = LocusType.mono)
-                            TextButton(onClick = { viewModel.pauseModel(m.id) }) { Text("Pause") }
+                            TextButton(onClick = { viewModel.pauseModel(m.id) }) { Text(stringResource(R.string.onboarding_pause)) }
                         }
                         if (modelState.wifiOnly) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                SupportingText("On Wi-Fi only: waits while you're on mobile data.", Modifier.weight(1f))
-                                TextButton(onClick = { viewModel.downloadModelOverAnyNetwork(m.id) }) { Text("Use mobile data") }
+                                SupportingText(stringResource(R.string.onboarding_on_wifi_only), Modifier.weight(1f))
+                                TextButton(onClick = { viewModel.downloadModelOverAnyNetwork(m.id) }) { Text(stringResource(R.string.onboarding_use_mobile_data)) }
                             }
                         }
                     }
-                    ModelState.Verifying -> LocusChip("Checking the download", tone = Tone.Live, dot = true)
-                    ModelState.Ready -> LocusChip("Downloaded", tone = Tone.Live)
+                    ModelState.Verifying -> LocusChip(stringResource(R.string.onboarding_checking_download), tone = Tone.Live, dot = true)
+                    ModelState.Ready -> LocusChip(stringResource(R.string.onboarding_downloaded), tone = Tone.Live)
                     is ModelState.Failed -> Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(modelState.message, style = LocusType.supporting, color = Locus.colors.critical, modifier = Modifier.weight(1f))
-                        TextButton(onClick = { viewModel.downloadModel(m.id) }) { Text("Retry") }
+                        TextButton(onClick = { viewModel.downloadModel(m.id) }) { Text(stringResource(R.string.onboarding_retry)) }
                     }
                 }
             }

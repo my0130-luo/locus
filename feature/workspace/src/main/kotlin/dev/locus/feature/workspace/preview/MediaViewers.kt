@@ -36,9 +36,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.viewinterop.AndroidView
+import dev.locus.feature.workspace.R
 import dev.locus.core.designsystem.FileTypeIcon
 import dev.locus.core.designsystem.IconSize
 import dev.locus.core.designsystem.Locus
@@ -69,9 +71,9 @@ internal fun openWith(context: Context, file: OpenFile, feedback: LocusFeedback)
     val uri = file.contentUri?.let(Uri::parse) ?: workspaceUri(context, file.path)
     val view = Intent(Intent.ACTION_VIEW).setDataAndType(uri, mimeTypeFor(file.name, file.kind)).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     try {
-        context.startActivity(Intent.createChooser(view, "Open ${file.name} with"))
+        context.startActivity(Intent.createChooser(view, context.getString(R.string.preview_open_file_with, file.name)))
     } catch (_: ActivityNotFoundException) {
-        feedback.show("No app here can open ${file.name}", Tone.Caution)
+        feedback.show(context.getString(R.string.preview_no_app_open, file.name), Tone.Caution)
     }
 }
 
@@ -85,7 +87,7 @@ internal fun share(context: Context, file: OpenFile, feedback: LocusFeedback) {
     try {
         context.startActivity(Intent.createChooser(send, null))
     } catch (_: ActivityNotFoundException) {
-        feedback.show("No app here can share ${file.name}", Tone.Caution)
+        feedback.show(context.getString(R.string.preview_no_app_share, file.name), Tone.Caution)
     }
 }
 
@@ -114,7 +116,7 @@ internal fun FileInfoCard(file: OpenFile, onExport: () -> Unit, modifier: Modifi
             modifier = Modifier.padding(top = Spacing.xs),
         )
         SupportingText(
-            note ?: "Locus can't preview this type of file. Open it in another app, or share or export it.",
+            note ?: stringResource(R.string.preview_file_unsupported),
             style = LocusType.rowSupporting,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = Spacing.md).widthIn(max = Sizes.readable),
@@ -126,23 +128,24 @@ internal fun FileInfoCard(file: OpenFile, onExport: () -> Unit, modifier: Modifi
             horizontalArrangement = Arrangement.spacedBy(Spacing.sm, Alignment.CenterHorizontally),
             verticalArrangement = Arrangement.spacedBy(Spacing.sm),
         ) {
-            FilledTonalButton(onClick = { openWith(context, file, feedback) }) { Text("Open with…") }
-            OutlinedButton(onClick = { share(context, file, feedback) }) { Text("Share") }
-            OutlinedButton(onClick = onExport) { Text("Export") }
+            FilledTonalButton(onClick = { openWith(context, file, feedback) }) { Text(stringResource(R.string.ws_open_with)) }
+            OutlinedButton(onClick = { share(context, file, feedback) }) { Text(stringResource(R.string.workspace_share)) }
+            OutlinedButton(onClick = onExport) { Text(stringResource(R.string.workspace_export)) }
         }
     }
 }
 
+@Composable
 private fun kindLabel(file: OpenFile): String {
     val ext = extensionOf(file.name)
     return when (ext) {
-        "apk", "aab", "apks", "xapk" -> "Android app package"
-        "zip", "tar", "gz", "tgz", "bz2", "xz", "zst", "7z", "rar", "lz4", "jar", "aar" -> "${ext.uppercase()} archive"
-        "doc", "docx", "odt", "rtf" -> "Document"
-        "xls", "xlsx", "ods" -> "Spreadsheet"
-        "ppt", "pptx", "odp" -> "Presentation"
-        "ttf", "otf", "woff", "woff2" -> "Font"
-        "" -> "File"
+        "apk", "aab", "apks", "xapk" -> stringResource(R.string.preview_android_package)
+        "zip", "tar", "gz", "tgz", "bz2", "xz", "zst", "7z", "rar", "lz4", "jar", "aar" -> stringResource(R.string.preview_archive, ext.uppercase())
+        "doc", "docx", "odt", "rtf" -> stringResource(R.string.preview_document)
+        "xls", "xlsx", "ods" -> stringResource(R.string.preview_spreadsheet)
+        "ppt", "pptx", "odp" -> stringResource(R.string.preview_presentation)
+        "ttf", "otf", "woff", "woff2" -> stringResource(R.string.preview_font)
+        "" -> stringResource(R.string.preview_file)
         else -> ext.uppercase()
     }
 }
@@ -157,7 +160,7 @@ internal fun VideoPlayer(file: File, modifier: Modifier = Modifier) {
     var failed by remember(file) { mutableStateOf(false) }
     if (failed) {
         Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            SupportingText("This video can't be played here. Try Open with.", style = LocusType.rowSupporting)
+            SupportingText(stringResource(R.string.preview_video_failed), style = LocusType.rowSupporting)
         }
         return
     }
@@ -214,7 +217,7 @@ internal fun AudioPlayer(file: File, modifier: Modifier = Modifier) {
         FileTypeIcon(file.name, isDirectory = false, size = IconSize.hero)
         Text(file.name, style = LocusType.stateTitle, textAlign = TextAlign.Center, modifier = Modifier.padding(top = Spacing.lg))
         if (failed) {
-            SupportingText("This audio can't be played here. Try Open with.", style = LocusType.rowSupporting, modifier = Modifier.padding(top = Spacing.md))
+            SupportingText(stringResource(R.string.preview_audio_failed), style = LocusType.rowSupporting, modifier = Modifier.padding(top = Spacing.md))
             return@Column
         }
         Slider(
@@ -238,7 +241,7 @@ internal fun AudioPlayer(file: File, modifier: Modifier = Modifier) {
             modifier = Modifier.padding(top = Spacing.lg),
         ) {
             if (!playing) Icon(LocusIcons.Play, contentDescription = null, modifier = Modifier.padding(end = Spacing.xs))
-            Text(if (playing) "Pause" else "Play")
+            Text(if (playing) stringResource(R.string.preview_pause) else stringResource(R.string.preview_play))
         }
     }
 }

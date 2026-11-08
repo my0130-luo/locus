@@ -23,6 +23,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import dev.locus.feature.analytics.R
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
@@ -113,9 +115,9 @@ internal fun AnalyticsScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             LocusTopBar(
-                "Insights",
+                stringResource(R.string.analytics_title),
                 onBack = onBack,
-                subtitle = "Counted on this phone from your chats",
+                subtitle = stringResource(R.string.analytics_subtitle),
             )
         },
     ) { padding ->
@@ -125,7 +127,7 @@ internal fun AnalyticsScreen(
         ) {
             item(key = "period") {
                 Segmented(
-                    options = listOf("7 days", "30 days", "All time"),
+                    options = listOf(stringResource(R.string.analytics_period_7_days), stringResource(R.string.analytics_period_30_days), stringResource(R.string.analytics_period_all_time)),
                     selected = state.period.ordinal,
                     onSelect = { onPeriod(AnalyticsPeriod.entries[it]) },
                     modifier = Modifier.fillMaxWidth(),
@@ -135,8 +137,8 @@ internal fun AnalyticsScreen(
                 report == null -> item(key = "loading") { LoadingState(Modifier.fillParentMaxHeight(StateHeight)) }
                 report.isEmpty -> item(key = "empty") {
                     EmptyState(
-                        title = "Nothing to count yet",
-                        body = "Token use, reply times and tool calls show up here once you've chatted with Locus in this period.",
+                        title = stringResource(R.string.analytics_empty_title),
+                        body = stringResource(R.string.analytics_empty_body),
                         icon = LocusIcons.Activity,
                         modifier = Modifier.fillParentMaxHeight(StateHeight),
                     )
@@ -144,39 +146,39 @@ internal fun AnalyticsScreen(
                 else -> {
                     item(key = "hero") { TokensCard(report, Modifier.padding(top = Spacing.md).entrance(0)) }
                     item(key = "speed") { SpeedRow(report, Modifier.padding(top = Spacing.md).entrance(1)) }
-                    item(key = "cost-label") { SectionLabel("Estimated spend") }
+                    item(key = "cost-label") { SectionLabel(stringResource(R.string.analytics_estimated_spend)) }
                     item(key = "cost") { CostCard(report, state.catalog != null, state.prices, onTurnOnPrices, Modifier.entrance(1)) }
                     // A breakdown is only worth showing once something has a price.
                     if (report.cost.models.any { it.cost.priced > 0 }) {
-                        item(key = "cost-models-label") { SectionLabel("Spend by model") }
+                        item(key = "cost-models-label") { SectionLabel(stringResource(R.string.analytics_spend_by_model)) }
                         item(key = "cost-models") { CostRows(report.cost.models.map { m -> costModelTitle(m, report, state.catalog, state.listed) to m.cost }, Modifier.entrance(2)) }
-                        item(key = "cost-sources-label") { SectionLabel("Spend by source") }
+                        item(key = "cost-sources-label") { SectionLabel(stringResource(R.string.analytics_spend_by_source)) }
                         item(key = "cost-sources") { CostRows(report.cost.sources.map { sourceLabel(it.source) to it.cost }, Modifier.entrance(2)) }
                     }
                     if (report.models.isNotEmpty()) {
-                        item(key = "models-label") { SectionLabel("By model") }
+                        item(key = "models-label") { SectionLabel(stringResource(R.string.analytics_by_model)) }
                         item(key = "models") { ModelsCard(report, state.catalog, state.listed, Modifier.entrance(2)) }
                     }
                     // Only worth a section once something besides chat replies used tokens.
                     if (report.sources.any { it.source != UsageSource.CHAT }) {
-                        item(key = "sources-label") { SectionLabel("Where tokens went") }
+                        item(key = "sources-label") { SectionLabel(stringResource(R.string.analytics_where_tokens_went)) }
                         item(key = "sources") { SourcesCard(report, Modifier.entrance(2)) }
                     }
                     if (report.tools.calls > 0) {
-                        item(key = "tools-label") { SectionLabel("Tools") }
+                        item(key = "tools-label") { SectionLabel(stringResource(R.string.analytics_tools)) }
                         item(key = "tools") { ToolsCard(report, Modifier.entrance(3)) }
                         if (report.tools.slowest.isNotEmpty()) {
-                            item(key = "slow-label") { SectionLabel("Slowest tools") }
-                            item(key = "slow-note") { SectionNote("Timed on calls that ran without asking you.", Modifier.padding(start = Spacing.xs)) }
+                            item(key = "slow-label") { SectionLabel(stringResource(R.string.analytics_slowest_tools)) }
+                            item(key = "slow-note") { SectionNote(stringResource(R.string.analytics_slowest_note), Modifier.padding(start = Spacing.xs)) }
                             item(key = "slow") { SlowestTools(report.tools, Modifier.entrance(4)) }
                         }
                     }
                     if (report.chats.isNotEmpty()) {
-                        item(key = "chats-label") { SectionLabel("Busiest chats") }
+                        item(key = "chats-label") { SectionLabel(stringResource(R.string.analytics_busiest_chats)) }
                         item(key = "chats") { BusiestChats(report, onOpenConversation, Modifier.entrance(5)) }
                     }
                     if (report.tasks.isNotEmpty()) {
-                        item(key = "tasks-label") { SectionLabel("Scheduled tasks") }
+                        item(key = "tasks-label") { SectionLabel(stringResource(R.string.analytics_scheduled_tasks)) }
                         item(key = "tasks") { TasksCard(report, Modifier.entrance(6)) }
                     }
                 }
@@ -197,7 +199,7 @@ private fun TokensCard(report: AnalyticsReport, modifier: Modifier = Modifier) {
     val inputColor = brand.copy(alpha = Emphasis.series)
     var selected by remember(report.period, report.buckets.size) { mutableStateOf<Int?>(null) }
     LocusCard(modifier, glow = brand) {
-        SupportingText("Tokens", style = LocusType.label)
+        SupportingText(stringResource(R.string.analytics_tokens), style = LocusType.label)
         Text(compactCount(t.total), style = LocusType.heroFigure, color = MaterialTheme.colorScheme.onSurface)
         // Wraps at a large font instead of breaking "63% cached" a letter a line.
         @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
@@ -206,9 +208,9 @@ private fun TokensCard(report: AnalyticsReport, modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(Spacing.md),
             verticalArrangement = Arrangement.spacedBy(Spacing.xs),
         ) {
-            ChartLegend(inputColor, "in ${compactCount(t.input)}")
-            ChartLegend(brand, "out ${compactCount(t.output)}")
-            t.cachedShare?.let { SupportingText("${(it * 100).roundToInt()}% cached", style = LocusType.mono) }
+            ChartLegend(inputColor, stringResource(R.string.analytics_input_tokens, compactCount(t.input)))
+            ChartLegend(brand, stringResource(R.string.analytics_output_tokens, compactCount(t.output)))
+            t.cachedShare?.let { SupportingText(stringResource(R.string.analytics_cached_percent, (it * 100).roundToInt()), style = LocusType.mono) }
         }
         // The prompt cache at work: what was read from it and written to it (writes cost more than
         // fresh input, reads far less), so cache hits can be checked on the phone.
@@ -224,7 +226,7 @@ private fun TokensCard(report: AnalyticsReport, modifier: Modifier = Modifier) {
         }
         // Thinking is part of "out"; shown on its own line so the legend row stays one line on phones.
         if (t.reasoning > 0) {
-            SupportingText("of which ${compactCount(t.reasoning)} thinking", Modifier.padding(top = Spacing.xs), style = LocusType.mono)
+            SupportingText(stringResource(R.string.analytics_reasoning_tokens, compactCount(t.reasoning)), Modifier.padding(top = Spacing.xs), style = LocusType.mono)
         }
         val buckets = report.buckets
         BarChart(
@@ -244,9 +246,9 @@ private fun TokensCard(report: AnalyticsReport, modifier: Modifier = Modifier) {
 private fun SpeedRow(report: AnalyticsReport, modifier: Modifier = Modifier) {
     LocusCard(modifier) {
         FigureRow {
-            Figure("Requests", compactCount(report.requests.toLong()), Modifier.weight(1f))
-            Figure("Median reply", report.replyMedianMs?.let(::durationLabel) ?: "–", Modifier.weight(1f))
-            Figure("Slowest 5%", report.replyP95Ms?.let(::durationLabel) ?: "–", Modifier.weight(1f))
+            Figure(stringResource(R.string.analytics_requests), compactCount(report.requests.toLong()), Modifier.weight(1f))
+            Figure(stringResource(R.string.analytics_median_reply), report.replyMedianMs?.let(::durationLabel) ?: "–", Modifier.weight(1f))
+            Figure(stringResource(R.string.analytics_slowest_five_percent), report.replyP95Ms?.let(::durationLabel) ?: "–", Modifier.weight(1f))
         }
         report.firstTokenMedianMs?.let { median ->
             SupportingText(
@@ -269,15 +271,15 @@ private fun CostCard(report: AnalyticsReport, catalogLoaded: Boolean, prices: Pr
     var selected by remember(report.period, report.buckets.size) { mutableStateOf<Int?>(null) }
     LocusCard(modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            SupportingText("Spend", Modifier.weight(1f), style = LocusType.label)
-            LocusChip("Estimate")
+            SupportingText(stringResource(R.string.analytics_spend), Modifier.weight(1f), style = LocusType.label)
+            LocusChip(stringResource(R.string.analytics_estimate))
         }
         FigureRow(Modifier.padding(top = Spacing.sm)) {
             // With prices off every span reads the same "–"; the note under them says why.
             val spend = { c: CostEstimate -> if (cost.pricesOn) costLabel(c) else "–" }
-            Figure("Today", spend(cost.today), Modifier.weight(1f))
-            Figure("7 days", spend(cost.week), Modifier.weight(1f))
-            Figure("30 days", spend(cost.month), Modifier.weight(1f))
+            Figure(stringResource(R.string.analytics_today), spend(cost.today), Modifier.weight(1f))
+            Figure(stringResource(R.string.analytics_period_7_days), spend(cost.week), Modifier.weight(1f))
+            Figure(stringResource(R.string.analytics_period_30_days), spend(cost.month), Modifier.weight(1f))
         }
         costNote(cost, catalogLoaded, prices)?.let { note ->
             Row(Modifier.padding(top = Spacing.sm), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
@@ -293,11 +295,11 @@ private fun CostCard(report: AnalyticsReport, catalogLoaded: Boolean, prices: Pr
         // Prices are opt-in, so the card offers to turn them on where it says they're off.
         when (costAction(cost, catalogLoaded, prices)) {
             CostAction.TurnOn -> Row(Modifier.padding(top = Spacing.xs), verticalAlignment = Alignment.CenterVertically) {
-                Button(onClick = onTurnOnPrices) { Text("Turn on prices") }
+                Button(onClick = onTurnOnPrices) { Text(stringResource(R.string.analytics_turn_on_prices)) }
                 Spacer(Modifier.weight(1f))
                 SettingsLink(SettingsDestination.Models)
             }
-            CostAction.TryAgain -> TextButton(onClick = onTurnOnPrices, modifier = Modifier.padding(top = Spacing.xs)) { Text("Try again") }
+            CostAction.TryAgain -> TextButton(onClick = onTurnOnPrices, modifier = Modifier.padding(top = Spacing.xs)) { Text(stringResource(R.string.analytics_try_again)) }
             null -> Unit
         }
         if (cost.pricesOn && cost.buckets.size == report.buckets.size && cost.buckets.any { it.priced > 0 }) {
@@ -413,9 +415,9 @@ private fun ToolsCard(report: AnalyticsReport, modifier: Modifier = Modifier) {
     var selected by remember(report.period, report.buckets.size) { mutableStateOf<Int?>(null) }
     LocusCard(modifier) {
         Row {
-            Figure("Calls", compactCount(tools.calls.toLong()), Modifier.weight(1f))
-            Figure("Succeeded", tools.successRate?.let { "${(it * 100).roundToInt()}%" } ?: "–", Modifier.weight(1f))
-            Figure("Failed", tools.failures.toString(), Modifier.weight(1f), tone = if (tools.failures > 0) Tone.Critical else Tone.Neutral)
+            Figure(stringResource(R.string.analytics_calls), compactCount(tools.calls.toLong()), Modifier.weight(1f))
+            Figure(stringResource(R.string.analytics_succeeded), tools.successRate?.let { "${(it * 100).roundToInt()}%" } ?: "–", Modifier.weight(1f))
+            Figure(stringResource(R.string.analytics_failed), tools.failures.toString(), Modifier.weight(1f), tone = if (tools.failures > 0) Tone.Critical else Tone.Neutral)
         }
         BarChart(
             values = report.buckets.map { listOf((it.toolCalls - it.toolFailures).toFloat(), it.toolFailures.toFloat()) },
@@ -438,7 +440,7 @@ private fun DecisionSplit(tools: ToolStats, modifier: Modifier = Modifier) {
     val approved = MaterialTheme.colorScheme.primary
     val denied = Locus.colors.caution
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
-        SupportingText("Approvals", style = LocusType.label)
+        SupportingText(stringResource(R.string.analytics_approvals), style = LocusType.label)
         SplitBar(listOf(tools.autoAllowed to auto, tools.userApproved to approved, tools.denied to denied))
         Row(horizontalArrangement = Arrangement.spacedBy(Spacing.md)) {
             ChartLegend(auto, "auto ${tools.autoAllowed}")
@@ -513,8 +515,8 @@ private fun TasksCard(report: AnalyticsReport, modifier: Modifier = Modifier) {
                 },
                 trailing = {
                     when (t.enabled) {
-                        false -> LocusChip("Paused")
-                        null -> LocusChip("Removed")
+                        false -> LocusChip(stringResource(R.string.analytics_paused))
+                        null -> LocusChip(stringResource(R.string.analytics_removed))
                         true -> Unit
                     }
                 },
@@ -581,7 +583,7 @@ private fun ChartCaption(report: AnalyticsReport, selected: Int?, describe: (Usa
         } else {
             SupportingText(date(buckets.first().start), style = LocusType.mono)
             Spacer(Modifier.weight(1f))
-            SupportingText("Today", style = LocusType.mono)
+            SupportingText(stringResource(R.string.analytics_today), style = LocusType.mono)
         }
     }
 }

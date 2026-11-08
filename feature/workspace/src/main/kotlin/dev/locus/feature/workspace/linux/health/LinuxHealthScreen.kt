@@ -37,6 +37,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import dev.locus.feature.workspace.R
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.LiveRegionMode
@@ -160,27 +162,27 @@ fun LinuxHealthRoute(
         val body = Modifier.padding(padding)
         when (val status = state.status) {
             is LinuxStatus.Unavailable -> EmptyState(
-                title = "Linux can't run on this phone",
+                title = stringResource(R.string.linux_health_unavailable_title),
                 body = status.reason,
                 modifier = body,
                 icon = LocusIcons.Terminal,
             )
             is LinuxStatus.Installing -> Column(body.fillMaxSize().padding(Spacing.xxl), verticalArrangement = Arrangement.Center) {
-                Text("Linux is being set up", style = LocusType.stateTitle, modifier = Modifier.semantics { heading() })
+                Text(stringResource(R.string.linux_health_installing_title), style = LocusType.stateTitle, modifier = Modifier.semantics { heading() })
                 SupportingText(status.step, Modifier.padding(top = Spacing.xs, bottom = Spacing.md))
                 Meter(status.fraction, size = MeterSize.Medium, contentDescription = status.fraction?.let { "${status.step}, ${meterPercent(it)}" } ?: status.step)
             }
             LinuxStatus.NotInstalled, is LinuxStatus.Failed -> EmptyState(
-                title = "Linux isn't installed",
-                body = if (status is LinuxStatus.Failed) "The last install didn't finish: ${status.message}" else
+                title = stringResource(R.string.linux_health_not_installed_title),
+                body = if (status is LinuxStatus.Failed) stringResource(R.string.linux_health_install_failed, status.message) else
                     "Install it from the Workspace's Linux card to run commands, servers and the terminal. Its health shows here once it's set up.",
                 modifier = body,
                 icon = LocusIcons.Terminal,
-                action = { Button(onClick = onSetUpLinux, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text("Set up Linux") } },
+                action = { Button(onClick = onSetUpLinux, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text(stringResource(R.string.linux_health_setup)) } },
             )
             LinuxStatus.Ready -> when {
                 report == null && state.error != null -> ErrorState(
-                    title = "Linux didn't answer",
+                    title = stringResource(R.string.linux_health_not_responding),
                     // What to do first; the raw reason stays, last, for anyone reporting it.
                     message = "Its health check didn't finish. Try again; if it keeps failing, Repair rewrites Linux's network and system " +
                         "files and checks it starts, and your packages and files stay." +
@@ -211,7 +213,7 @@ fun LinuxHealthRoute(
 
     when (confirm) {
         CONFIRM_CLEAN -> ConfirmSheet(
-            title = "Clean caches?",
+            title = stringResource(R.string.linux_health_clean_caches_title),
             message = "Deletes ${report?.storage?.cacheBytes?.let(LinuxHealth::bytes) ?: "the"} of package and download caches " +
                 "(apk, pip, npm, Go, Cargo, Gradle). Nothing installed is removed; tools download what they need again.",
             confirmLabel = "Clean",
@@ -219,7 +221,7 @@ fun LinuxHealthRoute(
             onDismiss = { confirm = null },
         )
         CONFIRM_REINSTALL -> ConfirmSheet(
-            title = "Reinstall Linux?",
+            title = stringResource(R.string.linux_health_reinstall_title),
             message = "Downloads Alpine Linux again and reinstalls the tools Locus added. Anything else you installed with apk, " +
                 "and running services and terminals, are removed. Your workspace files stay.",
             confirmLabel = "Reinstall",
@@ -248,17 +250,17 @@ private fun HealthContent(
         verticalArrangement = Arrangement.spacedBy(Spacing.sm),
     ) {
         item(key = "verdict") { Verdict(state.checks, report, state.repairing) }
-        item(key = "checks-label") { SectionLabel("Checks", Modifier.padding(top = Spacing.md)) }
+        item(key = "checks-label") { SectionLabel(stringResource(R.string.linux_health_checks), Modifier.padding(top = Spacing.md)) }
         item(key = "checks") { Checks(state, report, fixes, onCheckNetwork = viewModel::checkNetwork) }
         report.storage?.let { storage ->
-            item(key = "storage-label") { SectionLabel("Storage", Modifier.padding(top = Spacing.md)) }
+            item(key = "storage-label") { SectionLabel(stringResource(R.string.linux_health_storage), Modifier.padding(top = Spacing.md)) }
             item(key = "storage") { StorageCard(storage, cleaning = state.busy == LinuxHealthUiState.Busy.Clean, enabled = !fixes.anyBusy) { fixes.run(HealthCheck("clean", "", HealthLevel.Ok, "", LinuxFix.CleanCaches)) } }
         }
         if (report.memory != null || report.processes.isNotEmpty()) {
-            item(key = "memory-label") { SectionLabel("Memory", Modifier.padding(top = Spacing.md)) }
+            item(key = "memory-label") { SectionLabel(stringResource(R.string.linux_health_memory), Modifier.padding(top = Spacing.md)) }
             item(key = "memory") { MemorySection(report.memory, report.processes) }
         }
-        item(key = "services-label") { SectionLabel("Services", Modifier.padding(top = Spacing.md)) }
+        item(key = "services-label") { SectionLabel(stringResource(R.string.linux_health_services), Modifier.padding(top = Spacing.md)) }
         item(key = "services") {
             Services(
                 report.services,
@@ -279,7 +281,7 @@ private fun HealthContent(
 private fun PackagesRow(packages: List<LinuxInventory.Package>?, onOpen: () -> Unit, modifier: Modifier = Modifier) {
     CardGroup(modifier) {
         ListRow(
-            title = "Packages",
+            title = stringResource(R.string.linux_health_packages),
             subtitle = HealthSummary.packagesLine(packages),
             leading = { Icon(LocusIcons.Library, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(IconSize.medium)) },
             onClick = onOpen,
@@ -334,7 +336,7 @@ private fun Verdict(checks: List<HealthCheck>, report: LinuxReport, repairing: B
             if (repairing) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
                     InlineSpinner(contentDescription = null)
-                    SupportingText("Repairing…")
+                    SupportingText(stringResource(R.string.linux_health_repairing))
                 }
             }
         }
@@ -369,14 +371,14 @@ private fun Checks(state: LinuxHealthUiState, report: LinuxReport, fixes: FixAct
         if (report.network == null) {
             if (problems.isNotEmpty() || passed.isNotEmpty()) GroupDivider()
             ListRow(
-                title = "Internet from Linux",
-                subtitle = "Not checked. Looks up and opens Alpine's package mirror.",
+                title = stringResource(R.string.linux_health_internet),
+                subtitle = stringResource(R.string.linux_health_not_checked),
                 subtitleMaxLines = Int.MAX_VALUE,
                 titleMaxLines = 2,
                 leading = { Icon(LocusIcons.Globe, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(IconSize.medium)) },
                 meta = {
-                    if (state.checkingNetwork) InlineSpinner(contentDescription = "Checking the network")
-                    else OutlinedButton(onClick = onCheckNetwork, modifier = Modifier.padding(top = Spacing.xs).heightIn(min = Sizes.touchTarget)) { Text("Check") }
+                    if (state.checkingNetwork) InlineSpinner(contentDescription = stringResource(R.string.linux_health_check_again))
+                    else OutlinedButton(onClick = onCheckNetwork, modifier = Modifier.padding(top = Spacing.xs).heightIn(min = Sizes.touchTarget)) { Text(stringResource(R.string.linux_health_check)) }
                 },
             )
         }
@@ -419,7 +421,7 @@ private fun StorageCard(storage: LinuxReport.Storage, cleaning: Boolean, enabled
         Column(verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
             val used = (storage.phoneTotalBytes - storage.phoneFreeBytes).coerceAtLeast(0)
             val fraction = meterFraction(used, storage.phoneTotalBytes)
-            Text("Phone storage", style = LocusType.cardTitle)
+            Text(stringResource(R.string.linux_health_phone_storage), style = LocusType.cardTitle)
             Meter(fraction, size = MeterSize.Medium, contentDescription = "Phone storage, ${meterPercent(fraction)} used")
             SupportingText("${LinuxHealth.bytes(storage.phoneFreeBytes)} free of ${LinuxHealth.bytes(storage.phoneTotalBytes)}")
         }
@@ -433,7 +435,7 @@ private fun StorageCard(storage: LinuxReport.Storage, cleaning: Boolean, enabled
         // The button goes under the caches when beside them it would squeeze the list.
         SideOrBelow(Modifier.fillMaxWidth().padding(top = Spacing.sm), main = {
             Column {
-                Text("Caches", style = LocusType.cardTitle)
+                Text(stringResource(R.string.linux_health_caches), style = LocusType.cardTitle)
                 SupportingText(
                     if (storage.caches.isEmpty()) "None to clean."
                     else storage.caches.joinToString(", ") { "${it.path} ${LinuxHealth.bytes(it.bytes)}" },
@@ -456,7 +458,7 @@ private fun StorageCard(storage: LinuxReport.Storage, cleaning: Boolean, enabled
 private fun MemorySection(memory: LinuxReport.Memory?, processes: List<LinuxReport.GuestProcess>) {
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
         val warning = HealthSummary.memoryWarning(memory)
-        if (warning != null) Banner(warning, Tone.Caution, title = "Phone is low on memory")
+        if (warning != null) Banner(warning, Tone.Caution, title = stringResource(R.string.linux_health_low_memory))
         LocusCard {
             if (memory != null && warning == null) {
                 AmountRow("Phone memory", "${LinuxHealth.bytes(memory.availableBytes)} available")
@@ -499,7 +501,7 @@ private fun Services(
     onAutostart: (String, Boolean) -> Unit,
 ) {
     if (services.isEmpty()) {
-        SupportingText("No services. Ask the agent to start a server and it appears here, with its state.", Modifier.padding(horizontal = Spacing.xs))
+        SupportingText(stringResource(R.string.linux_health_no_services), Modifier.padding(horizontal = Spacing.xs))
         return
     }
     CardGroup {
@@ -525,8 +527,8 @@ private fun Services(
                 },
             )
             SwitchRow(
-                title = "Start when Locus opens",
-                subtitle = "Runs its command again each time you open Locus, after the app or the phone restarts.",
+                title = stringResource(R.string.linux_health_autostart),
+                subtitle = stringResource(R.string.linux_health_autostart_desc),
                 checked = s.autostart,
                 onCheckedChange = { onAutostart(s.name, it) },
                 enabled = enabled,
@@ -541,7 +543,7 @@ private fun Services(
 private fun PhantomHelpSheet(phantom: LinuxReport.Phantom?, onDismiss: () -> Unit) {
     val context = LocalContext.current
     val uri = LocalUriHandler.current
-    LocusSheet(title = "Android's background limit", onDismiss = onDismiss) {
+    LocusSheet(title = stringResource(R.string.linux_health_background_limit), onDismiss = onDismiss) {
         Column(verticalArrangement = Arrangement.spacedBy(Spacing.md)) {
             Text(AndroidKill.REASON, style = LocusType.rowSupporting)
             Text(AndroidKill.FIX_LEAD, style = LocusType.rowSupporting)
@@ -559,7 +561,7 @@ private fun PhantomHelpSheet(phantom: LinuxReport.Phantom?, onDismiss: () -> Uni
                     )
                     IconButton(onClick = {
                         scope.launch {
-                            clipboard.setClipEntry(androidx.compose.ui.platform.ClipEntry(android.content.ClipData.newPlainText("adb command", AndroidKill.ADB_COMMAND)))
+                            clipboard.setClipEntry(androidx.compose.ui.platform.ClipEntry(android.content.ClipData.newPlainText(stringResource(R.string.linux_health_adb_command), AndroidKill.ADB_COMMAND)))
                             copied = true
                         }
                     }) { Icon(if (copied) LocusIcons.Check else LocusIcons.Copy, contentDescription = if (copied) "Copied" else "Copy the command") }
@@ -583,8 +585,8 @@ private fun PhantomHelpSheet(phantom: LinuxReport.Phantom?, onDismiss: () -> Uni
                             .recoverCatching { context.startActivity(Intent(Settings.ACTION_DEVICE_INFO_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
                     },
                     modifier = Modifier.heightIn(min = Sizes.touchTarget),
-                ) { Text("Developer options") }
-                TextButton(onClick = { runCatching { uri.openUri(AndroidKill.HELP_URL) } }, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text("Read the guide") }
+                ) { Text(stringResource(R.string.linux_health_developer_options)) }
+                TextButton(onClick = { runCatching { uri.openUri(AndroidKill.HELP_URL) } }, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text(stringResource(R.string.linux_health_read_guide)) }
             }
         }
     }

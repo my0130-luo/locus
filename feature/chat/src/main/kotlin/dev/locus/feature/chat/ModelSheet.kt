@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -88,8 +89,8 @@ internal fun ModelSheet(
     // A pick of the provider's default stores no override, so the chat follows the default.
     val pick = { row: PickerRow -> onPick(row.ref.providerId, row.id) }
 
-    LocusSheet(title = "Model", subtitle = "For this chat only; other chats keep their own.", onDismiss = onDismiss) {
-        SearchField(query, onQueryChange = { query = it }, placeholder = "Search all models", modifier = Modifier.padding(vertical = Spacing.xs))
+    LocusSheet(title = stringResource(R.string.model_sheet_title), subtitle = stringResource(R.string.model_sheet_scope), onDismiss = onDismiss) {
+        SearchField(query, onQueryChange = { query = it }, placeholder = stringResource(R.string.model_sheet_search), modifier = Modifier.padding(vertical = Spacing.xs))
         val anyChatOnly = sections.any { s -> s.rows.any { it.caps.tools == dev.locus.core.llm.Support.NO } }
         chatOnlyNote(state.controls, anyChatOnly)?.let { SectionNote(it, Modifier.padding(bottom = Spacing.sm)) }
         val firstProvider = sections.indexOfFirst { it.provider != null }
@@ -106,7 +107,7 @@ internal fun ModelSheet(
             } else {
                 val open = searching || provider.id in expanded
                 // Under favourites and recents, a label marks where the full lists begin.
-                if (index == firstProvider && index > 0) SectionLabel("All models")
+                if (index == firstProvider && index > 0) SectionLabel(stringResource(R.string.model_sheet_all))
                 ProviderCard(
                     section = section,
                     provider = provider,
@@ -124,14 +125,14 @@ internal fun ModelSheet(
         // On-device models live on their own screen; the app routes this link there.
         dev.locus.core.designsystem.Locus.settings?.let { links ->
             LocusCard(Modifier.padding(top = Spacing.md), contentPadding = PaddingValues(0.dp)) {
-                dev.locus.core.designsystem.AddRow("Get an on-device model", icon = dev.locus.core.designsystem.LocusIcons.Phone) {
+                dev.locus.core.designsystem.AddRow(stringResource(R.string.model_sheet_get_on_device), icon = dev.locus.core.designsystem.LocusIcons.Phone) {
                     onDismiss()
                     links.open(dev.locus.core.model.SettingsDestination.OnDeviceModels)
                 }
             }
         }
         SectionNote(
-            "Switching model starts a fresh prompt cache for this chat, so the next reply reads the whole conversation again.",
+            stringResource(R.string.model_sheet_cache_note),
             Modifier.padding(top = Spacing.md),
         )
     }
@@ -154,8 +155,8 @@ private fun ProviderCard(
                 .then(
                     if (canCollapse) {
                         Modifier
-                            .clickable(onClickLabel = if (open) "Hide models" else "Show models", onClick = onToggle)
-                            .semantics { stateDescription = if (open) "Expanded" else "Collapsed" }
+                            .clickable(onClickLabel = if (open) stringResource(R.string.model_sheet_hide) else stringResource(R.string.model_sheet_show), onClick = onToggle)
+                            .semantics { stateDescription = if (open) stringResource(R.string.model_sheet_expanded) else stringResource(R.string.model_sheet_collapsed) }
                     } else {
                         Modifier
                     },
@@ -180,7 +181,7 @@ private fun ProviderCard(
             }
             when (val list = section.list) {
                 is ModelList.Failed -> SectionNote("Couldn't load the model list: ${list.message}", Modifier.padding(top = Spacing.sm))
-                null, ModelList.Loading -> SectionNote("Loading models…", Modifier.padding(top = Spacing.sm))
+                null, ModelList.Loading -> SectionNote(stringResource(R.string.model_sheet_loading), Modifier.padding(top = Spacing.sm))
                 is ModelList.Loaded -> if (section.more > 0) SectionNote("${section.more} more; search to narrow.", Modifier.padding(top = Spacing.sm))
             }
         }
@@ -193,8 +194,8 @@ private fun ProviderCard(
  */
 internal fun chatOnlyNote(controls: ChatControls, anyChatOnly: Boolean): String? = when {
     controls.chatOnly && !controls.empty ->
-        "This chat started on a model that can't use tools, so it has none. Switching model keeps it that way; start a new chat for tools."
-    controls.empty && anyChatOnly -> "Models marked Chat only start this chat without tools: they're too small, or not built, to use them."
+        stringResource(R.string.model_sheet_no_tools_note)
+    controls.empty && anyChatOnly -> stringResource(R.string.model_sheet_chat_only_note)
     else -> null
 }
 
@@ -214,14 +215,14 @@ private fun PickerModelRow(row: PickerRow, showProvider: Boolean, onPick: () -> 
     val subtitle = listOfNotNull(
         row.detail ?: row.id.takeIf { it != row.title },
         row.providerName.takeIf { showProvider },
-        "Default".takeIf { row.isDefault },
+        stringResource(R.string.model_sheet_default).takeIf { row.isDefault },
         "In use; not in the provider's list".takeIf { row.inUseOnly },
         // Unknown never disqualifies a model, but the sheet says what couldn't be checked for this chat.
         unconfirmedLabel(row.fit),
     ).joinToString(" · ").ifEmpty { null }
     // The chat's model says so in its chips, not with a check in the trailing column, so the name
     // and detail keep the row's width beside the star (at 200% font too).
-    val chips = listOfNotNull(("In use" to Tone.Brand).takeIf { row.selected }) +
+    val chips = listOfNotNull((stringResource(R.string.model_sheet_in_use) to Tone.Brand).takeIf { row.selected }) +
         capabilityChips(row.caps).map { it to Tone.Neutral } +
         listOfNotNull(chatOnlyChip(row.caps, row.fit)?.let { it to Tone.Caution }, cantUseLabel(row.fit)?.let { it to Tone.Caution })
     ListRow(
@@ -233,7 +234,7 @@ private fun PickerModelRow(row: PickerRow, showProvider: Boolean, onPick: () -> 
         onClick = onPick,
         modifier = Modifier.semantics {
             selected = row.selected
-            if (row.selected) stateDescription = "In use"
+            if (row.selected) stateDescription = stringResource(R.string.model_sheet_in_use)
         },
         leading = { ModelLogo(row.id, size = IconSize.tileSmall) },
         meta = if (chips.isEmpty()) {
@@ -262,19 +263,19 @@ private fun PickerModelRow(row: PickerRow, showProvider: Boolean, onPick: () -> 
 @Composable
 private fun CatalogOffer(onEnable: () -> Unit) {
     LocusCard(Modifier.padding(top = Spacing.md)) {
-        Text("Show context sizes and abilities?", style = LocusType.rowTitle)
+        Text(stringResource(R.string.model_sheet_catalogue_title), style = LocusType.rowTitle)
         SupportingText(
             "Locus can download the public models.dev catalogue (about 0.6 MB, at most once a day) to show each model's context window and whether it sees images, calls tools and reasons. Nothing about you or your chats is sent. You can turn it off again under Model details.",
             Modifier.padding(top = Spacing.xs),
         )
         dev.locus.core.designsystem.ActionRow(contentPadding = PaddingValues(0.dp)) {
             dev.locus.core.designsystem.SettingsLink(dev.locus.core.model.SettingsDestination.Models)
-            TextButton(onClick = onEnable) { Text("Turn on") }
+            TextButton(onClick = onEnable) { Text(stringResource(R.string.model_sheet_turn_on)) }
         }
     }
 }
 
-@androidx.compose.ui.tooling.preview.Preview(name = "On-device", widthDp = 360, heightDp = 900)
+@androidx.compose.ui.tooling.preview.Preview(name = stringResource(R.string.model_sheet_on_device), widthDp = 360, heightDp = 900)
 @Composable
 private fun ModelSheetOnDevicePreview() {
     val phone = chatProvider(dev.locus.core.model.ProviderConfig("p", "On this phone", dev.locus.core.model.ApiFormat.ON_DEVICE, "", "gguf:qwen3.5-0.8b-q4_k_m", requiresKey = false))

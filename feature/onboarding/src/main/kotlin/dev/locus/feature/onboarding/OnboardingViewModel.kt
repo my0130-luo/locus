@@ -63,16 +63,16 @@ import kotlinx.coroutines.withTimeout
 import java.util.UUID
 import javax.inject.Inject
 
-enum class Step(val title: String, val skippable: Boolean) {
-    Intro("Welcome", false),
-    Privacy("Privacy", false),
-    Provider("Model", true),
-    Identity("Your agent", true),
-    Linux("Workspace", true),
-    Ssh("Machines", true),
-    Connectors("Connectors", true),
-    Test("Check", true),
-    Done("Ready", false),
+enum class Step(val titleRes: Int, val skippable: Boolean) {
+    Intro(R.string.onboarding_step_welcome, false),
+    Privacy(R.string.onboarding_step_privacy, false),
+    Provider(R.string.onboarding_step_model, true),
+    Identity(R.string.onboarding_step_agent, true),
+    Linux(R.string.onboarding_step_workspace, true),
+    Ssh(R.string.onboarding_step_machines, true),
+    Connectors(R.string.onboarding_step_connectors, true),
+    Test(R.string.onboarding_step_check, true),
+    Done(R.string.onboarding_step_ready, false),
 }
 
 /** What the app already has, read from the repositories. */

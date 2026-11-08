@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="activity_title">活动记录</string>
+    <string name="activity_open_chat">打开对话</string>
+    <string name="activity_nothing_yet">暂无记录</string>
+    <string name="activity_no_actions_in_chat">此对话中没有操作记录</string>
+    <string name="activity_empty_explanation">智能体使用的每项工具都会记录在这里，包括执行了什么、你是否批准，以及执行结果。</string>
+    <string name="activity_load_older">加载更早的记录</string>
+    <string name="activity_search_chat_actions">搜索此对话中的操作</string>
+    <string name="activity_search_actions_chats">搜索操作和对话</string>
+    <string name="activity_nothing_period">此时间段内没有记录</string>
+    <string name="activity_no_matching_actions">没有符合条件的操作</string>
+    <string name="activity_widen_filters">试试扩大时间范围或减少筛选条件。</string>
+    <string name="activity_clear_filters">清除筛选条件</string>
+    <string name="activity_collapse">收起</string>
+    <string name="activity_expand">展开</string>
+    <string name="activity_view_all_chat">查看此对话中的全部记录</string>
+    <string name="activity_arguments">参数</string>
+    <string name="activity_error">错误</string>
+    <string name="activity_result">结果</string>
+    <string name="activity_show_earlier">显示更早的 %1$d 条操作</string>
+    <string name="activity_action_count">%1$d 项操作</string>
+    <string name="activity_failed_count">%1$d 项失败</string>
+    <string name="activity_approval_count">%1$d 次审批</string>
+    <string name="activity_last_action">最近：%1$s</string>
+    <string name="activity_in_chat">位于对话“%1$s”中</string>
+    <string name="activity_empty_result">（空）</string>
+    <string name="activity_failed">失败</string>
+    <string name="activity_approved">已批准</string>
+    <string name="activity_reviewer_allowed">审核器已允许</string>
+    <string name="activity_remembered_approval">已记住的批准</string>
+    <string name="activity_declined">已拒绝</string>
+    <string name="activity_blocked">已拦截</string>
+    <string name="activity_reviewer_blocked">审核器已拦截</string>
+    <string name="activity_invalid">无效</string>
+    <string name="activity_ran_automatically">自动执行</string>
+</resources>

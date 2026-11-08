@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="helpers_intro">助手是 Locus 可以分派专门任务的智能体。每个助手都有独立的上下文，并且只能使用其职责所需的工具。遇到需要批准的操作时，它们会先征求你的同意；工作过程会以嵌套步骤显示在聊天中。</string>
+    <string name="helpers_empty">你还没有自己的助手。可以让 Locus“创建一个能够……的助手”，它会生成草稿，供你在这里审核。</string>
+    <string name="built_in">内置</string>
+    <string name="built_in_helper">内置助手</string>
+    <string name="helper_model">助手模型</string>
+    <string name="chat_model">聊天模型</string>
+    <string name="needs_review">等待审核</string>
+    <string name="your_helper">你的助手</string>
+    <string name="discard_change">放弃更改</string>
+    <string name="reject">拒绝</string>
+    <string name="approve">批准</string>
+    <string name="remove">移除</string>
+
+    <string name="no_skills_yet">还没有技能</string>
+    <string name="import_a_skill">导入技能</string>
+    <string name="workflows">工作流</string>
+    <string name="skills">技能</string>
+    <string name="binary_file_not_shown">二进制文件，无法在此显示。</string>
+    <string name="approve_new_permissions">批准新增权限？</string>
+
+
+
+    <string name="undeclared">未声明</string>
+    <string name="manifest_parse_error">清单文件无法解析</string>
+    <string name="inferred_manifest">推断的权限清单</string>
+    <string name="review_before_approving">批准前请先审核</string>
+    <string name="skill_md">SKILL.md</string>
+    <string name="read_the_file">读取文件</string>
+    <string name="script">脚本</string>
+
+
+    <string name="importing">正在导入</string>
+    <string name="cancel">取消</string>
+    <string name="couldnt_import">导入失败</string>
+    <string name="ok">确定</string>
+    <string name="imported_for_review">已导入，等待审核</string>
+    <string name="review_the_import">审核导入内容</string>
+    <string name="import_action">导入</string>
+    <string name="github_link">GitHub 链接</string>
+    <string name="choose_zip_instead">改为选择 ZIP 压缩包</string>
+    <string name="new_name">新名称</string>
+    <string name="accept_new_permissions">我接受新增权限</string>
+    <string name="replace_yours">替换现有技能</string>
+    <string name="replace_draft">替换草稿</string>
+    <string name="no_changes">没有变化</string>
+    <string name="changed_without_new_version">内容已更改，但版本号未更新</string>
+    <string name="what_it_can_do">它能做什么</string>
+    <string name="it_installs">它会安装</string>
+    <string name="where_its_from">来源</string>
+    <string name="imported_from">导入来源</string>
+    <string name="published_at">发布地址</string>
+    <string name="version">版本</string>
+    <string name="content_hash">内容哈希</string>
+
+    <string name="library_title">资料库</string>
+    <string name="memory">记忆</string>
+
+    <string name="connectors">连接器</string>
+    <string name="helpers">助手</string>
+    <string name="couldnt_open_library">无法打开资料库</string>
+    <string name="try_again">重试</string>
+    <string name="dismiss">关闭</string>
+    <string name="nothing_remembered_yet">还没有记忆内容</string>
+    <string name="general">通用记忆</string>
+    <string name="save">保存</string>
+    <string name="summary">摘要</string>
+    <string name="note">笔记</string>
+    <string name="forget">忘记</string>
+    <string name="move">移动</string>
+    <string name="no_summary">暂无摘要</string>
+    <string name="project_memory_note">项目记忆笔记</string>
+    <string name="memory_note">记忆笔记</string>
+    <string name="needs_a_look">需要留意</string>
+    <string name="move_to_general">移至通用记忆</string>
+    <string name="edit">编辑</string>
+    <string name="open_the_chat">打开聊天</string>
+    <string name="saved_chat_deleted">保存这条记忆的聊天已被删除。</string>
+</resources>

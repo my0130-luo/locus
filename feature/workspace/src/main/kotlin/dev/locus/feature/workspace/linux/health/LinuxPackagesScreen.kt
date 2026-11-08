@@ -34,6 +34,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import dev.locus.feature.workspace.R
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
@@ -100,12 +102,12 @@ fun LinuxPackagesRoute(
         val body = Modifier.padding(padding)
         when {
             state.status != LinuxStatus.Ready -> EmptyState(
-                title = "Linux isn't installed",
-                body = "Packages show here once Linux is set up.",
+                title = stringResource(R.string.linux_packages_not_installed),
+                body = stringResource(R.string.linux_packages_empty_intro),
                 modifier = body,
                 icon = LocusIcons.Terminal,
                 action = if (state.status is LinuxStatus.Unavailable) null else {
-                    { Button(onClick = onSetUpLinux, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text("Set up Linux") } }
+                    { Button(onClick = onSetUpLinux, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text(stringResource(R.string.linux_packages_setup)) } }
                 },
             )
             pkgs == null && state.error != null -> ErrorState("Couldn't list packages", state.error.orEmpty(), onRetry = viewModel::load, modifier = body, retrying = state.loading)
@@ -153,8 +155,8 @@ fun LinuxPackagesRoute(
 
     confirmRemove?.let { name ->
         ConfirmSheet(
-            title = "Uninstall $name?",
-            message = "Runs `apk del $name`. Packages it pulled in that nothing else needs go too. Your workspace files stay, and you can install it again.",
+            title = stringResource(R.string.linux_packages_uninstall_title, name),
+            message = stringResource(R.string.linux_packages_uninstall_message, name),
             confirmLabel = "Uninstall",
             tone = Tone.Critical,
             onConfirm = { confirmRemove = null; viewModel.uninstall(name) },
@@ -198,26 +200,26 @@ private fun Updates(state: LinuxPackagesUiState, onCheck: () -> Unit, onOpenTerm
     when {
         state.checkingUpgrades -> Row(modifier, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
             InlineSpinner(contentDescription = null)
-            SupportingText("Checking Alpine's repositories for updates…")
+            SupportingText(stringResource(R.string.linux_packages_checking_updates))
         }
-        state.upgradesError != null -> Banner(state.upgradesError, Tone.Caution, modifier, title = "Couldn't check for updates", actionsBelow = true) {
-            TextButton(onClick = onCheck) { Text("Try again") }
+        state.upgradesError != null -> Banner(state.upgradesError, Tone.Caution, modifier, title = stringResource(R.string.linux_packages_update_error), actionsBelow = true) {
+            TextButton(onClick = onCheck) { Text(stringResource(R.string.linux_packages_try_again)) }
         }
         // The button goes under the note when beside it the note would be a one-word column.
         upgrades == null -> SideOrBelow(modifier.fillMaxWidth(), main = {
-            SupportingText("Updates are checked when you ask; it downloads Alpine's package index.")
+            SupportingText(stringResource(R.string.linux_packages_update_explanation))
         }) {
-            OutlinedButton(onClick = onCheck, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text("Check for updates") }
+            OutlinedButton(onClick = onCheck, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text(stringResource(R.string.linux_packages_check_updates)) }
         }
-        upgrades.isEmpty() -> SupportingText("Everything is up to date.", modifier)
+        upgrades.isEmpty() -> SupportingText(stringResource(R.string.linux_packages_up_to_date), modifier)
         else -> LocusCard(modifier) {
-            Text("${upgrades.size} update${if (upgrades.size == 1) "" else "s"} available", style = LocusType.cardTitle)
+            Text(stringResource(R.string.linux_packages_updates_available, upgrades.size), style = LocusType.cardTitle)
             Column(Modifier.padding(vertical = Spacing.xs)) {
                 upgrades.take(MAX_UPGRADES).forEach { AmountRow(it.name, "${it.installed} → ${it.available}", monoLabel = true) }
-                if (upgrades.size > MAX_UPGRADES) SupportingText("and ${upgrades.size - MAX_UPGRADES} more")
+                if (upgrades.size > MAX_UPGRADES) SupportingText(stringResource(R.string.linux_packages_more_updates, upgrades.size - MAX_UPGRADES))
             }
-            SupportingText("Install them with `apk upgrade` in the terminal.")
-            OutlinedButton(onClick = onOpenTerminal, modifier = Modifier.padding(top = Spacing.sm).heightIn(min = Sizes.touchTarget)) { Text("Open terminal") }
+            SupportingText(stringResource(R.string.linux_packages_install_updates))
+            OutlinedButton(onClick = onOpenTerminal, modifier = Modifier.padding(top = Spacing.sm).heightIn(min = Sizes.touchTarget)) { Text(stringResource(R.string.linux_packages_open_terminal)) }
         }
     }
 }
@@ -258,7 +260,7 @@ private fun PackageRow(
                                 onClick = onRemove,
                                 enabled = removeEnabled,
                                 modifier = Modifier.heightIn(min = Sizes.touchTarget).semantics { contentDescription = "Uninstall ${p.name}" },
-                            ) { Text("Uninstall", color = if (removeEnabled) Locus.colors.critical else MaterialTheme.colorScheme.onSurfaceVariant) }
+                            ) { Text(stringResource(R.string.linux_packages_uninstall), color = if (removeEnabled) Locus.colors.critical else MaterialTheme.colorScheme.onSurfaceVariant) }
                         }
                     }
                 }

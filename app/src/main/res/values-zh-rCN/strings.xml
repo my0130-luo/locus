@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Locus</string>
+    <string name="shortcut_new_chat">新建对话</string>
+    <string name="shortcut_voice">语音</string>
+    <string name="shortcut_voice_long">开始语音对话</string>
+    <string name="shortcut_workspace">工作区</string>
+    <string name="tile_ask">询问 Locus</string>
+    <string name="process_text_label">使用 Locus 处理</string>
+    <string name="automation_label">自动化</string>
+    <string name="permission_run_task_label">运行 Locus 任务</string>
+    <string name="permission_run_task_description">允许 Locus 运行任务并执行你授权的操作。</string>
+    <string name="widget_label">Locus</string>
+    <string name="widget_description">向 Locus 提问</string>
+    <string name="widget_ask">提问</string>
+    <string name="assist_label">Locus 助手</string>
+</resources>

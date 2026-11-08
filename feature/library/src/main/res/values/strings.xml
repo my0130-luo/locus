@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="helpers_intro">Helpers are agents Locus can hand a focused job to, each with its own fresh context and only the tools its role needs. They ask you before anything that needs approval, and their work shows as nested steps in the chat.</string>
+    <string name="helpers_empty">You have no helpers of your own yet. Ask Locus to “make a helper that…” and it drafts one for you to review here.</string>
+    <string name="built_in">Built in</string>
+    <string name="built_in_helper">Built-in helper</string>
+    <string name="helper_model">Helper model</string>
+    <string name="chat_model">Chat's model</string>
+    <string name="needs_review">Needs review</string>
+    <string name="your_helper">Your helper</string>
+    <string name="discard_change">Discard change</string>
+    <string name="reject">Reject</string>
+    <string name="approve">Approve</string>
+    <string name="remove">Remove</string>
+
+    <string name="no_skills_yet">No skills yet</string>
+    <string name="import_a_skill">Import a skill</string>
+    <string name="workflows">Workflows</string>
+    <string name="skills">Skills</string>
+    <string name="binary_file_not_shown">A binary file, not shown here.</string>
+    <string name="approve_new_permissions">Approve new permissions?</string>
+
+
+
+    <string name="undeclared">Undeclared</string>
+    <string name="manifest_parse_error">Its manifest doesn't parse</string>
+    <string name="inferred_manifest">Inferred manifest</string>
+    <string name="review_before_approving">Review before approving</string>
+    <string name="skill_md">SKILL.md</string>
+    <string name="read_the_file">Read the file</string>
+    <string name="script">Script</string>
+
+
+    <string name="importing">Importing</string>
+    <string name="cancel">Cancel</string>
+    <string name="couldnt_import">Couldn't import</string>
+    <string name="ok">OK</string>
+    <string name="imported_for_review">Imported for review</string>
+    <string name="review_the_import">Review the import</string>
+    <string name="import_action">Import</string>
+    <string name="github_link">GitHub link</string>
+    <string name="choose_zip_instead">Choose a zip file instead</string>
+    <string name="new_name">New name</string>
+    <string name="accept_new_permissions">I accept the new permissions</string>
+    <string name="replace_yours">Replace yours</string>
+    <string name="replace_draft">Replace the draft</string>
+    <string name="no_changes">No changes</string>
+    <string name="changed_without_new_version">Changed without a new version</string>
+    <string name="what_it_can_do">What it can do</string>
+    <string name="it_installs">It installs</string>
+    <string name="where_its_from">Where it's from</string>
+    <string name="imported_from">Imported from</string>
+    <string name="published_at">Published at</string>
+    <string name="version">Version</string>
+    <string name="content_hash">Content hash</string>
+
+    <string name="library_title">Library</string>
+    <string name="memory">Memory</string>
+
+    <string name="connectors">Connectors</string>
+    <string name="helpers">Helpers</string>
+    <string name="couldnt_open_library">Couldn't open the Library</string>
+    <string name="try_again">Try again</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="nothing_remembered_yet">Nothing remembered yet</string>
+    <string name="general">General</string>
+    <string name="save">Save</string>
+    <string name="summary">Summary</string>
+    <string name="note">Note</string>
+    <string name="forget">Forget</string>
+    <string name="move">Move</string>
+    <string name="no_summary">No summary</string>
+    <string name="project_memory_note">Project memory note</string>
+    <string name="memory_note">Memory note</string>
+    <string name="needs_a_look">Needs a look</string>
+    <string name="move_to_general">Move to general</string>
+    <string name="edit">Edit</string>
+    <string name="open_the_chat">Open the chat</string>
+    <string name="saved_chat_deleted">The chat it was saved in has been deleted.</string>
+</resources>

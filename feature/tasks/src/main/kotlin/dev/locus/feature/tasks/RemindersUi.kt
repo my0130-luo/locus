@@ -19,6 +19,8 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.res.stringResource
+import dev.locus.feature.tasks.R
 
 /**
  * Reminders set with remind_me, in Tasks (docs/design/phone-integrations.md): those to come with Cancel,
@@ -26,7 +28,7 @@ import androidx.compose.foundation.layout.padding
  */
 internal fun LazyListScope.remindersSection(reminders: List<Reminder>, now: Long, zone: ZoneId, exact: Boolean, onCancel: (Reminder) -> Unit) {
     if (reminders.isEmpty()) return
-    item { SectionLabel("Reminders") }
+    item { SectionLabel(stringResource(R.string.tasks_reminders)) }
     item {
         CardGroup {
             reminders.forEachIndexed { i, r ->
@@ -40,7 +42,7 @@ internal fun LazyListScope.remindersSection(reminders: List<Reminder>, now: Long
                     // An icon, not a text button: it doesn't grow with the font and squeeze the reminder's words.
                     trailing = {
                         IconButton(onClick = { onCancel(r) }) {
-                            Icon(LocusIcons.Close, contentDescription = if (r.upcoming) "Cancel reminder: ${r.text}" else "Clear reminder: ${r.text}")
+                            Icon(LocusIcons.Close, contentDescription = stringResource(if (r.upcoming) R.string.tasks_cancel_reminder else R.string.tasks_clear_reminder, r.text))
                         }
                     },
                 )
@@ -49,8 +51,7 @@ internal fun LazyListScope.remindersSection(reminders: List<Reminder>, now: Long
     }
     item {
         SectionNote(
-            "A reminder is a notification from Locus; nothing runs when it shows." +
-                if (exact) "" else " Without exact timing (Settings → Phone) it can show up to 10 minutes late.",
+            stringResource(if (exact) R.string.tasks_reminder_note_exact else R.string.tasks_reminder_note_inexact),
             Modifier.padding(top = Spacing.sm),
         )
     }

@@ -17,6 +17,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -108,12 +109,12 @@ internal fun BackupSettings(
 ) {
     val estimate = state.estimate
     val busy = state.backupProgress != null
-    SettingsPageScaffold("Backup & restore", onBack) {
-        item { SectionLabel("Back up", SectionPadding) }
+    SettingsPageScaffold(stringResource(R.string.backup_title), onBack) {
+        item { SectionLabel(stringResource(R.string.backup_back_up), SectionPadding) }
         item {
             CardGroup {
                 SwitchRow(
-                    title = "Include workspace files",
+                    title = stringResource(R.string.backup_include_workspace),
                     checked = state.includeWorkspace,
                     onCheckedChange = onIncludeWorkspace,
                     subtitle = estimate?.let { "${formatBytes(it.workspaceBytes)} · the files the agent works on" }
@@ -122,7 +123,7 @@ internal fun BackupSettings(
                 )
                 GroupDivider(inset = Insets.iconRow)
                 SwitchRow(
-                    title = "Include keys and passwords",
+                    title = stringResource(R.string.backup_include_secrets),
                     checked = state.includeVault,
                     onCheckedChange = onIncludeVault,
                     subtitle = "API keys, sign-ins, saved logins, SSH and connector secrets. Off: you enter them again after restoring.",
@@ -133,7 +134,7 @@ internal fun BackupSettings(
         if (state.includeVault) {
             item {
                 Banner(
-                    title = "Keys go in the file",
+                    title = stringResource(R.string.backup_keys_in_file),
                     text = "They're encrypted with your backup password, but anyone who has the file and the password can use your accounts. Keep the password somewhere safe, or leave this off.",
                     tone = Tone.Caution,
                     modifier = NotePadding,
@@ -143,7 +144,7 @@ internal fun BackupSettings(
         item {
             CardGroup(NotePadding) {
                 ListRow(
-                    title = "Back up now",
+                    title = stringResource(R.string.backup_now),
                     subtitle = estimate?.let { "About ${formatBytes(it.baseBytes + if (state.includeWorkspace) it.workspaceBytes else 0)} before compression" }
                         ?: if (state.estimating) "Chats, settings, memory, skills, workflows and helpers · $WORKING_OUT_SIZE" else "Chats, settings, memory, skills, workflows and helpers",
                     subtitleMaxLines = 2,
@@ -169,15 +170,15 @@ internal fun BackupSettings(
                         if (failed) {
                             // Below the text, so the row may take the full width.
                             FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.xs, Alignment.End)) {
-                                TextButton(onClick = onDismissResult) { Text("Dismiss") }
+                                TextButton(onClick = onDismissResult) { Text(stringResource(R.string.backup_dismiss)) }
                                 // "Free some space … Settings → … → Storage": the way to it.
                                 SettingsActionFor(message)
-                                TextButton(onClick = { onDismissResult(); onBackUp() }) { Text("Try again") }
+                                TextButton(onClick = { onDismissResult(); onBackUp() }) { Text(stringResource(R.string.backup_try_again)) }
                             }
                         } else {
                             // Beside the text: the button alone, at its own width. A full-width row here left the
                             // message one letter wide.
-                            TextButton(onClick = onDismissResult) { Text("OK") }
+                            TextButton(onClick = onDismissResult) { Text(stringResource(R.string.backup_ok)) }
                         }
                     },
                 )
@@ -191,11 +192,11 @@ internal fun BackupSettings(
             )
         }
 
-        item { SectionLabel("Restore", SectionPadding) }
+        item { SectionLabel(stringResource(R.string.backup_restore), SectionPadding) }
         item {
             CardGroup {
                 ListRow(
-                    title = "Restore from a backup",
+                    title = stringResource(R.string.backup_restore_from),
                     subtitle = "Replaces chats, settings, memory and skills on this phone",
                     subtitleMaxLines = 2,
                     onClick = onRestore,
@@ -216,7 +217,7 @@ private fun ProgressCard(progress: BackupProgress, onCancel: (() -> Unit)? = nul
             val amount = if (progress.total > 0) "${formatBytes(progress.done)} of ${formatBytes(progress.total)}" else null
             Text(
                 when {
-                    !showLabel -> amount ?: "Working…"
+                    !showLabel -> amount ?: stringResource(R.string.backup_working)
                     amount != null -> "${progress.label} · $amount"
                     else -> "${progress.label}…"
                 },
@@ -227,7 +228,7 @@ private fun ProgressCard(progress: BackupProgress, onCancel: (() -> Unit)? = nul
                 tone = Tone.Live,
                 contentDescription = progress.label,
             )
-            if (onCancel != null) TextButton(onClick = onCancel) { Text("Cancel") }
+            if (onCancel != null) TextButton(onClick = onCancel) { Text(stringResource(R.string.backup_cancel)) }
         }
     }
 }
@@ -239,16 +240,16 @@ private fun NewPasswordSheet(includesVault: Boolean, onDismiss: () -> Unit, onDo
     var again by remember { mutableStateOf("") }
     val problem = backupPasswordProblem(password, again)
     LocusSheet(
-        title = "Backup password",
-        subtitle = if (includesVault) "Protects the file, including your keys." else "Protects the file.",
+        title = stringResource(R.string.backup_password_title),
+        subtitle = if (includesVault) stringResource(R.string.backup_password_protects) else stringResource(R.string.backup_password_protects_file),
         onDismiss = onDismiss,
-        action = "Choose where to save",
+        action = stringResource(R.string.backup_choose_save_location),
         actionEnabled = problem == null,
         onAction = { onDone(password) },
     ) {
         OutlinedTextField(
             password, { password = it },
-            label = { Text("Password") },
+            label = { Text(stringResource(R.string.backup_password)) },
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -257,15 +258,15 @@ private fun NewPasswordSheet(includesVault: Boolean, onDismiss: () -> Unit, onDo
         )
         OutlinedTextField(
             again, { again = it },
-            label = { Text("Password again") },
+            label = { Text(stringResource(R.string.backup_password_again)) },
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth(),
             isError = again.isNotEmpty() && again != password,
-            supportingText = if (again.isNotEmpty() && again != password) ({ Text("The passwords don't match.") }) else null,
+            supportingText = if (again.isNotEmpty() && again != password) ({ Text(stringResource(R.string.backup_password_mismatch)) }) else null,
         )
-        Banner(text = "If you forget this password, the backup can't be opened. Nobody can recover it.", tone = Tone.Caution)
+        Banner(text = stringResource(R.string.backup_password_warning), tone = Tone.Caution)
     }
 }
 
@@ -273,9 +274,9 @@ internal const val MIN_PASSWORD = 8
 
 /** Why the password can't be used yet, or null when it can. */
 internal fun backupPasswordProblem(password: String, again: String): String? = when {
-    password.length < MIN_PASSWORD -> "Too short"
-    password.isBlank() -> "Blank"
-    again != password -> "Doesn't match"
+    password.length < MIN_PASSWORD -> stringResource(R.string.backup_too_short)
+    password.isBlank() -> stringResource(R.string.backup_blank)
+    again != password -> stringResource(R.string.backup_doesnt_match)
     else -> null
 }
 
@@ -297,10 +298,10 @@ private fun RestoreSheet(
             val notABackup = step.unreadable
             // A file that isn't a backup has no password to ask for: say so, and offer another file.
             LocusSheet(
-                title = if (notABackup) "Not a backup" else "Open backup",
-                subtitle = if (notABackup) null else "Enter the password it was saved with.",
+                title = if (notABackup) stringResource(R.string.backup_not_backup) else stringResource(R.string.backup_open_backup),
+                subtitle = if (notABackup) null else stringResource(R.string.backup_enter_password),
                 onDismiss = onDismiss,
-                action = if (notABackup) "Choose another file" else "Check",
+                action = if (notABackup) stringResource(R.string.backup_choose_another_file) else stringResource(R.string.backup_check),
                 actionEnabled = notABackup || password.isNotEmpty(),
                 onAction = { if (notABackup) onChooseAnother() else onUnlock(password) },
             ) {
@@ -309,7 +310,7 @@ private fun RestoreSheet(
                 if (!notABackup) {
                     OutlinedTextField(
                         password, { password = it },
-                        label = { Text("Backup password") },
+                        label = { Text(stringResource(R.string.backup_password_title)) },
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -321,15 +322,15 @@ private fun RestoreSheet(
                 }
             }
         }
-        is RestoreStep.Verifying -> LocusSheet(title = "Checking the backup", subtitle = "Decrypting and verifying every part.", onDismiss = onDismiss) {
+        is RestoreStep.Verifying -> LocusSheet(title = stringResource(R.string.backup_checking), subtitle = stringResource(R.string.backup_decrypting), onDismiss = onDismiss) {
             ProgressCard(step.progress, showLabel = false)
         }
         // What gets replaced comes first and the destructive action last, after the user has read it.
         is RestoreStep.Preview -> LocusSheet(
-            title = "Restore this backup?",
+            title = stringResource(R.string.backup_confirm_restore),
             onDismiss = onDismiss,
         ) {
-            if (runActive) Banner(title = "A task is running", text = "Stop it first, then restore.", tone = Tone.Caution)
+            if (runActive) Banner(title = stringResource(R.string.backup_task_running), text = stringResource(R.string.backup_stop_task_first), tone = Tone.Caution)
             if (step.noSpace != null) NoSpaceBanner(step.noSpace)
             else if (step.error != null) Banner(text = step.error, tone = Tone.Critical)
             Banner(
@@ -343,10 +344,10 @@ private fun RestoreSheet(
                 enabled = !runActive && step.noSpace == null,
                 colors = ButtonDefaults.buttonColors(containerColor = Locus.colors.critical, contentColor = MaterialTheme.colorScheme.surface),
                 modifier = Modifier.fillMaxWidth().heightIn(min = Sizes.touchTarget),
-            ) { Text("Restore and restart") }
+            ) { Text(stringResource(R.string.backup_restore_restart)) }
         }
-        RestoreStep.Restoring -> LocusSheet(title = "Restoring", subtitle = "Locus restarts in a moment.", onDismiss = {}) {
-            Meter(null, tone = Tone.Live, contentDescription = "Restoring")
+        RestoreStep.Restoring -> LocusSheet(title = stringResource(R.string.backup_restoring), subtitle = stringResource(R.string.backup_restarting), onDismiss = {}) {
+            Meter(null, tone = Tone.Live, contentDescription = stringResource(R.string.backup_restoring))
         }
     }
 }
@@ -355,7 +356,7 @@ private fun RestoreSheet(
 @Composable
 private fun NoSpaceBanner(need: SpaceNeeded) {
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-        Banner(text = noSpaceText(need), tone = Tone.Critical, title = "Not enough space")
+        Banner(text = noSpaceText(need), tone = Tone.Critical, title = stringResource(R.string.backup_not_enough_space))
         SettingsLink(SettingsDestination.Storage, hint = "See what Locus uses and clear it in")
     }
 }
@@ -384,8 +385,8 @@ private fun ManifestPreview(manifest: BackupManifest) {
 }
 
 internal fun sectionTitle(name: String) = when (name) {
-    BackupArchive.DATABASE -> "Chats and activity"
-    BackupArchive.SETTINGS -> "Settings"
+    BackupArchive.DATABASE -> stringResource(R.string.backup_chats_activity)
+    BackupArchive.SETTINGS -> stringResource(R.string.backup_settings)
     BackupArchive.AGENT_HOME -> "Memory, skills, workflows, helpers and persona"
     BackupArchive.WORKSPACE -> "Workspace files"
     BackupArchive.VAULT -> "Keys and passwords"

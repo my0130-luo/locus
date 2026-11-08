@@ -95,6 +95,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -405,7 +406,7 @@ internal fun ChatScreen(
     onSend: (String) -> Unit,
     onStop: () -> Unit,
     onAnswer: (String, Boolean) -> Unit,
-    /** "Allow for this chat" or "Always allow …" on an approval card that offers them. */
+    /** stringResource(R.string.chat_allow_this_chat) or stringResource(R.string.chat_always_allow) on an approval card that offers them. */
     onRemember: (String, dev.locus.core.agent.ApprovalAnswer) -> Unit = { _, _ -> },
     onAnswerQuestion: (String, dev.locus.core.agent.tools.QuestionAnswer) -> Unit = { _, _ -> },
     onDismissMessages: () -> Unit,
@@ -420,7 +421,7 @@ internal fun ChatScreen(
     controls: ChatControlActions = ChatControlActions(),
     branches: BranchActions = BranchActions(),
     queue: QueueActions = QueueActions(),
-    /** The "What was sent" sheet; null when closed. */
+    /** The stringResource(R.string.chat_what_was_sent) sheet; null when closed. */
     sent: SentState? = null,
     /** Opens it for a reply's request (its message id), or the chat's latest request when null. */
     onShowSent: (String?) -> Unit = {},
@@ -830,9 +831,9 @@ internal fun ChatScreen(
                             actionsBelow = true,
                         ) {
                             SettingsActionFor(state.run.error)
-                            if (state.run.failure != null && state.run.error != null) TextButton(onClick = failureActions.onDetails) { Text("Details") }
-                            TextButton(onClick = discardQueued) { Text("Discard") }
-                            TextButton(onClick = onResume) { Text("Continue") }
+                            if (state.run.failure != null && state.run.error != null) TextButton(onClick = failureActions.onDetails) { Text(stringResource(R.string.chat_details)) }
+                            TextButton(onClick = discardQueued) { Text(stringResource(R.string.chat_discard)) }
+                            TextButton(onClick = onResume) { Text(stringResource(R.string.chat_continue)) }
                         }
                     } else {
                         MessagesBanner(
@@ -841,38 +842,38 @@ internal fun ChatScreen(
                             onDismissMessages,
                             bannerModifier,
                             onContinue = if (canResume) onResume else null,
-                            continueLabel = if (state.run.error != null) "Try again" else "Continue",
+                            continueLabel = if (state.run.error != null) stringResource(R.string.chat_try_again) else stringResource(R.string.chat_continue),
                             failure = state.run.failure,
                             failureActions = failureActions,
                         )
                         if (unsent > 0) {
                             Banner(queuedNotSentText(unsent), Tone.Brand, bannerModifier, actionsBelow = true) {
-                                TextButton(onClick = discardQueued) { Text("Discard") }
-                                TextButton(onClick = onResume) { Text("Send") }
+                                TextButton(onClick = discardQueued) { Text(stringResource(R.string.chat_discard)) }
+                                TextButton(onClick = onResume) { Text(stringResource(R.string.chat_send)) }
                             }
                         }
                     }
                     // The chat ends on the user's message with nothing running (the error was dismissed, or the
                     // reply never came): offer to run it again, e.g. after switching to another model.
                     if (!canResume && !state.run.running && state.run.notice == null && state.run.queued.isEmpty() && state.items.lastOrNull() is ChatItem.User) {
-                        Banner("No reply to your last message.", Tone.Neutral, bannerModifier) { TextButton(onClick = onResume) { Text("Run again") } }
+                        Banner(stringResource(R.string.chat_no_reply), Tone.Neutral, bannerModifier) { TextButton(onClick = onResume) { Text(stringResource(R.string.chat_run_again)) } }
                     }
                     state.browserHandoff?.let {
-                        Banner(it, Tone.Caution, bannerModifier, title = "Locus needs you in the browser") { Button(onClick = onOpenBrowser) { Text("Open") } }
+                        Banner(it, Tone.Caution, bannerModifier, title = "Locus needs you in the browser") { Button(onClick = onOpenBrowser) { Text(stringResource(R.string.chat_open)) } }
                     }
                     editing?.let {
                         Banner(
                             "Sending makes a new branch; the original and its replies stay. Close to send it as a new message instead.",
                             Tone.Brand,
                             bannerModifier,
-                            title = "Editing a message",
+                            title = stringResource(R.string.chat_editing_message),
                         ) {
-                            IconButton(onClick = { editing = null }) { Icon(LocusIcons.Close, contentDescription = "Stop editing") }
+                            IconButton(onClick = { editing = null }) { Icon(LocusIcons.Close, contentDescription = stringResource(R.string.chat_stop_editing)) }
                         }
                     }
                     editingQueued?.let {
-                        Banner("Sending changes the queued message before it goes.", Tone.Brand, bannerModifier, title = "Editing a queued message") {
-                            IconButton(onClick = { editingQueued = null; text = "" }) { Icon(LocusIcons.Close, contentDescription = "Stop editing") }
+                        Banner("Sending changes the queued message before it goes.", Tone.Brand, bannerModifier, title = stringResource(R.string.chat_editing_queued)) {
+                            IconButton(onClick = { editingQueued = null; text = "" }) { Icon(LocusIcons.Close, contentDescription = stringResource(R.string.chat_stop_editing)) }
                         }
                     }
                     ReviewerBlockChips(state.run.reviewerBlocks, controls.runAnyway, controls.dismissReviewerBlock, bannerModifier)
@@ -884,10 +885,10 @@ internal fun ChatScreen(
                     }
                     if (heatServices.isNotEmpty()) {
                         // The body says the phone is hot; the title says what to do about it. The actions wrap at a large font.
-                        Banner(dev.locus.core.data.device.LinuxHeatAdvice.message(heatServices), Tone.Caution, bannerModifier, title = "Let the phone cool down", actionsBelow = true) {
+                        Banner(dev.locus.core.data.device.LinuxHeatAdvice.message(heatServices), Tone.Caution, bannerModifier, title = stringResource(R.string.chat_phone_cool_down), actionsBelow = true) {
                             androidx.compose.foundation.layout.FlowRow(Modifier.weight(1f), horizontalArrangement = Arrangement.End, itemVerticalAlignment = Alignment.CenterVertically) {
-                                TextButton(onClick = heatActions.dismissServices) { Text("Not now") }
-                                TextButton(onClick = heatActions.stopServices) { Text("Stop services") }
+                                TextButton(onClick = heatActions.dismissServices) { Text(stringResource(R.string.chat_not_now)) }
+                                TextButton(onClick = heatActions.stopServices) { Text(stringResource(R.string.chat_stop_services)) }
                             }
                         }
                     }
@@ -931,13 +932,13 @@ internal fun ChatScreen(
                     // The live panels' toggles, at the composer's top right while the chat has something in them.
                     panels = listOfNotNull(
                         ComposerPanel(
-                            LocusIcons.Terminal, "Terminal",
+                            LocusIcons.Terminal, stringResource(R.string.chat_terminal),
                             open = panel == LivePanelKind.Terminal,
                             live = activeTool in TERMINAL_TOOLS,
                             onToggle = { panel = if (panel == LivePanelKind.Terminal) null else LivePanelKind.Terminal },
                         ).takeIf { toggles.terminal },
                         ComposerPanel(
-                            LocusIcons.Globe, "Browser",
+                            LocusIcons.Globe, stringResource(R.string.chat_browser),
                             open = panel == LivePanelKind.Browser,
                             live = browsingNow,
                             onToggle = { panel = if (panel == LivePanelKind.Browser) null else LivePanelKind.Browser },
@@ -1104,7 +1105,7 @@ private fun StepsGroup(steps: List<ChatItem>, activeTool: String?) {
             val label = "${allCalls.size} steps"
             Row(
                 Modifier.fillMaxWidth().heightIn(min = Sizes.touchTarget)
-                    .clickable(role = androidx.compose.ui.semantics.Role.Button, onClickLabel = if (expanded) "Hide steps" else "Show steps") { expanded = !expanded }
+                    .clickable(role = androidx.compose.ui.semantics.Role.Button, onClickLabel = if (expanded) stringResource(R.string.chat_hide_steps) else stringResource(R.string.chat_show_steps)) { expanded = !expanded }
                     .padding(horizontal = Spacing.md, vertical = Spacing.xs)
                     .semantics {
                         contentDescription = label + (if (failed > 0) ", $failed failed" else "") + (if (anyRunning) ", working" else "")
@@ -1154,10 +1155,10 @@ private fun String.asNote(): String = trim().replace("**", "").replace("__", "")
 private data class Suggestion(val text: String, val tool: String)
 
 private val SUGGESTIONS = listOf(
-    Suggestion("Search the web for this week's top tech news and summarise it", "web_search"),
-    Suggestion("Make a packing list for a 3-day trip and save it to my workspace", "write_file"),
-    Suggestion("Write a Python script that renames my photos by date, then run it", "run_command"),
-    Suggestion("Plan my week: ask me what's on, then add the events to my calendar", "device_calendar_event"),
+    Suggestion(stringResource(R.string.chat_example_search), "web_search"),
+    Suggestion(stringResource(R.string.chat_example_packing), "write_file"),
+    Suggestion(stringResource(R.string.chat_example_script), "run_command"),
+    Suggestion(stringResource(R.string.chat_example_calendar), "device_calendar_event"),
 )
 
 @Composable
@@ -1166,12 +1167,12 @@ private fun Suggestions(modifier: Modifier, onPick: (String) -> Unit, temporary:
         modifier.fillMaxSize().padding(horizontal = Spacing.lg),
         verticalArrangement = Arrangement.spacedBy(Spacing.md, Alignment.CenterVertically),
     ) {
-        Text(if (temporary) "A temporary chat" else "What should we work on?", style = MaterialTheme.typography.headlineSmall, modifier = Modifier.entrance(0))
+        Text(if (temporary) stringResource(R.string.chat_temporary_title) else stringResource(R.string.chat_temporary_prompt), style = MaterialTheme.typography.headlineSmall, modifier = Modifier.entrance(0))
         SupportingText(
             if (temporary) {
-                "No memory, and it's deleted when you leave. Files it writes stay in the workspace; approvals work as usual."
+                stringResource(R.string.chat_temporary_explanation)
             } else {
-                "Locus can use the web, files, a Linux shell and your phone's apps. It asks before anything risky."
+                stringResource(R.string.chat_capabilities)
             },
             Modifier.padding(bottom = Spacing.md).entrance(1),
             style = LocusType.rowSupporting,
@@ -1206,7 +1207,7 @@ private fun UserBubble(
     val scope = androidx.compose.runtime.rememberCoroutineScope()
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
         SentAttachments(attachments)
-        if (planMode) Text("Plan mode", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+        if (planMode) Text(stringResource(R.string.chat_plan_mode), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
         if (midTask) Text(MID_TASK_LABEL, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
         if (text.isNotBlank()) {
             Surface(
@@ -1219,21 +1220,21 @@ private fun UserBubble(
                 Box {
                     Text(
                         text,
-                        Modifier.combinedClickable(onClick = {}, onLongClick = { menu = true }, onLongClickLabel = "Message actions")
+                        Modifier.combinedClickable(onClick = {}, onLongClick = { menu = true }, onLongClickLabel = stringResource(R.string.chat_message_actions))
                             .padding(horizontal = Spacing.lg, vertical = if (midTask) Spacing.sm else Spacing.md),
                         style = if (midTask) LocusType.rowSupporting else LocusType.rowTitle,
                     )
                     DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                         DropdownMenuItem(
-                            text = { Text("Copy") },
+                            text = { Text(stringResource(R.string.chat_copy)) },
                             leadingIcon = { Icon(LocusIcons.Copy, null) },
                             onClick = {
                                 menu = false
                                 scope.launch { clipboard.setClipEntry(androidx.compose.ui.platform.ClipEntry(android.content.ClipData.newPlainText("Locus", text))) }
                             },
                         )
-                        DropdownMenuItem(text = { Text("Edit") }, leadingIcon = { Icon(LocusIcons.Edit, null) }, enabled = branchEnabled, onClick = { menu = false; onEdit() })
-                        DropdownMenuItem(text = { Text("Fork into new chat") }, leadingIcon = { Icon(LocusIcons.Branch, null) }, onClick = { menu = false; onFork() })
+                        DropdownMenuItem(text = { Text(stringResource(R.string.chat_edit)) }, leadingIcon = { Icon(LocusIcons.Edit, null) }, enabled = branchEnabled, onClick = { menu = false; onEdit() })
+                        DropdownMenuItem(text = { Text(stringResource(R.string.chat_fork)) }, leadingIcon = { Icon(LocusIcons.Branch, null) }, onClick = { menu = false; onFork() })
                     }
                 }
             }
@@ -1278,8 +1279,8 @@ private fun QueuedBubble(
                 Modifier.weight(1f, fill = false),
                 style = MaterialTheme.typography.labelSmall,
             )
-            TextButton(onClick = onEdit) { Text("Edit") }
-            TextButton(onClick = onCancel) { Text("Cancel") }
+            TextButton(onClick = onEdit) { Text(stringResource(R.string.chat_edit)) }
+            TextButton(onClick = onCancel) { Text(stringResource(R.string.chat_cancel)) }
         }
     }
 }
@@ -1289,14 +1290,14 @@ private fun QueuedBubble(
 private fun BranchSwitcher(branch: dev.locus.core.model.Branch, enabled: Boolean, onSwitch: (String) -> Unit) {
     val tint = MaterialTheme.colorScheme.onSurfaceVariant
     Row(verticalAlignment = Alignment.CenterVertically) {
-        CompactIconButton(LocusIcons.ChevronLeft, "Previous version", onClick = { branch.previous?.let(onSwitch) }, enabled = enabled && branch.previous != null, tint = tint)
+        CompactIconButton(LocusIcons.ChevronLeft, stringResource(R.string.chat_previous_version), onClick = { branch.previous?.let(onSwitch) }, enabled = enabled && branch.previous != null, tint = tint)
         Text(
             "${branch.index + 1}/${branch.count}",
             style = LocusType.mono,
             color = tint,
             modifier = Modifier.semantics { contentDescription = "Version ${branch.index + 1} of ${branch.count}" },
         )
-        CompactIconButton(LocusIcons.ChevronRight, "Next version", onClick = { branch.next?.let(onSwitch) }, enabled = enabled && branch.next != null, tint = tint)
+        CompactIconButton(LocusIcons.ChevronRight, stringResource(R.string.chat_next_version), onClick = { branch.next?.let(onSwitch) }, enabled = enabled && branch.next != null, tint = tint)
     }
 }
 
@@ -1307,7 +1308,7 @@ private fun TurnEndRow(turn: TurnBranch, onRegenerate: (String) -> Unit, onSwitc
         // Labelled: a lone arrow under nothing doesn't say what it does. Pulled back so its icon starts on the text's edge.
         TextButton(onClick = { onRegenerate(turn.from) }, modifier = Modifier.offset(x = -Spacing.md)) {
             Icon(LocusIcons.Regenerate, contentDescription = null, modifier = Modifier.size(IconSize.small))
-            Text("Regenerate", Modifier.padding(start = Spacing.xs))
+            Text(stringResource(R.string.chat_regenerate), Modifier.padding(start = Spacing.xs))
         }
         turn.branch?.let { BranchSwitcher(it, enabled = true, onSwitch = onSwitch) }
     }
@@ -1360,7 +1361,7 @@ private fun AssistantText(
             modifier.then(
                 if (receipt == null) Modifier
                 else Modifier.clip(MaterialTheme.shapes.small)
-                    .clickable(role = androidx.compose.ui.semantics.Role.Button, onClickLabel = "Show run details") { showReceipt = true }
+                    .clickable(role = androidx.compose.ui.semantics.Role.Button, onClickLabel = stringResource(R.string.chat_show_run_details)) { showReceipt = true }
                     .heightIn(min = Sizes.touchTarget)
                     .wrapContentHeight(Alignment.CenterVertically)
                     .padding(horizontal = Spacing.xs),
@@ -1377,7 +1378,7 @@ private fun AssistantText(
         Row(verticalAlignment = Alignment.CenterVertically) {
             CompactIconButton(
                 if (copied.shown) LocusIcons.Check else LocusIcons.Copy,
-                if (copied.shown) "Copied" else "Copy reply",
+                if (copied.shown) stringResource(R.string.chat_copied) else stringResource(R.string.chat_copy_reply),
                 onClick = {
                     scope.launch {
                         clipboard.setClipEntry(androidx.compose.ui.platform.ClipEntry(android.content.ClipData.newPlainText("Locus", text)))
@@ -1388,27 +1389,27 @@ private fun AssistantText(
                 tint = tint,
             )
             if (turn != null && branchEnabled) {
-                CompactIconButton(LocusIcons.Regenerate, "Regenerate", onClick = { onRegenerate(turn.from) }, modifier = action, tint = tint)
+                CompactIconButton(LocusIcons.Regenerate, stringResource(R.string.chat_regenerate), onClick = { onRegenerate(turn.from) }, modifier = action, tint = tint)
             }
             Box {
-                CompactIconButton(LocusIcons.More, "More reply actions", onClick = { menu = true }, modifier = action, tint = tint)
+                CompactIconButton(LocusIcons.More, stringResource(R.string.chat_more_reply_actions), onClick = { menu = true }, modifier = action, tint = tint)
                 DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                     DropdownMenuItem(
-                        text = { Text(if (reading) "Stop reading" else "Read aloud") },
+                        text = { Text(if (reading) stringResource(R.string.chat_stop_reading) else stringResource(R.string.chat_read_aloud)) },
                         leadingIcon = { Icon(if (reading) LocusIcons.Stop else LocusIcons.Speaker, null) },
                         onClick = { menu = false; onReadAloud() },
                     )
-                    DropdownMenuItem(text = { Text("Fork into new chat") }, leadingIcon = { Icon(LocusIcons.Branch, null) }, onClick = { menu = false; onFork() })
+                    DropdownMenuItem(text = { Text(stringResource(R.string.chat_fork)) }, leadingIcon = { Icon(LocusIcons.Branch, null) }, onClick = { menu = false; onFork() })
                     onSaveWorkflow?.let { save ->
-                        DropdownMenuItem(text = { Text("Save as workflow") }, leadingIcon = { Icon(LocusIcons.Play, null) }, onClick = { menu = false; save() })
+                        DropdownMenuItem(text = { Text(stringResource(R.string.chat_save_workflow)) }, leadingIcon = { Icon(LocusIcons.Play, null) }, onClick = { menu = false; save() })
                     }
                     if (receipt != null) {
-                        DropdownMenuItem(text = { Text("Run details") }, leadingIcon = { Icon(LocusIcons.Gauge, null) }, onClick = { menu = false; showReceipt = true })
+                        DropdownMenuItem(text = { Text(stringResource(R.string.chat_run_details)) }, leadingIcon = { Icon(LocusIcons.Gauge, null) }, onClick = { menu = false; showReceipt = true })
                     }
                     // Still opens when not kept: the sheet says why it can't be shown.
                     val kept = remember(menu) { menu && whatWasSentKept() }
                     DropdownMenuItem(
-                        text = { Text(if (kept) "What was sent" else "What was sent (not kept)") },
+                        text = { Text(if (kept) stringResource(R.string.chat_what_was_sent) else stringResource(R.string.chat_sent_not_kept)) },
                         leadingIcon = { Icon(LocusIcons.Code, null) },
                         onClick = { menu = false; onWhatWasSent() },
                     )
@@ -1448,14 +1449,14 @@ private fun ToolCallRow(item: ChatItem.ToolCall, running: Boolean) {
             )
             when {
                 running -> StatusDot(Tone.Live)
-                done -> Icon(LocusIcons.Check, contentDescription = "Done", modifier = Modifier.size(IconSize.small), tint = Locus.colors.live)
+                done -> Icon(LocusIcons.Check, contentDescription = stringResource(R.string.chat_done), modifier = Modifier.size(IconSize.small), tint = Locus.colors.live)
                 else -> Text(
                     when {
-                        item.result == null -> "Not run"
-                        item.name == dev.locus.core.model.AgentControlTools.ASK_USER -> "No answer"
-                        decision == ApprovalDecision.USER_DENIED -> "You declined"
-                        decision == ApprovalDecision.POLICY_DENIED -> "Blocked"
-                        decision == ApprovalDecision.REVIEWER_DENIED -> "Reviewer blocked"
+                        item.result == null -> stringResource(R.string.chat_not_run)
+                        item.name == dev.locus.core.model.AgentControlTools.ASK_USER -> stringResource(R.string.chat_no_answer)
+                        decision == ApprovalDecision.USER_DENIED -> stringResource(R.string.chat_you_declined)
+                        decision == ApprovalDecision.POLICY_DENIED -> stringResource(R.string.chat_blocked)
+                        decision == ApprovalDecision.REVIEWER_DENIED -> stringResource(R.string.chat_reviewer_blocked)
                         else -> "Failed"
                     },
                     style = LocusType.chip,
@@ -1544,7 +1545,7 @@ private fun MessagesBanner(
     onDismiss: () -> Unit,
     modifier: Modifier,
     onContinue: (() -> Unit)? = null,
-    continueLabel: String = "Continue",
+    continueLabel: String = stringResource(R.string.chat_continue),
     failure: dev.locus.core.agent.RunFailure? = null,
     failureActions: FailureActions = FailureActions(),
 ) {
@@ -1565,7 +1566,7 @@ private fun MessagesBanner(
                 itemVerticalAlignment = Alignment.CenterVertically,
             ) {
                 SettingsActionFor(error)
-                TextButton(onClick = failureActions.onDetails) { Text("Details") }
+                TextButton(onClick = failureActions.onDetails) { Text(stringResource(R.string.chat_details)) }
                 if (model.suggestCompact) failureActions.onCompact?.let { TextButton(onClick = it) { Text("Summarise chat") } }
                 if (model.suggestSwitchModel) failureActions.onSwitchModel?.let { TextButton(onClick = it) { Text("Switch model") } }
                 onContinue?.let { TextButton(onClick = it) { Text(continueLabel) } }
@@ -1613,7 +1614,7 @@ private fun BudgetMeterChip(meter: dev.locus.core.agent.BudgetMeter, paused: Boo
 private fun BudgetPauseCard(pause: dev.locus.core.data.agent.BudgetPause, meter: dev.locus.core.agent.BudgetMeter?, onAnswer: (Boolean) -> Unit, modifier: Modifier) {
     Banner(budgetPauseText(pause.message, meter), Tone.Caution, modifier, title = "Paused at the task budget", actionsBelow = true) {
         TextButton(onClick = { onAnswer(false) }) { Text("Stop") }
-        Button(onClick = { onAnswer(true) }) { Text("Continue") }
+        Button(onClick = { onAnswer(true) }) { Text(stringResource(R.string.chat_continue)) }
     }
 }
 
@@ -1700,7 +1701,7 @@ private fun TokensSheet(tokens: ChatTokens, provider: ChatProvider?, canCompact:
         GroupDivider(inset = 0.dp)
         CardGroup {
             ListRow(
-                title = "What was sent",
+                title = stringResource(R.string.chat_what_was_sent),
                 subtitle = "The last request: system prompt, tools and messages",
                 onClick = onShowSent,
                 leading = { IconTile(LocusIcons.Code) },
@@ -1813,7 +1814,7 @@ private fun LivePanel(
     modifier: Modifier = Modifier,
 ) {
     LocusCard(modifier, contentPadding = PaddingValues(0.dp)) {
-        // The edge toggles pick the view, so the header just names it: "Terminal", or the page and its address.
+        // The edge toggles pick the view, so the header just names it: stringResource(R.string.chat_terminal), or the page and its address.
         Row(Modifier.fillMaxWidth().padding(start = Spacing.md, end = Spacing.xs, top = Spacing.xs, bottom = Spacing.xs), verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 if (kind == LivePanelKind.Browser) LocusIcons.Globe else LocusIcons.Terminal,
@@ -1824,9 +1825,9 @@ private fun LivePanel(
             Column(Modifier.weight(1f).padding(horizontal = Spacing.sm)) {
                 val url = state.browserUrl.substringAfter("://").removeSuffix("/")
                 val title = when {
-                    kind == LivePanelKind.Terminal -> "Terminal"
-                    !state.browserHasPage -> "Browser"
-                    else -> state.browserTitle.ifBlank { url.substringBefore('/').ifBlank { "Browser" } }
+                    kind == LivePanelKind.Terminal -> stringResource(R.string.chat_terminal)
+                    !state.browserHasPage -> stringResource(R.string.chat_browser)
+                    else -> state.browserTitle.ifBlank { url.substringBefore('/').ifBlank { stringResource(R.string.chat_browser) } }
                 }
                 Text(title, style = LocusType.cardTitle, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 if (kind == LivePanelKind.Browser && state.browserHasPage && url.isNotEmpty()) {

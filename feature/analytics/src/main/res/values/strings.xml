@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="analytics_title">Insights</string>
+    <string name="analytics_subtitle">Counted on this phone from your chats</string>
+    <string name="analytics_empty_title">Nothing to count yet</string>
+    <string name="analytics_empty_body">Token use, reply times and tool calls show up here once you've chatted with Locus in this period.</string>
+    <string name="analytics_estimated_spend">Estimated spend</string>
+    <string name="analytics_spend_by_model">Spend by model</string>
+    <string name="analytics_spend_by_source">Spend by source</string>
+    <string name="analytics_by_model">By model</string>
+    <string name="analytics_where_tokens_went">Where tokens went</string>
+    <string name="analytics_tools">Tools</string>
+    <string name="analytics_slowest_tools">Slowest tools</string>
+    <string name="analytics_slowest_note">Timed on calls that ran without asking you.</string>
+    <string name="analytics_busiest_chats">Busiest chats</string>
+    <string name="analytics_scheduled_tasks">Scheduled tasks</string>
+    <string name="analytics_tokens">Tokens</string>
+    <string name="analytics_spend">Spend</string>
+    <string name="analytics_estimate">Estimate</string>
+    <string name="analytics_turn_on_prices">Turn on prices</string>
+    <string name="analytics_try_again">Try again</string>
+    <string name="analytics_today">Today</string>
+    <string name="analytics_period_7_days">7 days</string>
+    <string name="analytics_period_30_days">30 days</string>
+    <string name="analytics_period_all_time">All time</string>
+    <string name="analytics_input_tokens">in %1$s</string>
+    <string name="analytics_output_tokens">out %1$s</string>
+    <string name="analytics_cached_percent">%1$d%% cached</string>
+    <string name="analytics_reasoning_tokens">of which %1$s thinking</string>
+    <string name="analytics_requests">Requests</string>
+    <string name="analytics_median_reply">Median reply</string>
+    <string name="analytics_slowest_five_percent">Slowest 5%</string>
+    <string name="analytics_approvals">Approvals</string>
+    <string name="analytics_calls">Calls</string>
+    <string name="analytics_succeeded">Succeeded</string>
+    <string name="analytics_failed">Failed</string>
+    <string name="analytics_paused">Paused</string>
+    <string name="analytics_removed">Removed</string>
+</resources>

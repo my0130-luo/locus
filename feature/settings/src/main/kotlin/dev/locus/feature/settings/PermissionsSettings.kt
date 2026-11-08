@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -60,18 +61,18 @@ internal fun PermissionsSettings(
     onSetReviewerOutward: (Boolean) -> Unit = {},
     onRevoke: (String) -> Unit = {},
 ) {
-    SettingsPageScaffold("Permissions", onBack) {
-        item { SectionLabel("Safety reviewer", SectionPadding) }
+    SettingsPageScaffold(stringResource(R.string.permissions_title), onBack) {
+        item { SectionLabel(stringResource(R.string.permissions_reviewer), SectionPadding) }
         item { ReviewerCard(state, onSetReviewerMode, onSetReviewerOutward) }
         item {
             SectionNote(
-                "A second AI model checks actions against what you asked before they run. It sees your recent messages and the action, " +
-                    "never web pages, emails or files the agent read. Anything it isn't sure about comes to you, and Deny below always wins.",
+                stringResource(R.string.permissions_reviewer_body1) +
+                    stringResource(R.string.permissions_reviewer_body2),
                 NotePadding,
             )
         }
-        item { SectionLabel("Tools", SectionPadding) }
-        item { SectionNote("Allow runs without asking. Ask shows you each action first. Deny blocks the tool.", Modifier.padding(top = Spacing.md, start = 0.dp)) }
+        item { SectionLabel(stringResource(R.string.permissions_tools), SectionPadding) }
+        item { SectionNote(stringResource(R.string.permissions_tools_body), Modifier.padding(top = Spacing.md, start = 0.dp)) }
         item {
             val groups = state.tools.groupBy { accentFor(it.name).first }.toSortedMap(compareBy { it.ordinal })
             CardGroup {
@@ -81,13 +82,13 @@ internal fun PermissionsSettings(
                 }
             }
         }
-        item { SectionNote("Some actions, like sensitive clicks in the browser, always ask regardless of these settings.", NotePadding) }
-        item { SectionLabel("Remembered", SectionPadding) }
+        item { SectionNote(stringResource(R.string.permissions_sensitive_note), NotePadding) }
+        item { SectionLabel(stringResource(R.string.permissions_remembered), SectionPadding) }
         item { RememberedCard(state.remembered, onRevoke) }
         item {
             SectionNote(
-                "Answers you gave with “This chat” or “Always” on an approval card. Each covers one tool and one site, folder, " +
-                    "recipient or command. “Always” lasts 30 days. Deny, project limits, payments and the reviewer still win.",
+                stringResource(R.string.permissions_remembered_body1) +
+                    stringResource(R.string.permissions_remembered_body2),
                 NotePadding,
             )
         }
@@ -99,7 +100,7 @@ internal fun PermissionsSettings(
 private fun RememberedCard(rules: List<RememberedApproval>, onRevoke: (String) -> Unit) {
     CardGroup {
         if (rules.isEmpty()) {
-            ListRow(title = "Nothing remembered", subtitle = "Every action set to Ask asks you.")
+            ListRow(title = stringResource(R.string.permissions_nothing_remembered), subtitle = stringResource(R.string.permissions_nothing_remembered_body))
         }
         rules.forEachIndexed { i, rule ->
             if (i > 0) GroupDivider(inset = Insets.iconRow)
@@ -109,7 +110,7 @@ private fun RememberedCard(rules: List<RememberedApproval>, onRevoke: (String) -
                 subtitle = rememberedSubtitle(rule, System.currentTimeMillis()),
                 titleMaxLines = 2,
                 leading = { AccentTile(accent, icon, size = IconSize.tile) },
-                trailing = { TextButton(onClick = { onRevoke(rule.id) }) { Text("Revoke") } },
+                trailing = { TextButton(onClick = { onRevoke(rule.id) }) { Text(stringResource(R.string.permissions_revoke)) } },
             )
         }
     }
@@ -152,12 +153,12 @@ private fun rememberedTitleText(rule: RememberedApproval): String {
 
 private const val FOLDER_SLOT = "\u0000"
 
-/** Where and how long it applies: "This chat only", "Always · 12 days left", plus "in its project" when made in one. */
+/** Where and how long it applies: stringResource(R.string.permissions_this_chat), "Always · 12 days left", plus "in its project" when made in one. */
 internal fun rememberedSubtitle(rule: RememberedApproval, now: Long): String {
     val expires = rule.expiresAt
     val span = when {
-        rule.conversationId != null -> "This chat only"
-        expires == null -> "Always"
+        rule.conversationId != null -> stringResource(R.string.permissions_this_chat)
+        expires == null -> stringResource(R.string.permissions_always)
         else -> {
             val days = (expires - now) / (24L * 60 * 60 * 1000)
             if (days < 1) "Always · ends today" else "Always · $days ${if (days == 1L) "day" else "days"} left"
@@ -166,7 +167,7 @@ internal fun rememberedSubtitle(rule: RememberedApproval, now: Long): String {
     return if (rule.projectId != null) "$span · in its project" else span
 }
 
-private val REVIEWER_LABELS = listOf("Off", "Ask actions", "All changes")
+private val REVIEWER_LABELS = listOf(stringResource(R.string.permissions_off), stringResource(R.string.permissions_ask_actions), stringResource(R.string.permissions_all_changes))
 
 /** The reviewer's mode, the model it runs on, and whether it may approve outward-facing actions. */
 @Composable
@@ -189,10 +190,10 @@ private fun ReviewerCard(state: SettingsUiState, onSetMode: (ReviewerMode) -> Un
         if (state.reviewerMode != ReviewerMode.OFF) {
             GroupDivider(inset = Spacing.lg)
             SwitchRow(
-                title = "Let it approve outward-facing actions",
+                title = stringResource(R.string.permissions_reviewer_outward),
                 checked = state.reviewerApprovesOutward,
                 onCheckedChange = onSetOutward,
-                subtitle = "Sending email, deploying, paying and similar. Off: these always come to you.",
+                subtitle = stringResource(R.string.permissions_reviewer_outward_body),
                 icon = LocusIcons.Globe,
             )
         }
@@ -200,9 +201,9 @@ private fun ReviewerCard(state: SettingsUiState, onSetMode: (ReviewerMode) -> Un
 }
 
 private fun reviewerModeHint(mode: ReviewerMode, model: String) = when (mode) {
-    ReviewerMode.OFF -> "Actions set to Ask always ask you."
-    ReviewerMode.REVIEW_ASKS -> "Checks actions set to Ask: runs the clearly fine ones, blocks the clearly wrong ones, asks you about the rest. Uses $model."
-    ReviewerMode.REVIEW_ALL_BUT_READS -> "Also checks allowed actions that change something; any it doesn't clear come to you. Uses $model."
+    ReviewerMode.OFF -> stringResource(R.string.permissions_ask_actions_body)
+    ReviewerMode.REVIEW_ASKS -> stringResource(R.string.permissions_reviewer_mode_body)
+    ReviewerMode.REVIEW_ALL_BUT_READS -> stringResource(R.string.permissions_reviewer_all_changes_body)
 }
 
 /** The model that does the reviewing: the helper model, or each chat's own. */
@@ -213,16 +214,16 @@ internal fun reviewerModelLabel(state: SettingsUiState): String {
 }
 
 private fun groupTitle(accent: Accent) = when (accent) {
-    Accent.Files -> "Files"
-    Accent.Web -> "Web"
-    Accent.Linux -> "Linux & machines"
-    Accent.Memory -> "Memory & skills"
-    Accent.Device -> "Phone apps"
-    Accent.Connector -> "Integrations & connectors"
-    Accent.Agent -> "Other"
+    Accent.Files -> stringResource(R.string.permissions_files)
+    Accent.Web -> stringResource(R.string.permissions_web)
+    Accent.Linux -> stringResource(R.string.permissions_linux_machines)
+    Accent.Memory -> stringResource(R.string.permissions_memory_skills)
+    Accent.Device -> stringResource(R.string.permissions_phone_apps)
+    Accent.Connector -> stringResource(R.string.permissions_integrations)
+    Accent.Agent -> stringResource(R.string.permissions_other)
 }
 
-private val POLICY_LABELS = listOf("Allow", "Ask", "Deny")
+private val POLICY_LABELS = listOf(stringResource(R.string.permissions_allow), stringResource(R.string.permissions_ask), stringResource(R.string.permissions_deny))
 
 @Composable
 private fun policyTint(index: Int) = when (ToolPolicy.entries[index]) {
@@ -245,7 +246,7 @@ private fun PermissionGroup(accent: Accent, tools: List<ToolRow>, onSetPolicy: (
             trailing = {
                 Icon(
                     LocusIcons.ChevronRight,
-                    contentDescription = if (expanded) "Collapse" else "Expand",
+                    contentDescription = if (expanded) stringResource(R.string.permissions_collapse) else stringResource(R.string.permissions_expand),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.rotate(if (expanded) 90f else 0f),
                 )

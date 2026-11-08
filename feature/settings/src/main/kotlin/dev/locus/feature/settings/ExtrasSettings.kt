@@ -2,6 +2,7 @@ package dev.locus.feature.settings
 
 import androidx.compose.material3.RadioButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,13 +42,13 @@ internal fun ExtrasSettings(
     var editingPrompt by remember { mutableStateOf<HelperPrompt?>(null) }
     val helper = state.providers.firstOrNull { it.config.id == state.helperProviderId }?.config
 
-    SettingsPageScaffold("Helper model & extras", onBack) {
+    SettingsPageScaffold(stringResource(R.string.extras_title), onBack) {
         item {
             CardGroup {
                 ListRow(
-                    title = "Helper model",
+                    title = stringResource(R.string.extras_helper_model),
                     subtitle = helper?.let { "${it.name} · ${dev.locus.core.model.ModelNames.short(state.helperModel.ifBlank { it.model })}" }
-                        ?: if (state.helperAutomatic) "Automatic · $AUTOMATIC_SHORT" else "Same as each chat",
+                        ?: if (state.helperAutomatic) stringResource(R.string.extras_automatic) else stringResource(R.string.extras_same_as_chat),
                     subtitleMaxLines = 2,
                     onClick = { editingHelper = true },
                     leading = {
@@ -68,42 +69,42 @@ internal fun ExtrasSettings(
                 NotePadding,
             )
         }
-        item { SectionLabel("Chat extras", SectionPadding) }
+        item { SectionLabel(stringResource(R.string.extras_chat_extras), SectionPadding) }
         item {
             CardGroup {
                 SwitchRow(
-                    title = "Name chats automatically",
+                    title = stringResource(R.string.extras_auto_name),
                     checked = state.autoTitle,
                     onCheckedChange = onSetAutoTitle,
-                    subtitle = "Gives each chat a short title after the first reply",
+                    subtitle = stringResource(R.string.extras_auto_name_body),
                     icon = LocusIcons.Chats,
                 )
                 GroupDivider(inset = Insets.iconRow)
                 SwitchRow(
-                    title = "Suggest follow-ups",
+                    title = stringResource(R.string.extras_suggest_followups),
                     checked = state.suggestFollowUps,
                     onCheckedChange = onSetSuggest,
-                    subtitle = "Shows a few things you might say next under each reply",
+                    subtitle = stringResource(R.string.extras_suggest_body),
                     icon = LocusIcons.Send,
                 )
                 GroupDivider(inset = Insets.iconRow)
                 SwitchRow(
-                    title = "Learn after tasks",
+                    title = stringResource(R.string.extras_learn_after_tasks),
                     checked = state.reflectAfterTasks,
                     onCheckedChange = onSetReflect,
-                    subtitle = "After a longer task, Locus may save a short lesson to memory",
+                    subtitle = stringResource(R.string.extras_learn_body),
                     icon = LocusIcons.Note,
                 )
             }
         }
-        item { SectionLabel("Prompts", SectionPadding) }
+        item { SectionLabel(stringResource(R.string.extras_prompts), SectionPadding) }
         item {
             CardGroup {
                 HelperPrompt.entries.forEachIndexed { i, prompt ->
                     if (i > 0) GroupDivider(inset = Insets.iconRow)
                     ListRow(
                         title = prompt.label,
-                        subtitle = if (prompt in state.helperPrompts) "Edited" else "Default",
+                        subtitle = if (prompt in state.helperPrompts) stringResource(R.string.extras_edited) else stringResource(R.string.extras_default),
                         onClick = { editingPrompt = prompt },
                         leading = { IconTile(prompt.icon) },
                         trailing = { RowChevron() },
@@ -142,7 +143,7 @@ internal fun ExtrasSettings(
     }
 }
 
-/** What "Automatic" picks, in a few words for the row and the sheet. */
+/** What stringResource(R.string.extras_automatic_label) picks, in a few words for the row and the sheet. */
 private const val AUTOMATIC_SHORT = "a cheaper model from each chat's provider"
 
 /** Picks the helper model: Automatic, the same as each chat, or a provider and, optionally, a cheaper model on it. */
@@ -161,21 +162,21 @@ private fun HelperSheet(
     // Only read while no provider is chosen.
     var automatic by remember { mutableStateOf(selectedAutomatic) }
     LocusSheet(
-        title = "Helper model",
+        title = stringResource(R.string.extras_helper_model),
         subtitle = "Writes chat titles and follow-up suggestions. Researcher and explorer helpers run on it too, and the safety reviewer when you choose a model here.",
         onDismiss = onDismiss,
-        action = "Save",
+        action = stringResource(R.string.extras_save),
         onAction = { onSave(id, if (id == null) "" else model, id == null && automatic) },
     ) {
         CardGroup {
             HelperOption(
-                "Automatic",
+                stringResource(R.string.extras_automatic_label),
                 "A cheaper model of the chat's provider (Haiku for Claude), when one is known",
                 selected = id == null && automatic,
                 onClick = { id = null; model = ""; automatic = true },
             ) { IconTile(LocusIcons.Sparkle) }
             GroupDivider(inset = Insets.iconRow)
-            HelperOption("Same as each chat", "Side jobs and helpers use the chat's own model", selected = id == null && !automatic, onClick = { id = null; model = ""; automatic = false }) {
+            HelperOption(stringResource(R.string.extras_same_as_chat), "Side jobs and helpers use the chat's own model", selected = id == null && !automatic, onClick = { id = null; model = ""; automatic = false }) {
                 IconTile(LocusIcons.Chats)
             }
             providers.forEach { p ->

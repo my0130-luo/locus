@@ -28,6 +28,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -114,25 +115,25 @@ internal fun ModelsSettings(
         }
     }
 
-    SettingsPageScaffold("Models", onBack) {
-        item { SectionLabel("Providers", SectionPadding) }
+    SettingsPageScaffold(stringResource(R.string.models_title), onBack) {
+        item { SectionLabel(stringResource(R.string.models_providers), SectionPadding) }
         item {
             CardGroup {
                 state.providers.forEachIndexed { i, row ->
                     if (i > 0) GroupDivider(inset = Insets.iconRow)
                     ListRow(
                         title = row.config.name,
-                        subtitle = row.config.model.takeIf { it.isNotBlank() }?.let(dev.locus.core.model.ModelNames::short) ?: "Model not set",
+                        subtitle = row.config.model.takeIf { it.isNotBlank() }?.let(dev.locus.core.model.ModelNames::short) ?: stringResource(R.string.models_not_set),
                         titleMaxLines = 2,
                         onClick = { editing = Editing.Provider(row.config, isNew = false, hasKey = row.hasKey, isDefault = row.isDefault, hasBackupKeys = row.hasBackupKeys) },
                         // The provider's own mark, the same on every screen; the model is named in the subtitle.
                         leading = { ProviderBadge(row.config.name, row.config.baseUrl, row.config.format == ApiFormat.ON_DEVICE, size = IconSize.tile) },
                         trailing = {
                             when {
-                                row.config.addressUnconfirmed -> StatusPill("Check address", Tone.Caution)
-                                row.config.signsIn && !row.hasKey -> StatusPill("Signed out", Tone.Caution)
-                                row.config.requiresKey && !row.hasKey -> StatusPill("No key", Tone.Caution)
-                                row.isDefault -> StatusPill("Default", Tone.Brand)
+                                row.config.addressUnconfirmed -> StatusPill(stringResource(R.string.models_check_address), Tone.Caution)
+                                row.config.signsIn && !row.hasKey -> StatusPill(stringResource(R.string.models_signed_out), Tone.Caution)
+                                row.config.requiresKey && !row.hasKey -> StatusPill(stringResource(R.string.models_no_key), Tone.Caution)
+                                row.isDefault -> StatusPill(stringResource(R.string.models_default), Tone.Brand)
                             }
                         },
                     )
@@ -143,19 +144,19 @@ internal fun ModelsSettings(
                     ProviderDraftListRow(row) { editing = Editing.Draft(row.draft.id) }
                 }
                 if (state.providers.isNotEmpty() || state.providerDrafts.isNotEmpty()) GroupDivider(inset = Insets.iconRow)
-                AddRow("Add a model provider") { editing = Editing.PickPreset }
+                AddRow(stringResource(R.string.models_add_provider)) { editing = Editing.PickPreset }
             }
         }
         item {
             SectionNote(
-                "Requests go straight from this phone to the provider. Keys and sign-ins are encrypted with a key held in Android's secure hardware. Open a provider to make it the default." +
-                    if (state.providerDrafts.isNotEmpty()) " Providers the agent drafted are never used until you review and approve them." else "",
+                stringResource(R.string.models_provider_intro) +
+                    if (state.providerDrafts.isNotEmpty()) stringResource(R.string.models_drafted_note) else "",
                 NotePadding,
             )
         }
 
         if (state.providers.any { it.config.format != ApiFormat.ON_DEVICE }) {
-            item { SectionLabel("Backup models", SectionPadding) }
+            item { SectionLabel(stringResource(R.string.models_backup_models), SectionPadding) }
             item {
                 BackupModels(
                     chain = state.fallbackModels,
@@ -174,14 +175,14 @@ internal fun ModelsSettings(
             }
         }
 
-        item { SectionLabel("Model details", SectionPadding) }
+        item { SectionLabel(stringResource(R.string.models_details), SectionPadding) }
         item {
             CardGroup {
                 SwitchRow(
-                    title = "Context sizes and abilities",
+                    title = stringResource(R.string.models_context_abilities),
                     checked = state.modelCatalog,
                     onCheckedChange = onSetModelCatalog,
-                    subtitle = "From the public models.dev catalogue, shown in the model picker.",
+                    subtitle = stringResource(R.string.models_catalogue_intro),
                     icon = LocusIcons.Library,
                 )
             }
@@ -193,16 +194,16 @@ internal fun ModelsSettings(
             )
         }
 
-        item { SectionLabel("On this phone", SectionPadding) }
+        item { SectionLabel(stringResource(R.string.models_on_phone), SectionPadding) }
         item {
             CardGroup {
                 val installed = state.onDeviceModels.count { it.second == ModelState.Ready } + state.ggufModels.size
                 val used = state.onDeviceModels.filter { it.second == ModelState.Ready }.sumOf { it.first.sizeBytes } + state.ggufModels.sumOf { it.model.sizeBytes }
                 val downloading = state.onDeviceModels.count { it.second is ModelState.Downloading }
                 ListRow(
-                    title = "On-device models",
+                    title = stringResource(R.string.models_on_device),
                     subtitle = listOfNotNull(
-                        if (installed == 0) "None installed" else "$installed installed · ${gb(used)} GB",
+                        if (installed == 0) stringResource(R.string.models_none_installed) else "$installed installed · ${gb(used)} GB",
                         if (downloading > 0) "$downloading downloading" else null,
                     ).joinToString(" · "),
                     onClick = onOpenOnDeviceModels,
@@ -332,7 +333,7 @@ private fun FallbackPicker(
         title = "Add a backup model",
         subtitle = "Asked when a chat's own model can't answer. It gets the same request: the same instructions, tools and messages.",
         onDismiss = onDismiss,
-        action = "Add",
+        action = stringResource(R.string.models_add),
         actionEnabled = provider != null && model.ifBlank { provider.model }.isNotBlank(),
         onAction = { provider?.let { onAdd(ModelRef(it.id, model.ifBlank { it.model })) } },
     ) {
@@ -342,7 +343,7 @@ private fun FallbackPicker(
                 val select = { if (id != p.id) { id = p.id; model = "" } }
                 ListRow(
                     title = p.name,
-                    subtitle = p.model.takeIf { it.isNotBlank() }?.let(dev.locus.core.model.ModelNames::short) ?: "Model not set",
+                    subtitle = p.model.takeIf { it.isNotBlank() }?.let(dev.locus.core.model.ModelNames::short) ?: stringResource(R.string.models_not_set),
                     onClick = select,
                     leading = { ProviderBadge(p.name, p.baseUrl, false, size = IconSize.tile, model = p.model) },
                     trailing = { RadioButton(selected = id == p.id, onClick = select) },
@@ -366,7 +367,7 @@ private fun FallbackPicker(
 
 @Composable
 private fun PresetPicker(onPick: (ProviderPreset) -> Unit, onDismiss: () -> Unit) {
-    LocusSheet(title = "Add a model provider", subtitle = "Pick where your model runs. You can add several.", onDismiss = onDismiss) {
+    LocusSheet(title = stringResource(R.string.models_add_provider), subtitle = stringResource(R.string.models_pick_location), onDismiss = onDismiss) {
         CardGroup {
             ProviderPresets.all.forEachIndexed { i, preset ->
                 if (i > 0) GroupDivider(inset = Insets.iconRow)
@@ -423,9 +424,9 @@ private fun ProviderEditor(
     val localNetwork = rememberLocalNetworkGate()
 
     LocusSheet(
-        title = if (editing.isNew) "New provider" else initial.name,
+        title = if (editing.isNew) stringResource(R.string.models_new_provider) else initial.name,
         onDismiss = onDismiss,
-        action = "Save",
+        action = stringResource(R.string.models_save),
         actionEnabled = canSave,
         onAction = {
             val config = initial.copy(
@@ -449,7 +450,7 @@ private fun ProviderEditor(
             }
         },
     ) {
-        OutlinedTextField(name, { name = it }, label = { Text("Name") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(name, { name = it }, label = { Text(stringResource(R.string.models_name)) }, singleLine = true, modifier = Modifier.fillMaxWidth())
         if (onDevice) {
             OnDeviceModelPicker(onDeviceModels, pausedBytes, ramWarnings, selected = model, onSelect = { model = it }, onAction = onModelAction)
             GgufModelChoices(ggufModels, selected = model, onSelect = { model = it })
@@ -459,13 +460,13 @@ private fun ProviderEditor(
             if (!signsIn) OutlinedTextField(
                 baseUrl,
                 { baseUrl = it.trim() },
-                label = { Text("Base URL") },
+                label = { Text(stringResource(R.string.models_base_url)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
                 supportingText = (
                     urlWarning ?: if (initial.addressUnconfirmed) {
-                        "This address was changed outside Locus. Check it: Locus won't send your key until you save."
+                        stringResource(R.string.models_address_changed)
                     } else {
                         null
                     }
@@ -476,7 +477,7 @@ private fun ProviderEditor(
                 OutlinedTextField(
                     key,
                     { key = it },
-                    label = { Text(if (editing.hasKey) "API key (saved — type to replace)" else "API key") },
+                    label = { Text(if (editing.hasKey) stringResource(R.string.models_api_key_replace) else stringResource(R.string.models_api_key)) },
                     singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -486,7 +487,7 @@ private fun ProviderEditor(
                 OutlinedTextField(
                     backupKeys,
                     { backupKeys = it },
-                    label = { Text(if (backupsSaved) "Backup keys (saved — type to replace)" else "Backup keys (optional)") },
+                    label = { Text(if (backupsSaved) stringResource(R.string.models_backup_keys_replace) else stringResource(R.string.models_backup_keys_optional)) },
                     singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -497,7 +498,7 @@ private fun ProviderEditor(
                         )
                     },
                     trailingIcon = if (backupsSaved && backupKeys.isEmpty()) {
-                        { TextButton(onClick = { clearBackupKeys = true }) { Text("Remove") } }
+                        { TextButton(onClick = { clearBackupKeys = true }) { Text(stringResource(R.string.models_remove)) } }
                     } else {
                         null
                     },
@@ -514,8 +515,8 @@ private fun ProviderEditor(
             OutlinedTextField(
                 contextWindow,
                 { contextWindow = it.filter(Char::isDigit).take(8) },
-                label = { Text("Context window (tokens)") },
-                placeholder = { Text("e.g. 200000") },
+                label = { Text(stringResource(R.string.models_context_window)) },
+                placeholder = { Text(stringResource(R.string.models_context_placeholder)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 supportingText = { Text("Filled in from the model list when the provider reports it. Used to show how full a chat is and to summarise before it overflows.") },
@@ -524,20 +525,20 @@ private fun ProviderEditor(
             ProviderNetworkRow(network, networkDefaults, onOpen = { editingNetwork = true })
         }
         if (dev.locus.core.model.Effort.supports(initial.format, baseUrl)) {
-            Text("Effort", style = LocusType.label)
-            // Blank is "Default": no level is sent and the model uses its own.
+            Text(stringResource(R.string.models_effort), style = LocusType.label)
+            // Blank is stringResource(R.string.models_default): no level is sent and the model uses its own.
             val levels = listOf("", "low", "medium", "high", "xhigh")
-            Segmented(listOf("Default", "Low", "Medium", "High", "X-high"), selected = levels.indexOf(effort), onSelect = { effort = levels[it] }, modifier = Modifier.fillMaxWidth())
+            Segmented(listOf(stringResource(R.string.models_default), stringResource(R.string.models_low), stringResource(R.string.models_medium), stringResource(R.string.models_high), stringResource(R.string.models_xhigh)), selected = levels.indexOf(effort), onSelect = { effort = levels[it] }, modifier = Modifier.fillMaxWidth())
             val modelDefault = dev.locus.core.model.Effort.modelDefault(initial.format, baseUrl, model)
             SupportingText(
-                "Default lets the model use its own level" + (modelDefault?.let { " (${it.label.lowercase()} for this model)" } ?: "") +
+                stringResource(R.string.models_effort_default) + (modelDefault?.let { " (${it.label.lowercase()} for this model)" } ?: "") +
                     ". Higher effort thinks longer and costs more.",
             )
         }
         if (!editing.isNew) {
-            if (!editing.isDefault) TextButton(onClick = onMakeDefault) { Text("Make default") }
+            if (!editing.isDefault) TextButton(onClick = onMakeDefault) { Text(stringResource(R.string.models_make_default)) }
             // Removing the provider is the one destructive action here: full width, outlined in the critical colour.
-            CriticalOutlinedButton("Remove provider", onClick = { confirmDelete = true })
+            CriticalOutlinedButton(stringResource(R.string.models_remove_provider), onClick = { confirmDelete = true })
         }
     }
 
@@ -561,7 +562,7 @@ private fun ProviderEditor(
             } else {
                 "Its saved API key is deleted from this phone. Chats that used it switch to your default provider."
             },
-            confirmLabel = "Remove",
+            confirmLabel = stringResource(R.string.models_remove),
             tone = Tone.Critical,
             onConfirm = onDelete,
             onDismiss = { confirmDelete = false },
@@ -605,12 +606,12 @@ internal fun ModelField(
         OutlinedTextField(
             model,
             { onModel(it.trim(), null); open = true },
-            label = { Text("Model") },
-            placeholder = { Text(if (loading) "Loading models…" else "Pick or type a model ID") },
+            label = { Text(stringResource(R.string.models_model)) },
+            placeholder = { Text(if (loading) stringResource(R.string.models_loading) else stringResource(R.string.models_pick_model)) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {
-                if (models.isNotEmpty()) TextButton(onClick = { open = !open }) { Text(if (open) "Hide" else "${models.size} models") }
+                if (models.isNotEmpty()) TextButton(onClick = { open = !open }) { Text(if (open) stringResource(R.string.models_hide) else "${models.size} models") }
             },
             supportingText = error?.let { { Text(it, color = Locus.colors.critical) } },
         )
@@ -707,7 +708,7 @@ private fun OnDeviceModelStatus(
         ConfirmSheet(
             title = "Download ${m.name} anyway?",
             message = ramWarning,
-            confirmLabel = "Download anyway",
+            confirmLabel = stringResource(R.string.models_download_anyway),
             onConfirm = { confirmDownload = false; onAction(m.id, "download") },
             onDismiss = { confirmDownload = false },
         )
@@ -715,29 +716,29 @@ private fun OnDeviceModelStatus(
     val download = { if (ramWarning != null) confirmDownload = true else onAction(m.id, "download") }
     when (state) {
         ModelState.NotDownloaded -> if (paused != null) {
-            DownloadProgress(paused, m.sizeBytes, pad, "Resume", download)
+            DownloadProgress(paused, m.sizeBytes, pad, stringResource(R.string.models_resume), download)
         } else {
-            TextButton(onClick = download, modifier = pad) { Text("Download") }
+            TextButton(onClick = download, modifier = pad) { Text(stringResource(R.string.models_download)) }
         }
         is ModelState.Downloading -> Column {
-            DownloadProgress(state.bytes, state.total, pad, "Pause") { onAction(m.id, "cancel") }
+            DownloadProgress(state.bytes, state.total, pad, stringResource(R.string.models_pause)) { onAction(m.id, "cancel") }
             if (state.wifiOnly) WifiOnlyRow(pad) { onAction(m.id, "anynetwork") }
         }
-        ModelState.Verifying -> SupportingText("Checking the download…", pad)
+        ModelState.Verifying -> SupportingText(stringResource(R.string.models_checking_download), pad)
         ModelState.Ready -> Row(pad, verticalAlignment = Alignment.CenterVertically) {
-            Text("Downloaded", Modifier.weight(1f), style = LocusType.supporting, color = MaterialTheme.colorScheme.primary)
-            TextButton(onClick = { confirmDelete = true }) { Text("Delete") }
+            Text(stringResource(R.string.models_downloaded), Modifier.weight(1f), style = LocusType.supporting, color = MaterialTheme.colorScheme.primary)
+            TextButton(onClick = { confirmDelete = true }) { Text(stringResource(R.string.models_delete)) }
         }
         is ModelState.Failed -> Column(pad) {
             Text(state.message, style = LocusType.supporting, color = Locus.colors.critical)
-            TextButton(onClick = download) { Text("Retry") }
+            TextButton(onClick = download) { Text(stringResource(R.string.models_retry)) }
         }
     }
     if (confirmDelete) {
         ConfirmSheet(
             title = "Delete ${m.name}?",
             message = "Frees ${gb(m.sizeBytes)} GB on this phone. Using it again means downloading it again.",
-            confirmLabel = "Delete",
+            confirmLabel = stringResource(R.string.models_delete),
             tone = Tone.Critical,
             onConfirm = { confirmDelete = false; onAction(m.id, "delete") },
             onDismiss = { confirmDelete = false },
@@ -750,7 +751,7 @@ private fun OnDeviceModelStatus(
 internal fun WifiOnlyRow(modifier: Modifier, onUseMobileData: () -> Unit) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
         SupportingText("On Wi-Fi only: waits while you're on mobile data.", Modifier.weight(1f))
-        TextButton(onClick = onUseMobileData) { Text("Use mobile data") }
+        TextButton(onClick = onUseMobileData) { Text(stringResource(R.string.models_use_mobile_data)) }
     }
 }
 
@@ -758,7 +759,7 @@ internal fun WifiOnlyRow(modifier: Modifier, onUseMobileData: () -> Unit) {
 @Composable
 private fun DownloadProgress(bytes: Long, total: Long, modifier: Modifier, action: String, onClick: () -> Unit) {
     Column(modifier) {
-        Meter(meterFraction(bytes, total), tone = Tone.Live, contentDescription = "Downloaded")
+        Meter(meterFraction(bytes, total), tone = Tone.Live, contentDescription = stringResource(R.string.models_downloaded))
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text("${bytes / 1_000_000} / ${total / 1_000_000} MB", Modifier.weight(1f), style = LocusType.mono)
             TextButton(onClick = onClick) { Text(action) }

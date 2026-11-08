@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.ImageBitmap
@@ -36,6 +37,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.viewinterop.AndroidView
+import dev.locus.feature.workspace.R
 import dev.locus.core.designsystem.EmptyState
 import dev.locus.core.designsystem.LocusIcons
 import dev.locus.core.designsystem.Spacing
@@ -66,8 +68,8 @@ internal fun ImageViewer(file: File, modifier: Modifier = Modifier, onInfo: (Str
     when (val d = decoded) {
         Decoded.Loading -> Box(modifier.fillMaxSize())
         Decoded.Failed -> EmptyState(
-            "Can't show this image",
-            "The format isn't supported on this phone, or the file is damaged. Try Open with.",
+            stringResource(R.string.preview_image_failed_title),
+            stringResource(R.string.preview_image_failed_body),
             modifier,
             icon = LocusIcons.File,
         )

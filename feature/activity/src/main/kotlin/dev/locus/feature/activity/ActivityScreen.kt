@@ -38,7 +38,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalContext
+import dev.locus.feature.activity.R
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
@@ -108,14 +110,14 @@ fun ActivityRoute(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             LocusTopBar(
-                state.scopeTitle ?: "Activity",
+                state.scopeTitle ?: stringResource(R.string.activity_title),
                 onBack = if (state.scopedHere) viewModel::showEverything else onBack,
                 status = { TopStatus(state) },
                 actions = {
                     val id = state.conversationId
                     val exists = state.days.firstOrNull()?.runs?.firstOrNull()?.chat?.exists ?: (state.scopeTitle != "Deleted chat")
                     if (id != null && exists) {
-                        IconButton(onClick = { onOpenConversation(id) }) { Icon(LocusIcons.Chats, contentDescription = "Open chat") }
+                        IconButton(onClick = { onOpenConversation(id) }) { Icon(LocusIcons.Chats, contentDescription = stringResource(R.string.activity_open_chat)) }
                     }
                 },
             )
@@ -127,8 +129,8 @@ fun ActivityRoute(
         }
         if (state.totalInScope == 0 && state.filters.isDefault) {
             EmptyState(
-                if (state.conversationId == null) "Nothing yet" else "No actions in this chat",
-                "Every tool the agent uses is recorded here: what it ran, whether you approved it, and what happened.",
+                if (state.conversationId == null) stringResource(R.string.activity_nothing_yet) else stringResource(R.string.activity_no_actions_in_chat),
+                stringResource(R.string.activity_empty_explanation),
                 Modifier.padding(padding),
                 icon = LocusIcons.Activity,
             )
@@ -164,7 +166,7 @@ fun ActivityRoute(
             if (state.hasMore) {
                 item(key = "more", contentType = "more") {
                     Box(Modifier.fillMaxWidth().padding(top = Spacing.lg), contentAlignment = Alignment.Center) {
-                        TextButton(onClick = viewModel::loadMore) { Text("Load older activity") }
+                        TextButton(onClick = viewModel::loadMore) { Text(stringResource(R.string.activity_load_older)) }
                     }
                 }
             }
@@ -204,7 +206,7 @@ private fun TopStatus(state: ActivityUiState) {
 @Composable
 private fun Filters(filters: ActivityFilters, inChat: Boolean, viewModel: ActivityViewModel) {
     Column(Modifier.padding(top = Spacing.sm), verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
-        SearchField(filters.query, viewModel::setQuery, if (inChat) "Search this chat's actions" else "Search actions and chats")
+        SearchField(filters.query, viewModel::setQuery, if (inChat) stringResource(R.string.activity_search_chat_actions) else stringResource(R.string.activity_search_actions_chats))
         val task = filters.task
         if (task != null) {
             // From a task receipt: that task's entries only. Tapping the chip shows the whole chat again.
@@ -258,12 +260,12 @@ private fun ChipRow(content: @Composable () -> Unit) {
 @Composable
 private fun NoResults(filters: ActivityFilters, onClear: () -> Unit) {
     EmptyState(
-        if (filters.query.isBlank() && filters.kind == null && filters.status == null) "Nothing in this period" else "No matching actions",
-        "Try a wider time range or fewer filters.",
+        if (filters.query.isBlank() && filters.kind == null && filters.status == null) stringResource(R.string.activity_nothing_period) else stringResource(R.string.activity_no_matching_actions),
+        stringResource(R.string.activity_widen_filters),
         // Inside the list, under the filters: as tall as its content, with room around it, not the whole screen.
         Modifier.padding(vertical = Spacing.xxl),
         icon = LocusIcons.Search,
-    ) { TextButton(onClick = onClear) { Text("Clear filters") } }
+    ) { TextButton(onClick = onClear) { Text(stringResource(R.string.activity_clear_filters)) } }
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -301,7 +303,7 @@ private fun LazyListScope.runItems(
         val i = index++
         item(key = "${run.key}:earlier", contentType = "earlier") {
             Text(
-                "Show ${plural(hidden, "earlier action")}",
+                stringResource(R.string.activity_show_earlier, hidden),
                 Modifier.cardSegment(i, count).fillMaxWidth().clickable(onClick = onShowAll).padding(horizontal = Spacing.lg, vertical = Spacing.md),
                 style = LocusType.label,
                 color = MaterialTheme.colorScheme.primary,
@@ -318,8 +320,8 @@ private fun LazyListScope.runItems(
             Modifier.cardSegment(last, count).fillMaxWidth().padding(horizontal = Spacing.sm, vertical = Spacing.xs),
             horizontalArrangement = Arrangement.End,
         ) {
-            if (!inChat) TextButton(onClick = onViewChat) { Text("View all in this chat") }
-            if (run.chat.exists) TextButton(onClick = onOpenChat) { Text("Open chat") }
+            if (!inChat) TextButton(onClick = onViewChat) { Text(stringResource(R.string.activity_view_all_chat)) }
+            if (run.chat.exists) TextButton(onClick = onOpenChat) { Text(stringResource(R.string.activity_open_chat)) }
         }
     }
 }
@@ -342,7 +344,7 @@ private fun RunHeader(run: Run, expanded: Boolean, inChat: Boolean, modifier: Mo
                 )
                 if (!inChat) SupportingText(timeRange(context, run.start, run.end), style = LocusType.mono)
             }
-            Icon(LocusIcons.ChevronRight, contentDescription = if (expanded) "Collapse" else "Expand", tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(IconSize.medium).rotate(turn))
+            Icon(LocusIcons.ChevronRight, contentDescription = if (expanded) stringResource(R.string.activity_collapse) else stringResource(R.string.activity_expand), tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(IconSize.medium).rotate(turn))
         }
         Row(Modifier.padding(top = Spacing.sm), verticalAlignment = Alignment.CenterVertically) {
             run.accents.take(4).forEach { a ->
@@ -350,20 +352,23 @@ private fun RunHeader(run: Run, expanded: Boolean, inChat: Boolean, modifier: Mo
                 Spacer(Modifier.width(Spacing.xs))
             }
             val critical = Locus.colors.critical
+            val actionCount = stringResource(R.string.activity_action_count, run.actions)
+            val failedCount = if (run.failed > 0) stringResource(R.string.activity_failed_count, run.failed) else null
+            val approvalCount = if (run.asked > 0) stringResource(R.string.activity_approval_count, run.asked) else null
             val counts = buildAnnotatedString {
-                append(plural(run.actions, "action"))
-                if (run.failed > 0) {
+                append(actionCount)
+                failedCount?.let {
                     append(" · ")
-                    withStyle(SpanStyle(color = critical)) { append("${run.failed} failed") }
+                    withStyle(SpanStyle(color = critical)) { append(it) }
                 }
-                if (run.asked > 0) append(" · " + plural(run.asked, "approval"))
+                approvalCount?.let { append(" · $it") }
             }
             SupportingText(counts, Modifier.padding(start = Spacing.xs), maxLines = 1)
         }
         if (!expanded) {
             val e = run.latest
             SupportingText(
-                "Last: " + toolLabel(e.toolName, e.argumentsJson, done = !e.isError && !e.refused),
+                stringResource(R.string.activity_last_action, toolLabel(e.toolName, e.argumentsJson, done = !e.isError && !e.refused)),
                 Modifier.padding(top = Spacing.xs),
                 style = LocusType.rowSupporting,
                 maxLines = 1,
@@ -393,7 +398,7 @@ private fun CallRow(entry: AuditEntry, modifier: Modifier, onClick: () -> Unit) 
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        decisionPill(entry)?.let { (label, tone) -> LocusChip(label, Modifier.padding(end = Spacing.sm), tone = tone) }
+        localizedDecisionPill(entry)?.let { (label, tone) -> LocusChip(label, Modifier.padding(end = Spacing.sm), tone = tone) }
         SupportingText(durationLabel(entry.finishedAt - entry.startedAt), Modifier.widthIn(min = DurationColumnWidth), style = LocusType.mono, maxLines = 1)
     }
 }
@@ -409,18 +414,18 @@ private fun DetailSheet(entry: AuditEntry, chat: RunChat, onDismiss: () -> Unit,
         title = toolLabel(entry.toolName, entry.argumentsJson, done = !entry.isError && !entry.refused),
         onDismiss = onDismiss,
         subtitle = "$when_ · ${durationLabel(entry.finishedAt - entry.startedAt).trim()}",
-        action = if (onOpenChat != null) "Open chat" else null,
+        action = if (onOpenChat != null) stringResource(R.string.activity_open_chat) else null,
         onAction = onOpenChat,
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             val (accent, icon) = accentFor(entry.toolName)
             AccentTile(accent, icon, size = IconSize.large)
             SupportingText(entry.toolName, Modifier.weight(1f).padding(horizontal = Spacing.sm), style = LocusType.mono)
-            LocusChip(decisionText(entry), tone = decisionPill(entry)?.second ?: Tone.Neutral)
+            LocusChip(localizedDecisionPill(entry)?.first ?: stringResource(R.string.activity_ran_automatically), tone = localizedDecisionPill(entry)?.second ?: Tone.Neutral)
         }
-        SupportingText("In “${chat.title}”", style = LocusType.rowSupporting)
-        CodeBlock("Arguments", pretty(entry.argumentsJson))
-        CodeBlock(if (entry.failed) "Error" else "Result", pretty(entry.resultPreview).ifBlank { "(empty)" })
+        SupportingText(stringResource(R.string.activity_in_chat, chat.title), style = LocusType.rowSupporting)
+        CodeBlock(stringResource(R.string.activity_arguments), pretty(entry.argumentsJson))
+        CodeBlock(stringResource(if (entry.failed) R.string.activity_error else R.string.activity_result), pretty(entry.resultPreview).ifBlank { stringResource(R.string.activity_empty_result) })
     }
 }
 
@@ -466,6 +471,18 @@ private fun timeRange(context: Context, start: Long, end: Long): String =
 
 private fun plural(n: Int, noun: String) = "$n $noun" + if (n == 1) "" else "s"
 
+
+@Composable
+private fun localizedDecisionPill(entry: AuditEntry): Pair<String, Tone>? = when (entry.decision) {
+    ApprovalDecision.AUTO_ALLOWED -> if (entry.isError) stringResource(R.string.activity_failed) to Tone.Critical else null
+    ApprovalDecision.USER_APPROVED -> if (entry.isError) stringResource(R.string.activity_failed) to Tone.Critical else stringResource(R.string.activity_approved) to Tone.Brand
+    ApprovalDecision.REVIEWER_ALLOWED -> if (entry.isError) stringResource(R.string.activity_failed) to Tone.Critical else stringResource(R.string.activity_reviewer_allowed) to Tone.Neutral
+    ApprovalDecision.REMEMBERED_ALLOWED -> if (entry.isError) stringResource(R.string.activity_failed) to Tone.Critical else stringResource(R.string.activity_remembered_approval) to Tone.Neutral
+    ApprovalDecision.USER_DENIED -> stringResource(R.string.activity_declined) to Tone.Caution
+    ApprovalDecision.POLICY_DENIED -> stringResource(R.string.activity_blocked) to Tone.Caution
+    ApprovalDecision.REVIEWER_DENIED -> stringResource(R.string.activity_reviewer_blocked) to Tone.Caution
+    ApprovalDecision.INVALID_INPUT -> stringResource(R.string.activity_invalid) to Tone.Critical
+}
 
 /** Automatic successes are the norm and get no pill; everything else says what happened. */
 private fun decisionPill(entry: AuditEntry): Pair<String, Tone>? = when (entry.decision) {
