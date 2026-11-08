@@ -160,4 +160,17 @@
     <string name="permissions_ask_actions_body">设置为“询问”的操作始终会先向你确认。</string>
     <string name="permissions_reviewer_mode_body">检查设置为“询问”的操作：自动执行明显安全的操作，阻止明显不合适的操作，其余操作交给你决定。当前使用模型：$model。</string>
     <string name="permissions_reviewer_all_changes_body">还会检查已允许但会产生更改的操作；未通过审核的操作会交给你确认。当前使用模型：$model。</string>
+    <string name="automation_title">自动化</string>
+    <string name="automation_other_apps">允许其他应用启动任务</string>
+    <string name="automation_other_apps_body">Tasker、Automate 等应用可以请求 Locus 开始对话、运行工作流，或立即执行计划任务。</string>
+    <string name="automation_assistant">助手</string>
+    <string name="automation_default_assistant">默认数字助理</string>
+    <string name="automation_assistant_short">Locus。使用系统助理手势即可打开提问栏。</string>
+    <string name="automation_answered_apps">已处理过授权请求的应用</string>
+    <string name="automation_always_allowed">始终允许</string>
+    <string name="automation_never_allowed">从不允许</string>
+    <string name="automation_forget">清除记录</string>
+    <string name="automation_developers">应用开发者</string>
+    <string name="automation_permission">权限</string>
+    <string name="automation_intents">Intent（应用意图）</string>
 </resources>
