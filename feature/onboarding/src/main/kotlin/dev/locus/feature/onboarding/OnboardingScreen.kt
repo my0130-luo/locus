@@ -85,7 +85,7 @@ fun OnboardingRoute(
         topBar = {
             Column {
                 LocusTopBar(
-                    step.title,
+                    stringResource(step.titleRes),
                     onBack = { if (!viewModel.back()) onExit() },
                     status = { SupportingText("Step ${step.ordinal + 1} of ${Step.entries.size}", style = LocusType.mono) },
                     actions = { if (step.skippable) TextButton(onClick = viewModel::next) { Text(stringResource(R.string.onboarding_skip)) } },
