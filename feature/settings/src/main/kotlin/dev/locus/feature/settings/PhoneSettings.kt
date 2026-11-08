@@ -11,6 +11,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.RadioButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -146,7 +147,7 @@ internal fun PhoneRoute(onBack: () -> Unit, viewModel: PhoneViewModel = hiltView
 object PhoneSystemPages {
     fun appInfo(context: Context) = open(context, Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, "package:${context.packageName}".toUri()))
 
-    /** "Alarms & reminders" for Locus (API 31+), with the package as Android's docs ask. */
+    /** stringResource(R.string.phone_alarms_reminders) for Locus (API 31+), with the package as Android's docs ask. */
     fun exactAlarms(context: Context) {
         if (Build.VERSION.SDK_INT >= 31) open(context, Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, "package:${context.packageName}".toUri()))
     }
@@ -169,16 +170,16 @@ object PhoneSystemPages {
 /** Locus's explanation before Android's calendar prompt, here and when a calendar tool first needs it. */
 @Composable
 fun CalendarRationaleSheet(onContinue: () -> Unit, onDismiss: () -> Unit, title: String = CALENDAR_RATIONALE_TITLE, message: String = CALENDAR_RATIONALE_TEXT) {
-    ConfirmSheet(title = title, confirmLabel = "Continue", onConfirm = onContinue, onDismiss = onDismiss, message = message, dismissLabel = "Not now")
+    ConfirmSheet(title = title, confirmLabel = stringResource(R.string.phone_continue), onConfirm = onContinue, onDismiss = onDismiss, message = message, dismissLabel = stringResource(R.string.phone_not_now))
 }
 
 /** When Android won't show its prompt again: what to do, with a way to App info. */
 @Composable
 fun PermissionBlockedSheet(message: String, onAppInfo: () -> Unit, onDismiss: () -> Unit) {
-    ConfirmSheet(title = "Turned off in Android", confirmLabel = "Open App info", onConfirm = onAppInfo, onDismiss = onDismiss, message = message, dismissLabel = "Not now")
+    ConfirmSheet(title = stringResource(R.string.phone_turned_off_android), confirmLabel = stringResource(R.string.phone_open_app_info), onConfirm = onAppInfo, onDismiss = onDismiss, message = message, dismissLabel = stringResource(R.string.phone_not_now))
 }
 
-internal const val CALENDAR_RATIONALE_TITLE = "Let Locus change your calendar?"
+internal const val CALENDAR_RATIONALE_TITLE = stringResource(R.string.phone_calendar_permission_title)
 internal const val CALENDAR_RATIONALE_TEXT =
     "Locus needs calendar access to add, change or delete events when you ask. It only writes to the one calendar you pick " +
         "here, and each change shows you the event first. Events sync to that calendar's account."
@@ -194,16 +195,16 @@ internal fun PhoneSettings(
     onNotifications: () -> Unit,
 ) {
     val probe = state.probe
-    SettingsPageScaffold("Phone", onBack) {
-        item { SectionLabel("Calendar Locus may change", SectionPadding) }
+    SettingsPageScaffold(stringResource(R.string.phone_title), onBack) {
+        item { SectionLabel(stringResource(R.string.phone_calendar_choose), SectionPadding) }
         item {
             CardGroup {
                 when {
-                    !probe.loaded -> ListRow("Checking calendar access…", leading = { IconTile(LocusIcons.Calendar) })
+                    !probe.loaded -> ListRow(stringResource(R.string.phone_checking_calendar), leading = { IconTile(LocusIcons.Calendar) })
                     // Whole rows are the buttons (with a chevron): a text button beside the words squeezes them at a large font.
                     probe.access == CalendarAccess.NOT_ASKED -> ListRow(
-                        title = "Allow calendar access",
-                        subtitle = "Then pick the calendar Locus adds events to.",
+                        title = stringResource(R.string.phone_allow_calendar),
+                        subtitle = stringResource(R.string.phone_pick_calendar_hint),
                         titleMaxLines = 2,
                         subtitleMaxLines = Int.MAX_VALUE,
                         onClick = onAllowCalendar,
@@ -211,7 +212,7 @@ internal fun PhoneSettings(
                         trailing = { RowChevron() },
                     )
                     probe.access == CalendarAccess.BLOCKED -> ListRow(
-                        title = "Calendar access is off",
+                        title = stringResource(R.string.phone_calendar_off),
                         subtitle = "Android won't ask again. Open App info → Permissions → Calendar to allow it.",
                         titleMaxLines = 2,
                         subtitleMaxLines = Int.MAX_VALUE,
@@ -220,7 +221,7 @@ internal fun PhoneSettings(
                         trailing = { RowChevron() },
                     )
                     probe.calendars.isEmpty() -> ListRow(
-                        title = "No calendar can be changed",
+                        title = stringResource(R.string.phone_no_calendar),
                         subtitle = "Every calendar on this phone is read-only or not synced. Add an account in your calendar app, then come back.",
                         subtitleMaxLines = Int.MAX_VALUE,
                         leading = { IconTile(LocusIcons.Calendar) },
@@ -254,13 +255,13 @@ internal fun PhoneSettings(
                 NotePadding,
             )
         }
-        item { SectionLabel("Reminders", SectionPadding) }
+        item { SectionLabel(stringResource(R.string.phone_reminders), SectionPadding) }
         item {
             CardGroup {
                 // Below Android 12 exact alarms need no grant, so there's nothing to open.
                 val canChangeExact = Build.VERSION.SDK_INT >= 31
                 ListRow(
-                    title = "Exact timing",
+                    title = stringResource(R.string.phone_exact_timing),
                     subtitle = if (probe.exactAlarms) "On: reminders show on the minute." else "Off: reminders can show up to 10 minutes late. Turn on Alarms & reminders for Locus.",
                     subtitleMaxLines = Int.MAX_VALUE,
                     onClick = onExactAlarms.takeIf { canChangeExact },
@@ -269,7 +270,7 @@ internal fun PhoneSettings(
                 )
                 GroupDivider(inset = Insets.iconRow)
                 ListRow(
-                    title = "Notifications",
+                    title = stringResource(R.string.phone_notifications),
                     subtitle = if (probe.notifications) "On: reminders appear with Snooze and Done." else "Off: reminders won't show until you allow notifications for Locus.",
                     subtitleMaxLines = Int.MAX_VALUE,
                     onClick = onNotifications,
