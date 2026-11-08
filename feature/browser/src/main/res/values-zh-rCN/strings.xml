@@ -22,4 +22,19 @@
     <string name="browser_forward">前进</string>
     <string name="browser_copy_link">复制链接</string>
     <string name="browser_open_external">在其他应用中打开</string>
+    <string name="browser_page_placeholder">页面将在这里显示</string>
+    <string name="browser_handoff_title">将控制权交还给 Locus？</string>
+    <string name="browser_handoff_message">Locus 会从当前页面继续操作。你在页面中输入的内容不会被它看到。</string>
+    <string name="browser_note_optional">备注（选填）</string>
+    <string name="browser_note_hint">例如：已登录，预订 9:40 的列车。</string>
+    <string name="browser_tabs_description">Locus 浏览器中已打开的页面。Locus 会在当前选中的标签页中操作。</string>
+    <string name="browser_current_tab">当前标签页</string>
+    <string name="browser_close_tab">关闭标签页</string>
+    <string name="browser_clear_data_title">清除浏览数据？</string>
+    <string name="browser_clear_data_message">这会让 Locus 浏览器退出所有网站，并删除 Cookie、站点存储和历史记录。不会影响你自己的浏览器。</string>
+    <string name="browser_your_turn_title">轮到你了</string>
+    <string name="browser_control_title">当前由你控制</string>
+    <string name="browser_browsing_title">Locus 正在浏览</string>
+    <string name="browser_saved_logins">已保存的登录信息</string>
+    <string name="browser_tabs_count">%1$d 个标签页</string>
 </resources>
