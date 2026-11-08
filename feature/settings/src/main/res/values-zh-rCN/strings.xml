@@ -72,4 +72,5 @@
     <string name="agent_helper_timeout_body2">交回已有结果：最后一条回复、工具执行结果以及修改过的文件，并标记为部分结果。</string>
     <string name="agent_helper_timeout_body3">主智能体可以从这里继续。此设置只影响之后启动的辅助任务。</string>
     <string name="agent_save">保存</string>
+    <string name="settings_loading">正在加载…</string>
 </resources>
