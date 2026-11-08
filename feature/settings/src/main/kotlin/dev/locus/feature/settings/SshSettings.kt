@@ -7,6 +7,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,8 +55,8 @@ internal fun SshSettings(
 ) {
     var editingSsh by remember { mutableStateOf<SshHost?>(null) }
 
-    SettingsPageScaffold("SSH machines", onBack) {
-        item { SectionLabel("Machines", SectionPadding) }
+    SettingsPageScaffold(stringResource(R.string.ssh_title), onBack) {
+        item { SectionLabel(stringResource(R.string.ssh_machines), SectionPadding) }
         item {
             CardGroup {
                 state.sshHosts.forEachIndexed { i, host ->
@@ -69,7 +70,7 @@ internal fun SshSettings(
                     )
                 }
                 if (state.sshHosts.isNotEmpty()) GroupDivider(inset = Insets.iconRow)
-                AddRow("Add a machine") { editingSsh = SshHost(UUID.randomUUID().toString(), "", "", 22, "") }
+                AddRow(stringResource(R.string.ssh_add_machine)) { editingSsh = SshHost(UUID.randomUUID().toString(), "", "", 22, "") }
             }
         }
         item { SectionNote("Each command Locus runs on a machine asks you first. Running commands on machines can be changed in Permissions.", NotePadding) }
@@ -114,10 +115,10 @@ private fun SshHostEditor(
     val localNetwork = rememberLocalNetworkGate()
 
     LocusSheet(
-        title = if (isNew) "Add SSH machine" else initial.alias,
+        title = if (isNew) stringResource(R.string.ssh_add_ssh_machine) else initial.alias,
         subtitle = "Locus checks the machine's host key once and refuses any other key afterwards.",
         onDismiss = onDismiss,
-        action = "Trust and save",
+        action = stringResource(R.string.ssh_trust_save),
         actionEnabled = alias.isNotBlank() && host.isNotBlank() && user.isNotBlank() && fingerprint.isNotBlank() &&
             sshSecretReady(method, initial.authMethod, isNew, privateKey, password),
         onAction = {
@@ -132,7 +133,7 @@ private fun SshHostEditor(
             OutlinedTextField(port, { port = it.filter(Char::isDigit).take(5); fingerprint = "" }, label = { Text("Port") }, singleLine = true, modifier = Modifier.weight(0.4f))
         }
         LocalNetworkNote(host, localNetwork)
-        OutlinedTextField(user, { user = it.trim() }, label = { Text("User") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(user, { user = it.trim() }, label = { Text(stringResource(R.string.ssh_user)) }, singleLine = true, modifier = Modifier.fillMaxWidth())
         SshAuthFields(
             method, { method = it },
             privateKey, { privateKey = it },
@@ -141,7 +142,7 @@ private fun SshHostEditor(
             needsSecret = sshNeedsSecret(method, initial.authMethod, isNew),
         )
         if (fingerprint.isNotBlank() && !hostChanged || fingerprint.isNotBlank() && isNew) {
-            CardGroup { KeyValueRow("Host key", fingerprint, mono = true) }
+            CardGroup { KeyValueRow(stringResource(R.string.ssh_host_key), fingerprint, mono = true) }
             SupportingText("Check this matches the server (ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub). Locus will refuse any other key.")
         } else {
             TextButton(enabled = host.isNotBlank() && !checking, onClick = {
@@ -154,9 +155,9 @@ private fun SshHostEditor(
                         result.onSuccess { fingerprint = it }.onFailure { probeError = it.message }
                     }
                 }
-            }) { Text(if (checking) "Checking…" else "Check host key") }
+            }) { Text(if (checking) stringResource(R.string.ssh_checking) else stringResource(R.string.ssh_check_host_key)) }
             probeError?.let { Text(it, color = Locus.colors.critical, style = LocusType.supporting) }
         }
-        if (!isNew) CriticalOutlinedButton("Remove machine", onClick = onDelete)
+        if (!isNew) CriticalOutlinedButton(stringResource(R.string.ssh_remove_machine), onClick = onDelete)
     }
 }
