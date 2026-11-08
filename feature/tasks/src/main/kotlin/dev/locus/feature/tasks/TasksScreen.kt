@@ -156,9 +156,9 @@ private fun TasksScreen(onBack: () -> Unit, onOpenChat: (String) -> Unit, viewMo
                         val running = tasks.count { it.active == RunNowStatus.RUNNING }
                         val active = tasks.count { it.task.enabled }
                         when {
-                            running > 0 -> StatusLine(if (running == 1) "1 running" else "$running running", Tone.Live)
+                            running > 0 -> StatusLine(stringResource(R.string.tasks_running_count, running), Tone.Live)
                             active == 0 -> StatusLine(stringResource(R.string.tasks_all_paused), Tone.Neutral)
-                            else -> StatusLine("$active of ${tasks.size} on", Tone.Brand)
+                            else -> StatusLine(stringResource(R.string.tasks_active_count, active, tasks.size), Tone.Brand)
                         }
                     }
                 },
@@ -176,8 +176,7 @@ private fun TasksScreen(onBack: () -> Unit, onOpenChat: (String) -> Unit, viewMo
             is TasksUiState.Ready -> if (s.tasks.isEmpty() && reminders.isEmpty()) {
                 EmptyState(
                     stringResource(R.string.tasks_empty_title),
-                    "A task runs on its own, on a schedule or when something happens (a calendar entry coming up, an ntfy message, new mail). " +
-                        "It looks things up, read-only (it never changes or sends anything), and notifies you with a short summary.",
+                    stringResource(R.string.tasks_empty_explanation),
                     Modifier.padding(padding),
                     icon = LocusIcons.Clock,
                 ) {
@@ -227,8 +226,7 @@ private fun TasksScreen(onBack: () -> Unit, onOpenChat: (String) -> Unit, viewMo
                         SettingsLink(
                             SettingsDestination.Battery,
                             Modifier.padding(top = Spacing.sm),
-                            hint = "Tasks run read-only and need a network connection. Android may delay runs and event checks to save battery, and Locus " +
-                                "holds a run while the phone is hot or low. What waits is set in",
+                            hint = stringResource(R.string.tasks_battery_hint),
                         )
                     }
                 }
@@ -331,7 +329,12 @@ private fun TaskRow(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         InlineSpinner(Modifier.padding(end = Spacing.xs), size = IconSize.small, color = MaterialTheme.colorScheme.primary)
                         Text(
-                            runNowLine(run, fromEvent = item.run?.active != true),
+                            stringResource(when {
+                                item.run?.active != true && run == RunNowStatus.QUEUED -> R.string.tasks_event_run_queued
+                                item.run?.active == true && run == RunNowStatus.QUEUED -> R.string.tasks_queued_connection
+                                item.run?.active != true && run == RunNowStatus.RUNNING -> R.string.tasks_running_for_event
+                                else -> R.string.tasks_running_now
+                            }),
                             style = LocusType.rowSupporting, color = MaterialTheme.colorScheme.primary, maxLines = 1, overflow = TextOverflow.Ellipsis,
                         )
                     }
@@ -349,7 +352,7 @@ private fun TaskRow(
                 InlineSwitch(
                     checked = task.enabled,
                     onCheckedChange = { viewModel.setEnabled(task.id, it) },
-                    contentDescription = if (trigger != null) "Run “${task.title}” when its events arrive" else "Run “${task.title}” on its schedule",
+                    contentDescription = stringResource(if (trigger != null) R.string.tasks_enable_trigger_description else R.string.tasks_enable_schedule_description, task.title),
                 )
             },
         )
@@ -390,7 +393,7 @@ private fun TaskRow(
                         RowAction(stringResource(R.string.tasks_history), LocusIcons.Activity, onClick = onHistory)
                         RowAction(stringResource(R.string.tasks_test_event), LocusIcons.Send, onClick = onTest)
                     }
-                    RowAction(if (item.running) "Running" else stringResource(R.string.tasks_run_now), LocusIcons.Play, enabled = !item.running) { viewModel.runNow(task.id) }
+                    RowAction(if (item.running) stringResource(R.string.tasks_running) else stringResource(R.string.tasks_run_now), LocusIcons.Play, enabled = !item.running) { viewModel.runNow(task.id) }
                     RowAction(stringResource(R.string.tasks_edit), LocusIcons.Edit, onClick = onEdit)
                     RowAction(stringResource(R.string.tasks_delete), LocusIcons.Trash, color = Tone.Critical.color()) { confirmDelete = true }
                 }
