@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import dev.locus.core.data.folders.FolderStatus
 import dev.locus.core.designsystem.AddRow
 import dev.locus.core.designsystem.Banner
@@ -45,7 +46,7 @@ import dev.locus.core.model.Project
 /** What a connected folder's row says about it, and in which tone. */
 internal fun folderStatus(row: ConnectedFolderRow): Pair<String, Tone> = when (row.status) {
     FolderStatus.PERMISSION_LOST -> "Access lost · reconnect it" to Tone.Critical
-    FolderStatus.GONE -> "Folder not found" to Tone.Critical
+    FolderStatus.GONE -> stringResource(R.string.workspace_folder_not_found) to Tone.Critical
     FolderStatus.PROVIDER_READ_ONLY -> "Read-only (storage app)" to Tone.Caution
     null -> "Checking…" to Tone.Neutral
     FolderStatus.OK -> if (row.folder.readOnly) "Read-only" to Tone.Neutral else "Can edit · asks first" to Tone.Live
@@ -113,7 +114,7 @@ internal fun ConnectFolderSheet(
     ) {
         OutlinedTextField(
             name, { name = it.trim() },
-            label = { Text("Name") },
+            label = { Text(stringResource(R.string.workspace_folder_name)) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             isError = name.isNotEmpty() && problem != null,
@@ -168,7 +169,7 @@ internal fun FolderSheet(
                 },
                 Tone.Critical,
                 title = if (row.status == FolderStatus.GONE) "Folder not found" else "Access lost",
-            ) { TextButton(onClick = onReconnect) { Text("Reconnect") } }
+            ) { TextButton(onClick = onReconnect) { Text(stringResource(R.string.workspace_reconnect_folder)) } }
             FolderStatus.PROVIDER_READ_ONLY -> Banner("The storage app holding this folder doesn't let other apps change it, so Locus can only read it.", Tone.Caution)
             else -> Unit
         }
@@ -205,7 +206,7 @@ internal fun FolderSheet(
             }
         }
         if (row.status == FolderStatus.OK || row.status == FolderStatus.PROVIDER_READ_ONLY) {
-            TextButton(onClick = onReconnect) { Text("Pick the folder again") }
+            TextButton(onClick = onReconnect) { Text(stringResource(R.string.workspace_pick_folder_again)) }
         }
         CriticalOutlinedButton("Disconnect", onClick = { confirming = true })
     }
