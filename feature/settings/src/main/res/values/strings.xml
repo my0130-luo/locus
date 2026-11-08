@@ -288,4 +288,17 @@
     <string name="battery_downloads">Downloads</string>
     <string name="battery_download_wifi_only">Download models on Wi-Fi only</string>
     <string name="battery_use_mobile_data">Use mobile data</string>
+    <string name="chatgpt_continue">Continue with ChatGPT</string>
+    <string name="chatgpt_account">ChatGPT account</string>
+    <string name="chatgpt_using_plan">Using your ChatGPT plan</string>
+    <string name="chatgpt_signed_in">Signed in</string>
+    <string name="chatgpt_manage_usage">Manage usage</string>
+    <string name="chatgpt_opens_settings">Opens ChatGPT settings</string>
+    <string name="chatgpt_sign_out">Sign out</string>
+    <string name="chatgpt_cancel">Cancel</string>
+    <string name="chatgpt_sign_in_failed">Couldn\'t sign in</string>
+    <string name="chatgpt_sign_out_unconfirmed">Sign-out not confirmed</string>
+    <string name="chatgpt_sign_out_confirm">Sign out of ChatGPT?</string>
+    <string name="chatgpt_using_plan_title">You\'re using your ChatGPT plan</string>
+    <string name="chatgpt_got_it">Got it</string>
 </resources>
