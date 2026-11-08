@@ -192,4 +192,6 @@
     <string name="preview_no_app_share">没有可用于分享 %1$s 的应用</string>
     <string name="preview_code_cut_lines">此处已将 %1$d 行超长内容截断为 %2$s 个字符。</string>
     <string name="preview_code_plain">内容过长，无法进行语法着色，已按纯文本显示。</string>
+    <string name="preview_pause">暂停</string>
+    <string name="preview_play">播放</string>
 </resources>
