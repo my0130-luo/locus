@@ -288,4 +288,17 @@
     <string name="battery_downloads">下载</string>
     <string name="battery_download_wifi_only">仅通过 Wi-Fi 下载模型</string>
     <string name="battery_use_mobile_data">使用移动数据</string>
+    <string name="chatgpt_continue">继续使用 ChatGPT</string>
+    <string name="chatgpt_account">ChatGPT 账号</string>
+    <string name="chatgpt_using_plan">正在使用 ChatGPT 方案</string>
+    <string name="chatgpt_signed_in">已登录</string>
+    <string name="chatgpt_manage_usage">管理用量</string>
+    <string name="chatgpt_opens_settings">打开 ChatGPT 设置</string>
+    <string name="chatgpt_sign_out">退出登录</string>
+    <string name="chatgpt_cancel">取消</string>
+    <string name="chatgpt_sign_in_failed">登录失败</string>
+    <string name="chatgpt_sign_out_unconfirmed">尚未确认退出登录</string>
+    <string name="chatgpt_sign_out_confirm">退出 ChatGPT？</string>
+    <string name="chatgpt_using_plan_title">你正在使用 ChatGPT 方案</string>
+    <string name="chatgpt_got_it">知道了</string>
 </resources>
