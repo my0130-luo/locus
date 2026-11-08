@@ -141,4 +141,22 @@
     <string name="composer_summarise_available">对话足够长且当前没有任务运行时即可使用。</string>
     <string name="composer_controls_hint">模型、思考强度和工具都可以在输入框下方的控制栏中快速调整。</string>
     <string name="composer_remove_attachment">移除 %1$s</string>
+    <string name="model_sheet_title">模型</string>
+    <string name="model_sheet_scope">仅影响当前对话；其他对话保留各自的模型。</string>
+    <string name="model_sheet_search">搜索所有模型</string>
+    <string name="model_sheet_all">全部模型</string>
+    <string name="model_sheet_get_on_device">获取本地模型</string>
+    <string name="model_sheet_cache_note">切换模型会为当前对话重新建立提示缓存，因此下一次回复需要重新读取整段对话。</string>
+    <string name="model_sheet_hide">隐藏模型</string>
+    <string name="model_sheet_show">显示模型</string>
+    <string name="model_sheet_expanded">已展开</string>
+    <string name="model_sheet_collapsed">已收起</string>
+    <string name="model_sheet_loading">正在加载模型…</string>
+    <string name="model_sheet_no_tools_note">此对话最初使用的模型不支持工具，因此当前没有可用工具。切换模型也不会改变这一点；如需使用工具，请新建对话。</string>
+    <string name="model_sheet_chat_only_note">标记为“仅对话”的模型无法使用工具：它们可能太小，或本身不支持工具调用。</string>
+    <string name="model_sheet_default">默认</string>
+    <string name="model_sheet_in_use">正在使用</string>
+    <string name="model_sheet_catalogue_title">是否显示上下文容量与模型能力？</string>
+    <string name="model_sheet_turn_on">开启</string>
+    <string name="model_sheet_on_device">本地模型</string>
 </resources>
