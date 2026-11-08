@@ -101,4 +101,14 @@
     <string name="tasks_on_wifi">连接 Wi-Fi 时</string>
     <string name="tasks_on_wifi_note">不使用移动数据或其他按流量计费的网络。</string>
     <string name="tasks_battery_not_low_note">Android 显示低电量警告时跳过运行。</string>
+    <string name="tasks_running_count">%1$d 项正在运行</string>
+    <string name="tasks_active_count">%1$d / %2$d 项已启用</string>
+    <string name="tasks_empty_explanation">任务可以按计划自动运行，也可以在特定事件发生时触发（例如日程即将开始、收到 ntfy 消息或新邮件）。任务只查询信息，不会修改或发送任何内容，并会通过简短摘要通知你。</string>
+    <string name="tasks_battery_hint">任务以只读方式运行，需要网络连接。Android 可能为了省电而延迟任务和事件检查；手机温度过高或电量过低时，Locus 也会暂缓运行。等待条件可在以下位置设置：</string>
+    <string name="tasks_event_run_queued">事件任务已排队</string>
+    <string name="tasks_queued_connection">已排队：连接网络后开始</string>
+    <string name="tasks_running_for_event">正在执行事件任务</string>
+    <string name="tasks_running_now">正在运行</string>
+    <string name="tasks_enable_trigger_description">收到事件时运行“%1$s”</string>
+    <string name="tasks_enable_schedule_description">按计划运行“%1$s”</string>
 </resources>
