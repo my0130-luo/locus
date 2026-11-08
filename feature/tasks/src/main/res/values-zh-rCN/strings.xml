@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tasks_reminders">提醒</string>
+    <string name="tasks_cancel_reminder">取消提醒：%1$s</string>
+    <string name="tasks_clear_reminder">清除提醒：%1$s</string>
+    <string name="tasks_reminder_note_exact">提醒是 Locus 发出的通知；通知出现时不会执行任何操作。</string>
+    <string name="tasks_reminder_note_inexact">提醒是 Locus 发出的通知；通知出现时不会执行任何操作。如果未启用精确时间（设置 → 手机），提醒最多可能延迟 10 分钟。</string>
+</resources>
