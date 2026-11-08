@@ -56,7 +56,7 @@
 
     <string name="library_title">资料库</string>
     <string name="memory">记忆</string>
-    <string name="skills">技能</string>
+
     <string name="connectors">连接器</string>
     <string name="helpers">助手</string>
     <string name="couldnt_open_library">无法打开资料库</string>
