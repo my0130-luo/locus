@@ -139,7 +139,7 @@ private fun RemoteFields(viewModel: OnboardingViewModel, localNetwork: LocalNetw
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            supportingText = { Text("Stored encrypted on this phone. Only sent to ${draft.baseUrl.substringAfter("://").substringBefore('/').ifBlank { "the provider" }}.") },
+            supportingText = { Text(stringResource(R.string.onboarding_provider_key_stored, draft.baseUrl.substringAfter("://").substringBefore('/').ifBlank { "the provider" })) },
             modifier = Modifier.fillMaxWidth(),
         )
     }
@@ -193,7 +193,7 @@ private fun ChatGptSignInFields(viewModel: OnboardingViewModel) {
             TextButton(onClick = { uriHandler.openUri(ChatGptErrors.USAGE_URL) }) { Text(stringResource(R.string.onboarding_manage_usage)) }
         }
     } else {
-        SupportingText("Use your ChatGPT Plus or Pro plan instead of an API key. Usage counts toward your plan's limits.")
+        SupportingText(stringResource(R.string.onboarding_chatgpt_plan))
         ContinueWithChatGptButton(onClick = viewModel::signInChatGpt, busy = viewModel.chatGptSignIn.running)
         Row(verticalAlignment = Alignment.CenterVertically) {
             JobStatus(viewModel.chatGptSignIn, "Finish signing in in the browser…", Modifier.weight(1f))
@@ -202,8 +202,8 @@ private fun ChatGptSignInFields(viewModel: OnboardingViewModel) {
     }
     if (viewModel.chatGptWelcome) {
         LocusSheet(
-            title = "You're using your ChatGPT plan",
-            subtitle = "Locus's requests to this model now use your ChatGPT plan. You can review and manage that usage in ChatGPT settings.",
+            title = stringResource(R.string.onboarding_chatgpt_welcome_title),
+            subtitle = stringResource(R.string.onboarding_chatgpt_welcome_body),
             onDismiss = viewModel::dismissChatGptWelcome,
             action = stringResource(R.string.onboarding_got_it),
             onAction = viewModel::dismissChatGptWelcome,
@@ -217,7 +217,7 @@ private fun ChatGptSignInFields(viewModel: OnboardingViewModel) {
 private fun OnDevicePicker(state: OnboardingUiState, viewModel: OnboardingViewModel) {
     val draft = viewModel.provider ?: return
     SupportingText(
-        "Runs entirely on this phone: no internet, no key, nothing leaves the device. Smaller than cloud models, so best for everyday tasks. You can keep setting up while it downloads.",
+        stringResource(R.string.onboarding_ondevice_body),
     )
     state.onDeviceModels.forEach { (m, modelState) ->
         Column(Modifier.fillMaxWidth().clickable { viewModel.editProvider { it.copy(model = m.id) } }) {
@@ -234,20 +234,20 @@ private fun OnDevicePicker(state: OnboardingUiState, viewModel: OnboardingViewMo
                 when (modelState) {
                     ModelState.NotDownloaded -> TextButton(onClick = { viewModel.downloadModel(m.id) }) { Text(stringResource(R.string.onboarding_download)) }
                     is ModelState.Downloading -> {
-                        Meter(meterFraction(modelState.bytes, modelState.total), tone = Tone.Live, contentDescription = "Downloaded")
+                        Meter(meterFraction(modelState.bytes, modelState.total), tone = Tone.Live, contentDescription = stringResource(R.string.onboarding_downloaded))
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text("${modelState.bytes / 1_000_000} / ${modelState.total / 1_000_000} MB", Modifier.weight(1f), style = LocusType.mono)
                             TextButton(onClick = { viewModel.pauseModel(m.id) }) { Text(stringResource(R.string.onboarding_pause)) }
                         }
                         if (modelState.wifiOnly) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                SupportingText("On Wi-Fi only: waits while you're on mobile data.", Modifier.weight(1f))
+                                SupportingText(stringResource(R.string.onboarding_on_wifi_only), Modifier.weight(1f))
                                 TextButton(onClick = { viewModel.downloadModelOverAnyNetwork(m.id) }) { Text(stringResource(R.string.onboarding_use_mobile_data)) }
                             }
                         }
                     }
-                    ModelState.Verifying -> LocusChip("Checking the download", tone = Tone.Live, dot = true)
-                    ModelState.Ready -> LocusChip("Downloaded", tone = Tone.Live)
+                    ModelState.Verifying -> LocusChip(stringResource(R.string.onboarding_checking_download), tone = Tone.Live, dot = true)
+                    ModelState.Ready -> LocusChip(stringResource(R.string.onboarding_downloaded), tone = Tone.Live)
                     is ModelState.Failed -> Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(modelState.message, style = LocusType.supporting, color = Locus.colors.critical, modifier = Modifier.weight(1f))
                         TextButton(onClick = { viewModel.downloadModel(m.id) }) { Text(stringResource(R.string.onboarding_retry)) }
