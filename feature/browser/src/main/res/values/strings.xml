@@ -46,4 +46,15 @@
     <string name="browser_user_control_waiting">Locus is waiting for you. It sees nothing of this page until you hand it back, and never what you type.</string>
     <string name="browser_user_control_paused">Locus is paused on this page. It sees nothing of it until you hand it back, and never what you type.</string>
     <string name="browser_takeover_help">Take over to scroll, type or sign in yourself. Locus waits until you hand back.</string>
+    <string name="browser_your_browsing">Your browsing</string>
+    <string name="browser_link_label">Link</string>
+    <string name="browser_login_updated">Login updated</string>
+    <string name="browser_login_saved">Login saved</string>
+    <string name="browser_waiting_answer">Locus is waiting for your answer below.</string>
+    <string name="browser_using_page">Locus is using this page.</string>
+    <string name="browser_data_cleared">Browsing data cleared</string>
+    <string name="browser_untitled">Untitled</string>
+    <string name="browser_page_says">%1$s says</string>
+    <string name="browser_this_page">This page</string>
+    <string name="browser_ok">OK</string>
 </resources>
