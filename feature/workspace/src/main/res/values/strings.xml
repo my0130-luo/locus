@@ -119,4 +119,19 @@
     <string name="linux_packages_more_updates">and %1$d more</string>
     <string name="linux_packages_install_updates">Install them with `apk upgrade` in the terminal.</string>
     <string name="linux_packages_open_terminal">Open terminal</string>
+    <string name="terminal_new_terminal">New terminal</string>
+    <string name="terminal_actions">Terminal actions</string>
+    <string name="terminal_ask_about_selection">Ask Locus about the selection</string>
+    <string name="terminal_paste">Paste</string>
+    <string name="terminal_bigger_text">Bigger text</string>
+    <string name="terminal_smaller_text">Smaller text</string>
+    <string name="terminal_close_this">Close this terminal</string>
+    <string name="terminal_linux_installing">Linux is installing</string>
+    <string name="terminal_linux_not_installed">Linux isn't installed</string>
+    <string name="terminal_see_progress">See progress</string>
+    <string name="terminal_setup_linux">Set up Linux</string>
+    <string name="terminal_none_open">No terminal open</string>
+    <string name="terminal_empty_explanation">Each terminal is a shell in Locus's Alpine Linux, isolated like the agent's commands, with your workspace at /workspace. Nothing you type here is sent to the model.</string>
+    <string name="terminal_open_terminal">Open a terminal</string>
+    <string name="terminal_close_tab">Close %1$s</string>
 </resources>
