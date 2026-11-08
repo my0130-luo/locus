@@ -251,4 +251,25 @@
     <string name="network_trust_everywhere">Trust everywhere</string>
     <string name="network_remove">Remove</string>
     <string name="network_direct">Direct</string>
+    <string name="integrations_title">Integrations &amp; connectors</string>
+    <string name="integrations_section">Integrations</string>
+    <string name="integrations_using_mcp">Using its MCP server</string>
+    <string name="integrations_mcp_available">MCP server available</string>
+    <string name="integrations_connected">Connected</string>
+    <string name="integrations_set_up">Set up</string>
+    <string name="integrations_add_key">Add key</string>
+    <string name="integrations_connectors">Connectors</string>
+    <string name="integrations_connectors_mcp">Connectors &amp; MCP servers</string>
+    <string name="integrations_intro">Add MCP servers and review connectors Locus drafted.</string>
+    <string name="integrations_home_services">Home &amp; self-hosted services</string>
+    <string name="integrations_home_services_examples">Home Assistant, Miniflux, Paperless, Immich, Mastodon, Todoist and more</string>
+    <string name="integrations_use_builtin">Use the built-in tools instead</string>
+    <string name="integrations_use_mcp_new_chats">Use the MCP server in new chats</string>
+    <string name="integrations_using_builtin">Using the built-in tools in new chats</string>
+    <string name="integrations_mcp_not_working">The MCP server isn\'t working</string>
+    <string name="integrations_official_mcp">Use the official MCP server</string>
+    <string name="integrations_save">Save</string>
+    <string name="integrations_secret_stored">Stored encrypted on this phone. The AI never sees it.</string>
+    <string name="integrations_remove_key">Remove key</string>
+    <string name="integrations_remove">Remove</string>
 </resources>
