@@ -137,4 +137,8 @@
     <string name="onboarding_quick_start_explanation">这些就是 Locus 所需的全部信息。快速开始会立即打开主页；命名智能体、配置 Linux、SSH 设备和连接器等事项会以卡片形式留在主页，你可以稍后完成或忽略。继续完整设置则会现在逐项完成这些配置。</string>
     <string name="onboarding_context_window_detail">上下文窗口：%1$s 个词元</string>
     <string name="onboarding_chatgpt_signing_in">请在浏览器中完成登录…</string>
+    <string name="onb_identity_remember_title">以下是 %1$s 将记住的内容</string>
+    <string name="onb_identity_changed_outside">%1$s 在 Locus 之外发生了更改</string>
+    <string name="onb_identity_external_change_note">此更改是在 Locus 之外进行的。只有确认是你本人所做时才保留：智能体会在每次对话开始时读取此文件。</string>
+    <string name="onb_identity_edit_files_directly">直接编辑文件</string>
 </resources>
