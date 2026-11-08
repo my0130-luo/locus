@@ -107,7 +107,7 @@ internal fun ColumnScope.ProviderStep(state: OnboardingUiState, viewModel: Onboa
                 enabled = draft.canSave && !viewModel.providerSave.running,
                 modifier = Modifier.fillMaxWidth(),
             ) { Text(stringResource(R.string.onboarding_save_and_use)) }
-            JobStatus(viewModel.providerSave, "Saving…")
+            JobStatus(viewModel.providerSave, stringResource(R.string.onb_identity_saving))
         }
     }
     SupportingText(draft.preset.note)
