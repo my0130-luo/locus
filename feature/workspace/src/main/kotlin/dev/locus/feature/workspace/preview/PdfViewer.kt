@@ -222,7 +222,7 @@ private fun PasswordPrompt(wrong: Boolean, modifier: Modifier, onSubmit: (String
     }
     var text by remember { mutableStateOf("") }
     EmptyState(
-        "Password-protected PDF",
+        stringResource(R.string.preview_pdf_password_title),
         if (wrong) stringResource(R.string.preview_pdf_wrong_password) else stringResource(R.string.preview_pdf_enter_password),
         modifier,
         icon = LocusIcons.Key,
