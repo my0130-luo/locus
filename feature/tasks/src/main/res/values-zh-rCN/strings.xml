@@ -68,4 +68,20 @@
     <string name="tasks_ran">已运行</string>
     <string name="tasks_skipped">已跳过</string>
     <string name="tasks_failed">失败</string>
+    <string name="tasks_source_calendar">日历</string>
+    <string name="tasks_source_mail">邮件</string>
+    <string name="tasks_source_app">应用</string>
+    <string name="tasks_source_help_calendar">在手机日历中的日程开始前运行。Locus 每 15 分钟读取一次日历，并安排合适的运行时间；手机空闲时，Android 可能会延迟几分钟。</string>
+    <string name="tasks_source_help_ntfy">ntfy 主题收到消息时运行。任何能够发送网络请求的设备或服务都可以向 ntfy.sh 或你自己的服务器发送消息。Locus 每 15 分钟检查一次，手机空闲时可能延迟；不会保持连接。</string>
+    <string name="tasks_source_help_mail">智能体自己的邮箱收到邮件时运行。Locus 每 15 分钟检查一次新邮件，手机空闲时可能延迟；只读取发件人和主题。</string>
+    <string name="tasks_source_help_app">其他应用（如 Tasker、Automate 或脚本）发送下方事件时运行。事件会立即送达；Locus 的自动化设置和下方列表决定哪些应用可以发送。</string>
+    <string name="tasks_priority_any">任意</string>
+    <string name="tasks_priority_default">默认</string>
+    <string name="tasks_priority_high">高</string>
+    <string name="tasks_priority_urgent">紧急</string>
+    <string name="tasks_mailbox_setup_note">智能体邮箱尚未配置 IMAP 服务器。请前往“设置 → 集成 → 电子邮件”进行添加。</string>
+    <string name="tasks_mailbox_needed">需要配置邮箱</string>
+    <string name="tasks_5_min">5 分钟</string>
+    <string name="tasks_15_min">15 分钟</string>
+    <string name="tasks_6_hours">6 小时</string>
 </resources>
