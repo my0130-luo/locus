@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="activity_title">Activity</string>
+    <string name="activity_open_chat">Open chat</string>
+    <string name="activity_nothing_yet">Nothing yet</string>
+    <string name="activity_no_actions_in_chat">No actions in this chat</string>
+    <string name="activity_empty_explanation">Every tool the agent uses is recorded here: what it ran, whether you approved it, and what happened.</string>
+    <string name="activity_load_older">Load older activity</string>
+    <string name="activity_search_chat_actions">Search this chat's actions</string>
+    <string name="activity_search_actions_chats">Search actions and chats</string>
+    <string name="activity_nothing_period">Nothing in this period</string>
+    <string name="activity_no_matching_actions">No matching actions</string>
+    <string name="activity_widen_filters">Try a wider time range or fewer filters.</string>
+    <string name="activity_clear_filters">Clear filters</string>
+    <string name="activity_collapse">Collapse</string>
+    <string name="activity_expand">Expand</string>
+    <string name="activity_view_all_chat">View all in this chat</string>
+    <string name="activity_arguments">Arguments</string>
+    <string name="activity_error">Error</string>
+    <string name="activity_result">Result</string>
+</resources>
