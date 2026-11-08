@@ -311,4 +311,20 @@
     <string name="ssh_checking">正在检查…</string>
     <string name="ssh_check_host_key">检查主机密钥</string>
     <string name="ssh_remove_machine">移除设备</string>
+    <string name="diagnostics_report_title">Locus 诊断报告</string>
+    <string name="diagnostics_share">分享诊断信息</string>
+    <string name="diagnostics_title">诊断</string>
+    <string name="diagnostics_tools">工具</string>
+    <string name="diagnostics_self_test">自检</string>
+    <string name="diagnostics_self_test_body">检查密钥、数据库、存储空间、通知和 Linux。</string>
+    <string name="diagnostics_storage">存储空间</string>
+    <string name="diagnostics_storage_body">查看 Locus 各部分占用的空间，并进行清理。</string>
+    <string name="diagnostics_recent_problems">最近的问题</string>
+    <string name="diagnostics_none">没有记录的问题</string>
+    <string name="diagnostics_share_report">分享报告</string>
+    <string name="diagnostics_clear">清除</string>
+    <string name="diagnostics_clear_confirm">清除诊断记录？</string>
+    <string name="diagnostics_locus_error">Locus 遇到错误并停止运行</string>
+    <string name="diagnostics_android_closed">Android 关闭了 Locus</string>
+    <string name="diagnostics_request_failed">请求或任务执行失败</string>
 </resources>
