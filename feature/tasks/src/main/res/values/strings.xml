@@ -84,4 +84,21 @@
     <string name="tasks_5_min">5 min</string>
     <string name="tasks_15_min">15 min</string>
     <string name="tasks_6_hours">6 hours</string>
+    <string name="tasks_start_from_digest">Start from the morning digest</string>
+    <string name="tasks_morning_digest_note">Every day at 7:00: today’s calendar and what to prepare</string>
+    <string name="tasks_news_digest_note">Every day at 7:00: unread articles from your Miniflux</string>
+    <string name="tasks_delete_title">Delete “%1$s”?</string>
+    <string name="tasks_delete_trigger_message">It stops listening for events and its history goes. Chats from its earlier runs are kept.</string>
+    <string name="tasks_delete_schedule_message">It stops running. Chats from its earlier runs are kept.</string>
+    <string name="tasks_edit_title">Edit “%1$s”</string>
+    <string name="tasks_digest_editor_note">Runs on its own, read-only, and notifies you with a short summary.</string>
+    <string name="tasks_schedule_interval_now">Current interval: %1$s. Pick one to change it.</string>
+    <string name="tasks_first_run_note">First run at %1$s, then once a period. Android may run it a little later while the phone is idle.</string>
+    <string name="tasks_digest_ntfy_note">The digest also goes to your ntfy topic, so it reaches your other devices.</string>
+    <string name="tasks_only_run">Only run</string>
+    <string name="tasks_when_charging">When charging</string>
+    <string name="tasks_when_charging_note">Waits until the phone is plugged in.</string>
+    <string name="tasks_on_wifi">On Wi-Fi</string>
+    <string name="tasks_on_wifi_note">Not on mobile data or another metered network.</string>
+    <string name="tasks_battery_not_low_note">Skips the time Android shows its low-battery warning.</string>
 </resources>
