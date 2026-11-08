@@ -111,4 +111,20 @@
     <string name="tasks_running_now">Running now</string>
     <string name="tasks_enable_trigger_description">Run “%1$s” when its events arrive</string>
     <string name="tasks_enable_schedule_description">Run “%1$s” on its schedule</string>
+    <string name="tasks_last_run_failed">Last run failed</string>
+    <string name="tasks_last_run_stopped">Last run stopped</string>
+    <string name="tasks_trigger_status_paused">%1$s · paused</string>
+    <string name="tasks_trigger_status_no_access">%1$s · no access</string>
+    <string name="tasks_trigger_status_not_setup">%1$s · not set up</string>
+    <string name="tasks_trigger_status_offline">%1$s · offline</string>
+    <string name="tasks_trigger_status_check_failed">%1$s · check failed</string>
+    <string name="tasks_trigger_status_problem">%1$s · %2$s</string>
+    <string name="tasks_trigger_status_ran">%1$s · ran %2$s</string>
+    <string name="tasks_trigger_status_waiting">%1$s · waiting for an event</string>
+    <string name="tasks_trigger_status_checked">%1$s · checked %2$s</string>
+    <string name="tasks_trigger_status_not_checked">%1$s · not checked yet</string>
+    <string name="tasks_schedule_status_paused">%1$s · paused</string>
+    <string name="tasks_schedule_status_problem">%1$s · %2$s %3$s</string>
+    <string name="tasks_schedule_status_ran">%1$s · ran %2$s</string>
+    <string name="tasks_schedule_status_not_run">%1$s · not run yet</string>
 </resources>
