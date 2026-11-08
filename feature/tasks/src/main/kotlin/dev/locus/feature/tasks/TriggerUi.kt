@@ -149,7 +149,12 @@ internal fun TriggerFields(
     fun set(t: TaskTrigger) = onChange(draft.copy(trigger = t))
     Text(stringResource(R.string.tasks_when), style = LocusType.cardTitle)
     ChoiceChips(SOURCE_LABELS, trigger.source.ordinal) { set(trigger.copy(source = TriggerSource.entries[it])) }
-    SupportingText(sourceHelp(trigger.source))
+    SupportingText(stringResource(when (trigger.source) {
+        TriggerSource.CALENDAR -> R.string.tasks_source_help_calendar
+        TriggerSource.NTFY -> R.string.tasks_source_help_ntfy
+        TriggerSource.MAIL -> R.string.tasks_source_help_mail
+        TriggerSource.APP -> R.string.tasks_source_help_app
+    }))
     when (trigger.source) {
         TriggerSource.CALENDAR -> {
             if (!setup.calendarAllowed) CalendarAccessBanner(stringResource(R.string.tasks_calendar_access_note), calendarDenied, onAllowCalendar)
@@ -193,7 +198,7 @@ internal fun TriggerFields(
             }
             Text(stringResource(R.string.tasks_lowest_priority), style = LocusType.cardTitle)
             val priorities = listOf(1, 3, 4, 5)
-            ChoiceChips(listOf("Any", "Default", "High", "Urgent"), priorities.indexOf(trigger.minPriority).coerceAtLeast(0)) {
+            ChoiceChips(listOf(stringResource(R.string.tasks_priority_any), stringResource(R.string.tasks_priority_default), stringResource(R.string.tasks_priority_high), stringResource(R.string.tasks_priority_urgent)), priorities.indexOf(trigger.minPriority).coerceAtLeast(0)) {
                 set(trigger.copy(minPriority = priorities[it]))
             }
             OutlinedTextField(
@@ -204,8 +209,8 @@ internal fun TriggerFields(
         }
         TriggerSource.MAIL -> {
             if (!setup.mailbox) {
-                val message = "The agent's mailbox isn't set up with an IMAP server. Add it in Settings → Integrations → Email."
-                Banner(message, Tone.Caution, title = "Mailbox needed", actionsBelow = true) { SettingsLinkIn(message) }
+                val message = stringResource(R.string.tasks_mailbox_setup_note)
+                Banner(message, Tone.Caution, title = stringResource(R.string.tasks_mailbox_needed), actionsBelow = true) { SettingsLinkIn(message) }
             }
             OutlinedTextField(
                 trigger.from, { set(trigger.copy(from = it)) },
@@ -238,7 +243,7 @@ internal fun TriggerFields(
         }
     }
     Text(stringResource(R.string.tasks_max_run_frequency), style = LocusType.cardTitle)
-    ChoiceChips(listOf("5 min", "15 min", "1 hour", "6 hours"), TaskTrigger.GAPS.indexOf(trigger.minGapMinutes)) {
+    ChoiceChips(listOf(stringResource(R.string.tasks_5_min), stringResource(R.string.tasks_15_min), stringResource(R.string.tasks_1_hour), stringResource(R.string.tasks_6_hours)), TaskTrigger.GAPS.indexOf(trigger.minGapMinutes)) {
         set(trigger.copy(minGapMinutes = TaskTrigger.GAPS[it]))
     }
     SupportingText(stringResource(R.string.tasks_event_skip_note))
