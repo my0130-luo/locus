@@ -98,4 +98,25 @@
     <string name="linux_health_copy_command">复制命令</string>
     <string name="linux_health_developer_options">开发者选项</string>
     <string name="linux_health_read_guide">阅读指南</string>
+    <string name="linux_packages_you_installed">你安装的</string>
+    <string name="linux_packages_title">软件包</string>
+    <string name="linux_packages_user_total">你安装了 %1$d 个 · 共 %2$d 个</string>
+    <string name="linux_packages_not_installed">尚未安装 Linux</string>
+    <string name="linux_packages_empty_intro">配置好 Linux 后，软件包会显示在这里。</string>
+    <string name="linux_packages_setup">设置 Linux</string>
+    <string name="linux_packages_list_error">无法获取软件包列表</string>
+    <string name="linux_packages_empty_user">你还没有安装任何软件包。可以让智能体帮你安装，或在终端中运行 `apk add <名称>`。</string>
+    <string name="linux_packages_uninstall_title">卸载 %1$s？</string>
+    <string name="linux_packages_uninstall_message">将运行 `apk del %1$s`。同时也会移除仅由它依赖、且其他软件不再需要的软件包。工作区文件会保留，你之后也可以重新安装。</string>
+    <string name="linux_packages_uninstall">卸载</string>
+    <string name="linux_packages_checking_updates">正在检查 Alpine 软件仓库中的更新…</string>
+    <string name="linux_packages_update_error">无法检查更新</string>
+    <string name="linux_packages_try_again">重试</string>
+    <string name="linux_packages_update_explanation">只有在你主动检查时才会查询更新；此操作会下载 Alpine 软件包索引。</string>
+    <string name="linux_packages_check_updates">检查更新</string>
+    <string name="linux_packages_up_to_date">所有软件包均为最新版本。</string>
+    <string name="linux_packages_updates_available">有 %1$d 项更新可用</string>
+    <string name="linux_packages_more_updates">以及另外 %1$d 项</string>
+    <string name="linux_packages_install_updates">在终端中运行 `apk upgrade` 以安装这些更新。</string>
+    <string name="linux_packages_open_terminal">打开终端</string>
 </resources>
