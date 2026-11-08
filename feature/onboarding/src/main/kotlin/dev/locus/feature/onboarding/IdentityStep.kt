@@ -102,7 +102,7 @@ internal fun ColumnScope.IdentityFields(state: OnboardingUiState, viewModel: Onb
         }
     }
 
-    SectionLabel("What do you want help with?")
+    SectionLabel(stringResource(R.string.onb_identity_help_with))
     LocusCard {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
             HelpArea.entries.forEach { area ->
@@ -116,13 +116,13 @@ internal fun ColumnScope.IdentityFields(state: OnboardingUiState, viewModel: Onb
     SectionLabel(stringResource(R.string.onb_identity_about_you))
     LocusCard {
         Column(verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
-            Field(a.userName, "Your name", words = true) { v -> viewModel.editAnswers { it.copy(userName = v) } }
-            Field(a.callMe, "What should it call you?", words = true, placeholder = a.userName.substringBefore(' ').ifBlank { null }) { v -> viewModel.editAnswers { it.copy(callMe = v) } }
+            Field(a.userName, stringResource(R.string.onb_identity_your_name), words = true) { v -> viewModel.editAnswers { it.copy(userName = v) } }
+            Field(a.callMe, stringResource(R.string.onb_identity_call_you), words = true, placeholder = a.userName.substringBefore(' ').ifBlank { null }) { v -> viewModel.editAnswers { it.copy(callMe = v) } }
             Row(horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
-                Field(a.timeZone, "Time zone", Modifier.weight(1f)) { v -> viewModel.editAnswers { it.copy(timeZone = v) } }
-                Field(a.language, "Language", Modifier.weight(1f), words = true) { v -> viewModel.editAnswers { it.copy(language = v) } }
+                Field(a.timeZone, stringResource(R.string.onb_identity_timezone), Modifier.weight(1f)) { v -> viewModel.editAnswers { it.copy(timeZone = v) } }
+                Field(a.language, stringResource(R.string.onb_identity_language), Modifier.weight(1f), words = true) { v -> viewModel.editAnswers { it.copy(language = v) } }
             }
-            Field(a.location, "Where you are (city or country)", words = true) { v -> viewModel.editAnswers { it.copy(location = v) } }
+            Field(a.location, stringResource(R.string.onb_identity_location), words = true) { v -> viewModel.editAnswers { it.copy(location = v) } }
         }
     }
 
@@ -139,7 +139,7 @@ internal fun ColumnScope.IdentityFields(state: OnboardingUiState, viewModel: Onb
     val override = viewModel.personaOverride
     if (override != null) {
         Banner(
-            "This is edited text, so changes to the answers above won't show up here until you switch back.",
+            stringResource(R.string.onb_identity_override_note),
             Tone.Caution,
             actions = { TextButton(onClick = { viewModel.setPersonaText(null) }) { Text(stringResource(R.string.onb_identity_use_answers)) } },
         )
@@ -161,12 +161,12 @@ internal fun ColumnScope.IdentityFields(state: OnboardingUiState, viewModel: Onb
         Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
             OutlinedButton(onClick = viewModel::polishPersona, enabled = !viewModel.personaPolish.running) {
                 Icon(LocusIcons.Sparkle, null, Modifier.size(IconSize.medium))
-                Text("Write it with my model", Modifier.padding(start = Spacing.sm))
+                Text(stringResource(R.string.onb_identity_write_with_model), Modifier.padding(start = Spacing.sm))
             }
         }
-        JobStatus(viewModel.personaPolish, "Asking your model…")
+        JobStatus(viewModel.personaPolish, stringResource(R.string.onb_identity_asking_model))
     }
-    Hint("Stored as plain files on this phone and sent to your model with each new chat. Keep secrets out of them.")
+    Hint(stringResource(R.string.onb_identity_storage_note))
     JobStatus(viewModel.identitySave, stringResource(R.string.onb_identity_saving))
 
     editing?.let { name ->
@@ -204,7 +204,7 @@ private fun PersonaChanges(viewModel: OnboardingViewModel) {
         title = "The change to ${file.fileName}",
         subtitle = "Made outside Locus. Keep it only if you made it yourself: your agent reads this file at the start of every chat.",
         onDismiss = { reviewing = null },
-        action = "Keep this version",
+        action = stringResource(R.string.onb_identity_keep_version),
         actionTone = Tone.Caution,
         actionEnabled = !viewModel.personaReview.running,
         onAction = { reviewing = null; viewModel.keepPersonaChange(file) },
@@ -229,7 +229,7 @@ private fun PersonaEditorSheet(initial: PersonaFiles, start: PersonaFile, onSave
     val files = PersonaFiles(identity, soul, user, agents)
     LocusSheet(
         title = "Edit files directly",
-        subtitle = "Optional. Markdown your agent reads at the start of every chat.",
+        subtitle = stringResource(R.string.onb_identity_optional_markdown),
         onDismiss = onDismiss,
         action = "Done",
         onAction = { onSave(files) },
@@ -289,10 +289,10 @@ fun PersonaRoute(onBack: () -> Unit, viewModel: OnboardingViewModel = hiltViewMo
 // ---- Pieces --------------------------------------------------------------------------------------
 
 private fun PersonaFile.title() = when (this) {
-    PersonaFile.IDENTITY -> "Identity"
-    PersonaFile.SOUL -> "Personality"
+    PersonaFile.IDENTITY -> stringResource(R.string.onb_identity_agent_identity)
+    PersonaFile.SOUL -> stringResource(R.string.onb_identity_personality)
     PersonaFile.USER -> "About you"
-    PersonaFile.AGENTS -> "Rules"
+    PersonaFile.AGENTS -> stringResource(R.string.onb_identity_rules_tab)
 }
 
 /** The file without Markdown headings and bullets, for the preview rows. */
