@@ -193,19 +193,19 @@ private fun ColumnScope.IntroStep() {
 private fun ColumnScope.PrivacyStep(viewModel: OnboardingViewModel) {
     StepHeading(stringResource(R.string.onboarding_privacy_title), stringResource(R.string.onboarding_privacy_body))
     CardGroup {
-        Fact(LocusIcons.Send, stringResource(R.string.onboarding_provider_privacy_title), "Your messages and the files the agent reads go directly to the AI provider you pick, under that provider's terms. With the on-device model, nothing leaves at all.")
+        Fact(LocusIcons.Send, stringResource(R.string.onboarding_provider_privacy_title), stringResource(R.string.onboarding_provider_privacy_body))
         GroupDivider(Insets.iconRow)
-        Fact(LocusIcons.Key, stringResource(R.string.onboarding_keys_privacy_title), "API keys and passwords are kept in an encrypted vault on this phone, never shown to the model.")
+        Fact(LocusIcons.Key, stringResource(R.string.onboarding_keys_privacy_title), stringResource(R.string.onboarding_keys_privacy_body))
         GroupDivider(Insets.iconRow)
-        Fact(LocusIcons.Globe, stringResource(R.string.onboarding_network_privacy_title), "Websites, services and machines are contacted only when you, or the agent with your approval, use them.")
+        Fact(LocusIcons.Globe, stringResource(R.string.onboarding_network_privacy_title), stringResource(R.string.onboarding_network_privacy_body))
     }
     // The one request Locus would make on its own, so it's asked here, off by default (docs/design/updates.md).
     if (viewModel.offerUpdateCheck) {
         val updateCheck by viewModel.updateCheck.collectAsStateWithLifecycle()
         CardGroup {
             SwitchRow(
-                title = "Check GitHub for new versions?",
-                subtitle = "About once a day on Wi-Fi, one request to GitHub with nothing about you. You decide whether to install; this bypasses app-store checks. Change it in Settings → About & privacy.",
+                title = stringResource(R.string.onboarding_update_check_title),
+                subtitle = stringResource(R.string.onboarding_update_check_body),
                 checked = updateCheck,
                 onCheckedChange = viewModel::setUpdateCheck,
                 icon = LocusIcons.Regenerate,
@@ -214,11 +214,11 @@ private fun ColumnScope.PrivacyStep(viewModel: OnboardingViewModel) {
     }
     SectionLabel(stringResource(R.string.onboarding_approvals))
     CardGroup {
-        Fact(LocusIcons.Check, stringResource(R.string.onboarding_allow), "Runs without asking.")
+        Fact(LocusIcons.Check, stringResource(R.string.onboarding_allow), stringResource(R.string.onboarding_allow_body))
         GroupDivider(Insets.iconRow)
-        Fact(LocusIcons.Shield, stringResource(R.string.onboarding_ask), "Waits for you to approve each time, in the app or from a notification.")
+        Fact(LocusIcons.Shield, stringResource(R.string.onboarding_ask), stringResource(R.string.onboarding_ask_body))
         GroupDivider(Insets.iconRow)
-        Fact(LocusIcons.Close, stringResource(R.string.onboarding_deny), "Never runs.")
+        Fact(LocusIcons.Close, stringResource(R.string.onboarding_deny), stringResource(R.string.onboarding_deny_body))
     }
     SectionLabel(stringResource(R.string.onboarding_starting_point))
     CardGroup {
@@ -237,12 +237,12 @@ private fun ColumnScope.PrivacyStep(viewModel: OnboardingViewModel) {
             }
         }
     }
-    SupportingText("You can change any single tool later in Settings → Permissions.")
+    SupportingText(stringResource(R.string.onboarding_permissions_hint))
     LocusCard(outline = if (viewModel.consent) MaterialTheme.colorScheme.primary.copy(alpha = Emphasis.toneOutline) else null, onClick = { viewModel.agree(!viewModel.consent) }) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(checked = viewModel.consent, onCheckedChange = viewModel::agree)
             Text(
-                "I understand that what I ask Locus to work on is sent to the AI provider I choose, and that the agent acts within the approvals above.",
+                stringResource(R.string.onboarding_consent),
                 Modifier.padding(start = Spacing.xs),
                 style = LocusType.rowSupporting,
             )
@@ -254,21 +254,21 @@ private fun ColumnScope.PrivacyStep(viewModel: OnboardingViewModel) {
 private fun ColumnScope.DoneStep(state: OnboardingUiState, viewModel: OnboardingViewModel, onOpenWorkspace: () -> Unit = {}) {
     StepHeading("${viewModel.answers.agentName.trim().ifBlank { "Locus" }} is ready", "Here is what you set up. All of it can be changed in Settings.")
     CardGroup {
-        Summary(LocusIcons.Sparkle, "Model", state.defaultProvider?.let { "${it.name} · ${dev.locus.core.model.ModelNames.short(it.model)}" }, "Not set up. Add one in Settings → Models.", link = SettingsDestination.Models)
+        Summary(LocusIcons.Sparkle, stringResource(R.string.onboarding_summary_model), state.defaultProvider?.let { "${it.name} · ${dev.locus.core.model.ModelNames.short(it.model)}" }, stringResource(R.string.onboarding_not_set_up), link = SettingsDestination.Models)
         GroupDivider(Insets.iconRow)
-        Summary(LocusIcons.Note, "Agent", "${viewModel.answers.agentName.trim().ifBlank { "Locus" }} · ${viewModel.answers.style.label.lowercase()}", null)
+        Summary(LocusIcons.Note, stringResource(R.string.onboarding_summary_agent), "${viewModel.answers.agentName.trim().ifBlank { "Locus" }} · ${viewModel.answers.style.label.lowercase()}", null)
         GroupDivider(Insets.iconRow)
         Summary(LocusIcons.Shield, stringResource(R.string.onboarding_approvals), viewModel.profile?.title ?: "Unchanged", null)
         GroupDivider(Insets.iconRow)
         Summary(
-            LocusIcons.Terminal, "Linux", if (state.linux == dev.locus.core.linux.LinuxStatus.Ready) "Installed" else null,
-            "Not installed. Install it any time in Workspace.",
+            LocusIcons.Terminal, stringResource(R.string.onboarding_summary_linux), if (state.linux == dev.locus.core.linux.LinuxStatus.Ready) stringResource(R.string.onboarding_installed) else null,
+            stringResource(R.string.onboarding_not_installed),
             onOpen = onOpenWorkspace,
         )
         GroupDivider(Insets.iconRow)
-        Summary(LocusIcons.Server, "Machines", state.sshHosts.takeIf { it.isNotEmpty() }?.joinToString { it.alias }, "None")
+        Summary(LocusIcons.Server, stringResource(R.string.onboarding_summary_machines), state.sshHosts.takeIf { it.isNotEmpty() }?.joinToString { it.alias }, stringResource(R.string.onboarding_none))
         GroupDivider(Insets.iconRow)
-        Summary(LocusIcons.Plug, "Integrations", state.integrations.filter { it.second }.takeIf { it.isNotEmpty() }?.joinToString { it.first.name }, "None")
+        Summary(LocusIcons.Plug, stringResource(R.string.onboarding_summary_integrations), state.integrations.filter { it.second }.takeIf { it.isNotEmpty() }?.joinToString { it.first.name }, stringResource(R.string.onboarding_none))
     }
 }
 
@@ -308,7 +308,7 @@ private fun Summary(
         onClick = open,
         leading = { IconTile(icon, tint = if (value != null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant) },
         trailing = when {
-            value != null -> { { Icon(LocusIcons.Check, contentDescription = "Done", Modifier.size(IconSize.medium), tint = Locus.colors.live) } }
+            value != null -> { { Icon(LocusIcons.Check, contentDescription = stringResource(R.string.onboarding_done), Modifier.size(IconSize.medium), tint = Locus.colors.live) } }
             open != null -> { { RowChevron() } }
             else -> null
         },
