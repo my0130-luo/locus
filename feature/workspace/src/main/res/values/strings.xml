@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="workspace_title">Workspace</string>
+    <string name="workspace_preview">Preview</string>
+    <string name="workspace_source">Source</string>
+    <string name="workspace_file_actions">File actions</string>
+    <string name="workspace_open_with">Open with…</string>
+    <string name="workspace_share">Share</string>
+    <string name="workspace_export">Export</string>
+    <string name="workspace_copy_text">Copy text</string>
+    <string name="workspace_delete">Delete</string>
+    <string name="workspace_terminal">Terminal</string>
+    <string name="workspace_browser">Browser</string>
+    <string name="workspace_import_files">Import files</string>
+    <string name="workspace_cannot_open_folder">Can't open this folder</string>
+    <string name="workspace_reconnect">Reconnect</string>
+    <string name="workspace_folder_empty">This folder is empty</string>
+    <string name="workspace_files_label">Files</string>
+    <string name="workspace_workspace_empty">The workspace is empty</string>
+    <string name="workspace_trash_empty">Trash is empty</string>
+    <string name="workspace_delete_permanently">Delete permanently</string>
+    <string name="workspace_delete_permanently_question">Delete permanently?</string>
+    <string name="workspace_overwritten">OVERWRITTEN</string>
+    <string name="workspace_earlier_version">Earlier version</string>
+    <string name="workspace_replaced_by_move">Replaced by a move</string>
+    <string name="workspace_before_move">Before a move</string>
+    <string name="workspace_deleted">Deleted</string>
+</resources>
