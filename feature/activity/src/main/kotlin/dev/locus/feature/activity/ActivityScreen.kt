@@ -38,7 +38,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalContext
+import dev.locus.feature.activity.R
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
@@ -108,14 +110,14 @@ fun ActivityRoute(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             LocusTopBar(
-                state.scopeTitle ?: "Activity",
+                state.scopeTitle ?: stringResource(R.string.activity_title),
                 onBack = if (state.scopedHere) viewModel::showEverything else onBack,
                 status = { TopStatus(state) },
                 actions = {
                     val id = state.conversationId
                     val exists = state.days.firstOrNull()?.runs?.firstOrNull()?.chat?.exists ?: (state.scopeTitle != "Deleted chat")
                     if (id != null && exists) {
-                        IconButton(onClick = { onOpenConversation(id) }) { Icon(LocusIcons.Chats, contentDescription = "Open chat") }
+                        IconButton(onClick = { onOpenConversation(id) }) { Icon(LocusIcons.Chats, contentDescription = stringResource(R.string.activity_open_chat)) }
                     }
                 },
             )
@@ -127,8 +129,8 @@ fun ActivityRoute(
         }
         if (state.totalInScope == 0 && state.filters.isDefault) {
             EmptyState(
-                if (state.conversationId == null) "Nothing yet" else "No actions in this chat",
-                "Every tool the agent uses is recorded here: what it ran, whether you approved it, and what happened.",
+                if (state.conversationId == null) stringResource(R.string.activity_nothing_yet) else stringResource(R.string.activity_no_actions_in_chat),
+                stringResource(R.string.activity_empty_explanation),
                 Modifier.padding(padding),
                 icon = LocusIcons.Activity,
             )
@@ -164,7 +166,7 @@ fun ActivityRoute(
             if (state.hasMore) {
                 item(key = "more", contentType = "more") {
                     Box(Modifier.fillMaxWidth().padding(top = Spacing.lg), contentAlignment = Alignment.Center) {
-                        TextButton(onClick = viewModel::loadMore) { Text("Load older activity") }
+                        TextButton(onClick = viewModel::loadMore) { Text(stringResource(R.string.activity_load_older)) }
                     }
                 }
             }
@@ -204,7 +206,7 @@ private fun TopStatus(state: ActivityUiState) {
 @Composable
 private fun Filters(filters: ActivityFilters, inChat: Boolean, viewModel: ActivityViewModel) {
     Column(Modifier.padding(top = Spacing.sm), verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
-        SearchField(filters.query, viewModel::setQuery, if (inChat) "Search this chat's actions" else "Search actions and chats")
+        SearchField(filters.query, viewModel::setQuery, if (inChat) stringResource(R.string.activity_search_chat_actions) else stringResource(R.string.activity_search_actions_chats))
         val task = filters.task
         if (task != null) {
             // From a task receipt: that task's entries only. Tapping the chip shows the whole chat again.
@@ -258,12 +260,12 @@ private fun ChipRow(content: @Composable () -> Unit) {
 @Composable
 private fun NoResults(filters: ActivityFilters, onClear: () -> Unit) {
     EmptyState(
-        if (filters.query.isBlank() && filters.kind == null && filters.status == null) "Nothing in this period" else "No matching actions",
-        "Try a wider time range or fewer filters.",
+        if (filters.query.isBlank() && filters.kind == null && filters.status == null) stringResource(R.string.activity_nothing_period) else stringResource(R.string.activity_no_matching_actions),
+        stringResource(R.string.activity_widen_filters),
         // Inside the list, under the filters: as tall as its content, with room around it, not the whole screen.
         Modifier.padding(vertical = Spacing.xxl),
         icon = LocusIcons.Search,
-    ) { TextButton(onClick = onClear) { Text("Clear filters") } }
+    ) { TextButton(onClick = onClear) { Text(stringResource(R.string.activity_clear_filters)) } }
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -318,7 +320,7 @@ private fun LazyListScope.runItems(
             Modifier.cardSegment(last, count).fillMaxWidth().padding(horizontal = Spacing.sm, vertical = Spacing.xs),
             horizontalArrangement = Arrangement.End,
         ) {
-            if (!inChat) TextButton(onClick = onViewChat) { Text("View all in this chat") }
+            if (!inChat) TextButton(onClick = onViewChat) { Text(stringResource(R.string.activity_view_all_chat)) }
             if (run.chat.exists) TextButton(onClick = onOpenChat) { Text("Open chat") }
         }
     }
