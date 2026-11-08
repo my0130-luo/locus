@@ -25,4 +25,13 @@
     <string name="activity_last_action">最近：%1$s</string>
     <string name="activity_in_chat">位于对话“%1$s”中</string>
     <string name="activity_empty_result">（空）</string>
+    <string name="activity_failed">失败</string>
+    <string name="activity_approved">已批准</string>
+    <string name="activity_reviewer_allowed">审核器已允许</string>
+    <string name="activity_remembered_approval">已记住的批准</string>
+    <string name="activity_declined">已拒绝</string>
+    <string name="activity_blocked">已拦截</string>
+    <string name="activity_reviewer_blocked">审核器已拦截</string>
+    <string name="activity_invalid">无效</string>
+    <string name="activity_ran_automatically">自动执行</string>
 </resources>
