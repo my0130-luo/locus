@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="browser_title">浏览器</string>
+    <string name="browser_close">关闭浏览器</string>
+    <string name="browser_back_to_chat">返回对话</string>
+    <string name="browser_more_options">更多选项</string>
+    <string name="browser_link_copied">链接已复制</string>
+    <string name="browser_stop_loading">停止加载</string>
+    <string name="browser_reload">重新加载</string>
+    <string name="browser_browse_on_your_own">自行浏览</string>
+    <string name="browser_nothing_open_yet">尚未打开页面</string>
+    <string name="browser_could_not_open">无法打开此页面</string>
+    <string name="browser_take_over">接管浏览器</string>
+    <string name="browser_hand_back">交还控制权</string>
+    <string name="browser_tabs">标签页</string>
+    <string name="browser_answer">回答</string>
+    <string name="browser_clear_data">清除浏览数据</string>
+    <string name="browser_clear">清除</string>
+    <string name="browser_your_turn">轮到你了</string>
+    <string name="browser_done">完成</string>
+    <string name="browser_back">后退</string>
+    <string name="browser_forward">前进</string>
+    <string name="browser_copy_link">复制链接</string>
+    <string name="browser_open_external">在其他应用中打开</string>
+</resources>
