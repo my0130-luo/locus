@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_all_chats">全部对话</string>
+    <string name="home_settings">设置</string>
+    <string name="home_connect_model">连接模型</string>
+    <string name="home_choose_model">选择模型</string>
+    <string name="home_delete_chat_title">删除此对话？</string>
+    <string name="home_delete">删除</string>
+    <string name="home_rename_chat">重命名对话</string>
+    <string name="home_save">保存</string>
+    <string name="home_pinned">已置顶</string>
+    <string name="home_recent">最近</string>
+    <string name="home_recent_files">最近的文件</string>
+    <string name="home_all">全部</string>
+    <string name="home_waiting_approval">等待你的授权</string>
+    <string name="home_thinking">思考中</string>
+    <string name="home_library">资料库</string>
+    <string name="home_tasks">任务</string>
+    <string name="home_files">文件</string>
+    <string name="home_workspace_files">工作区文件与 Linux</string>
+    <string name="home_activity">活动记录</string>
+    <string name="home_activity_summary">查看智能体执行过的所有操作</string>
+    <string name="home_insights">数据洞察</string>
+    <string name="home_insights_summary">Token 用量、速度与工具使用情况</string>
+    <string name="home_chat_options">对话选项</string>
+    <string name="home_needs_approval">需要你的授权</string>
+    <string name="home_working">正在运行</string>
+    <string name="home_stopped_early">提前停止 · 点击继续</string>
+    <string name="home_scheduled_task">计划任务</string>
+    <string name="home_unpin">取消置顶</string>
+    <string name="home_pin_top">置顶</string>
+    <string name="home_rename">重命名</string>
+    <string name="home_you">你</string>
+    <string name="home_other_branch">其他分支</string>
+    <string name="home_chats">对话</string>
+    <string name="home_searching">正在搜索…</string>
+    <string name="home_search_chats">搜索对话</string>
+    <string name="home_no_project">无项目</string>
+    <string name="home_no_chats_body">还没有对话。你可以在下方提出任何问题；Locus 能搜索网页、处理文件、运行 Linux 命令并打开手机应用。</string>
+    <string name="home_model_intro">Locus 在你的手机上运行，并连接你选择的模型：可以使用自己的 API 密钥、局域网中的模型服务器，也可以完全离线运行手机本地模型。</string>
+</resources>
