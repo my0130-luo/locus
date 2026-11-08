@@ -398,7 +398,7 @@ private fun CallRow(entry: AuditEntry, modifier: Modifier, onClick: () -> Unit) 
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        decisionPill(entry)?.let { (label, tone) -> LocusChip(label, Modifier.padding(end = Spacing.sm), tone = tone) }
+        localizedDecisionPill(entry)?.let { (label, tone) -> LocusChip(label, Modifier.padding(end = Spacing.sm), tone = tone) }
         SupportingText(durationLabel(entry.finishedAt - entry.startedAt), Modifier.widthIn(min = DurationColumnWidth), style = LocusType.mono, maxLines = 1)
     }
 }
@@ -421,7 +421,7 @@ private fun DetailSheet(entry: AuditEntry, chat: RunChat, onDismiss: () -> Unit,
             val (accent, icon) = accentFor(entry.toolName)
             AccentTile(accent, icon, size = IconSize.large)
             SupportingText(entry.toolName, Modifier.weight(1f).padding(horizontal = Spacing.sm), style = LocusType.mono)
-            LocusChip(decisionText(entry), tone = decisionPill(entry)?.second ?: Tone.Neutral)
+            LocusChip(localizedDecisionPill(entry)?.first ?: stringResource(R.string.activity_ran_automatically), tone = localizedDecisionPill(entry)?.second ?: Tone.Neutral)
         }
         SupportingText(stringResource(R.string.activity_in_chat, chat.title), style = LocusType.rowSupporting)
         CodeBlock(stringResource(R.string.activity_arguments), pretty(entry.argumentsJson))
@@ -471,6 +471,18 @@ private fun timeRange(context: Context, start: Long, end: Long): String =
 
 private fun plural(n: Int, noun: String) = "$n $noun" + if (n == 1) "" else "s"
 
+
+@Composable
+private fun localizedDecisionPill(entry: AuditEntry): Pair<String, Tone>? = when (entry.decision) {
+    ApprovalDecision.AUTO_ALLOWED -> if (entry.isError) stringResource(R.string.activity_failed) to Tone.Critical else null
+    ApprovalDecision.USER_APPROVED -> if (entry.isError) stringResource(R.string.activity_failed) to Tone.Critical else stringResource(R.string.activity_approved) to Tone.Brand
+    ApprovalDecision.REVIEWER_ALLOWED -> if (entry.isError) stringResource(R.string.activity_failed) to Tone.Critical else stringResource(R.string.activity_reviewer_allowed) to Tone.Neutral
+    ApprovalDecision.REMEMBERED_ALLOWED -> if (entry.isError) stringResource(R.string.activity_failed) to Tone.Critical else stringResource(R.string.activity_remembered_approval) to Tone.Neutral
+    ApprovalDecision.USER_DENIED -> stringResource(R.string.activity_declined) to Tone.Caution
+    ApprovalDecision.POLICY_DENIED -> stringResource(R.string.activity_blocked) to Tone.Caution
+    ApprovalDecision.REVIEWER_DENIED -> stringResource(R.string.activity_reviewer_blocked) to Tone.Caution
+    ApprovalDecision.INVALID_INPUT -> stringResource(R.string.activity_invalid) to Tone.Critical
+}
 
 /** Automatic successes are the norm and get no pill; everything else says what happened. */
 private fun decisionPill(entry: AuditEntry): Pair<String, Tone>? = when (entry.decision) {
