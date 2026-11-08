@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tasks_reminders">Reminders</string>
+    <string name="tasks_cancel_reminder">Cancel reminder: %1$s</string>
+    <string name="tasks_clear_reminder">Clear reminder: %1$s</string>
+    <string name="tasks_reminder_note_exact">A reminder is a notification from Locus; nothing runs when it shows.</string>
+    <string name="tasks_reminder_note_inexact">A reminder is a notification from Locus; nothing runs when it shows. Without exact timing (Settings → Phone) it can show up to 10 minutes late.</string>
+</resources>
