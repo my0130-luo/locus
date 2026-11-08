@@ -183,7 +183,7 @@ private fun TasksScreen(onBack: () -> Unit, onOpenChat: (String) -> Unit, viewMo
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Button(onClick = { sheet = SheetTarget.New() }) { Text(stringResource(R.string.tasks_new_task)) }
-                        TextButton(onClick = { sheet = SheetTarget.New(TaskDraft.morningDigest(viewModel.defaultConditions.value)) }) { Text("Start from the morning digest") }
+                        TextButton(onClick = { sheet = SheetTarget.New(TaskDraft.morningDigest(viewModel.defaultConditions.value)) }) { Text(stringResource(R.string.tasks_start_from_digest)) }
                     }
                 }
             } else {
@@ -210,14 +210,14 @@ private fun TasksScreen(onBack: () -> Unit, onOpenChat: (String) -> Unit, viewMo
                             GroupDivider(inset = Insets.iconRow)
                             ListRow(
                                 stringResource(R.string.tasks_morning_digest),
-                                subtitle = "Every day at 7:00: today's calendar and what to prepare",
+                                subtitle = stringResource(R.string.tasks_morning_digest_note),
                                 leading = { IconTile(LocusIcons.Sunrise) },
                                 onClick = { sheet = SheetTarget.New(TaskDraft.morningDigest(viewModel.defaultConditions.value)) },
                             )
                             GroupDivider(inset = Insets.iconRow)
                             ListRow(
                                 stringResource(R.string.tasks_news_digest),
-                                subtitle = "Every day at 7:00: unread articles from your Miniflux",
+                                subtitle = stringResource(R.string.tasks_news_digest_note),
                                 leading = { IconTile(LocusIcons.Note) },
                                 onClick = { sheet = SheetTarget.New(TaskDraft.newsDigest(viewModel.defaultConditions.value)) },
                             )
@@ -310,8 +310,8 @@ private fun TaskRow(
     val calendar = rememberCalendarAccess(viewModel) { viewModel.checkNow(task.id) }
     if (confirmDelete) {
         ConfirmSheet(
-            title = "Delete “${task.title}”?",
-            message = if (trigger != null) "It stops listening for events and its history goes. Chats from its earlier runs are kept." else "It stops running. Chats from its earlier runs are kept.",
+            title = stringResource(R.string.tasks_delete_title, task.title),
+            message = stringResource(if (trigger != null) R.string.tasks_delete_trigger_message else R.string.tasks_delete_schedule_message),
             confirmLabel = stringResource(R.string.tasks_delete),
             tone = Tone.Critical,
             onConfirm = { viewModel.delete(task.id); confirmDelete = false },
@@ -434,8 +434,8 @@ internal fun TaskSheet(initial: TaskDraft, editing: String?, viewModel: TasksVie
     LaunchedEffect(Unit) { viewModel.refreshSetup() }
     val digest = editing == null && initial.firstRunAt != null
     LocusSheet(
-        title = editing?.let { "Edit “$it”" } ?: if (digest) initial.title else stringResource(R.string.tasks_new_task),
-        subtitle = "Runs on its own, read-only, and notifies you with a short summary.",
+        title = if (editing != null) stringResource(R.string.tasks_edit_title, editing) else if (digest) initial.title else stringResource(R.string.tasks_new_task),
+        subtitle = stringResource(R.string.tasks_digest_editor_note),
         onDismiss = onDismiss,
         action = if (editing != null) stringResource(R.string.tasks_save) else stringResource(R.string.tasks_create),
         actionEnabled = draft.valid && (editing == null || draft != initial),
@@ -461,15 +461,15 @@ internal fun TaskSheet(initial: TaskDraft, editing: String?, viewModel: TasksVie
                 compact = true,
             )
             if (ScheduleIntervals.indexOf(draft.intervalMinutes) < 0) {
-                SupportingText("Now ${ScheduleIntervals.label(draft.intervalMinutes).lowercase()}. Pick one to change it.")
+                SupportingText(stringResource(R.string.tasks_schedule_interval_now, ScheduleIntervals.label(draft.intervalMinutes).lowercase()))
             }
             draft.firstRunAt?.takeIf { editing == null }?.let { at ->
-                SupportingText("First run at ${QuietHours.clock(at)}, then once a period. Android may run it a little later while the phone is idle.")
+                SupportingText(stringResource(R.string.tasks_first_run_note, QuietHours.clock(at)))
             }
             if (digest) {
                 if (initial.readsCalendar && !setup.calendarAllowed) CalendarAccessBanner("The digest reads today's calendar entries.", calendar.denied, calendar.request)
                 if (setup.ntfyResults) {
-                    SupportingText("The digest also goes to your ntfy topic, so it reaches your other devices.")
+                    SupportingText(stringResource(R.string.tasks_digest_ntfy_note))
                 } else {
                     SettingsLink(SettingsDestination.Integrations, hint = "To get the digest on your other devices too, set up ntfy in")
                 }
@@ -477,7 +477,7 @@ internal fun TaskSheet(initial: TaskDraft, editing: String?, viewModel: TasksVie
         } else {
             TriggerFields(draft, setup, calendar.denied, calendar.request) { draft = it }
         }
-        Text("Only run", style = LocusType.cardTitle)
+        Text(stringResource(R.string.tasks_only_run), style = LocusType.cardTitle)
         CardGroup { ConditionSwitches(draft.conditions) { draft = draft.copy(conditions = it) } }
     }
 }
@@ -485,14 +485,14 @@ internal fun TaskSheet(initial: TaskDraft, editing: String?, viewModel: TasksVie
 /** The three run conditions, as WorkManager constraints (docs/design/battery-thermal.md). */
 @Composable
 private fun ConditionSwitches(conditions: TaskConditions, onChange: (TaskConditions) -> Unit) {
-    SwitchRow("When charging", conditions.requiresCharging, { onChange(conditions.copy(requiresCharging = it)) }, subtitle = "Waits until the phone is plugged in.")
+    SwitchRow(stringResource(R.string.tasks_when_charging), conditions.requiresCharging, { onChange(conditions.copy(requiresCharging = it)) }, subtitle = stringResource(R.string.tasks_when_charging_note))
     GroupDivider()
-    SwitchRow("On Wi-Fi", conditions.unmeteredOnly, { onChange(conditions.copy(unmeteredOnly = it)) }, subtitle = "Not on mobile data or another metered network.")
+    SwitchRow(stringResource(R.string.tasks_on_wifi), conditions.unmeteredOnly, { onChange(conditions.copy(unmeteredOnly = it)) }, subtitle = stringResource(R.string.tasks_on_wifi_note))
     GroupDivider()
     SwitchRow(
         "When the battery isn't low",
         conditions.batteryNotLow,
         { onChange(conditions.copy(batteryNotLow = it)) },
-        subtitle = "Skips the time Android shows its low-battery warning.",
+        subtitle = stringResource(R.string.tasks_battery_not_low_note),
     )
 }
