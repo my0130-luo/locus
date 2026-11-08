@@ -127,7 +127,7 @@ internal fun AnalyticsScreen(
         ) {
             item(key = "period") {
                 Segmented(
-                    options = listOf("7 days", "30 days", "All time"),
+                    options = listOf(stringResource(R.string.analytics_period_7_days), stringResource(R.string.analytics_period_30_days), stringResource(R.string.analytics_period_all_time)),
                     selected = state.period.ordinal,
                     onSelect = { onPeriod(AnalyticsPeriod.entries[it]) },
                     modifier = Modifier.fillMaxWidth(),
@@ -208,9 +208,9 @@ private fun TokensCard(report: AnalyticsReport, modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(Spacing.md),
             verticalArrangement = Arrangement.spacedBy(Spacing.xs),
         ) {
-            ChartLegend(inputColor, "in ${compactCount(t.input)}")
-            ChartLegend(brand, "out ${compactCount(t.output)}")
-            t.cachedShare?.let { SupportingText("${(it * 100).roundToInt()}% cached", style = LocusType.mono) }
+            ChartLegend(inputColor, stringResource(R.string.analytics_input_tokens, compactCount(t.input)))
+            ChartLegend(brand, stringResource(R.string.analytics_output_tokens, compactCount(t.output)))
+            t.cachedShare?.let { SupportingText(stringResource(R.string.analytics_cached_percent, (it * 100).roundToInt()), style = LocusType.mono) }
         }
         // The prompt cache at work: what was read from it and written to it (writes cost more than
         // fresh input, reads far less), so cache hits can be checked on the phone.
@@ -226,7 +226,7 @@ private fun TokensCard(report: AnalyticsReport, modifier: Modifier = Modifier) {
         }
         // Thinking is part of "out"; shown on its own line so the legend row stays one line on phones.
         if (t.reasoning > 0) {
-            SupportingText("of which ${compactCount(t.reasoning)} thinking", Modifier.padding(top = Spacing.xs), style = LocusType.mono)
+            SupportingText(stringResource(R.string.analytics_reasoning_tokens, compactCount(t.reasoning)), Modifier.padding(top = Spacing.xs), style = LocusType.mono)
         }
         val buckets = report.buckets
         BarChart(
@@ -246,9 +246,9 @@ private fun TokensCard(report: AnalyticsReport, modifier: Modifier = Modifier) {
 private fun SpeedRow(report: AnalyticsReport, modifier: Modifier = Modifier) {
     LocusCard(modifier) {
         FigureRow {
-            Figure("Requests", compactCount(report.requests.toLong()), Modifier.weight(1f))
-            Figure("Median reply", report.replyMedianMs?.let(::durationLabel) ?: "–", Modifier.weight(1f))
-            Figure("Slowest 5%", report.replyP95Ms?.let(::durationLabel) ?: "–", Modifier.weight(1f))
+            Figure(stringResource(R.string.analytics_requests), compactCount(report.requests.toLong()), Modifier.weight(1f))
+            Figure(stringResource(R.string.analytics_median_reply), report.replyMedianMs?.let(::durationLabel) ?: "–", Modifier.weight(1f))
+            Figure(stringResource(R.string.analytics_slowest_five_percent), report.replyP95Ms?.let(::durationLabel) ?: "–", Modifier.weight(1f))
         }
         report.firstTokenMedianMs?.let { median ->
             SupportingText(
@@ -277,9 +277,9 @@ private fun CostCard(report: AnalyticsReport, catalogLoaded: Boolean, prices: Pr
         FigureRow(Modifier.padding(top = Spacing.sm)) {
             // With prices off every span reads the same "–"; the note under them says why.
             val spend = { c: CostEstimate -> if (cost.pricesOn) costLabel(c) else "–" }
-            Figure("Today", spend(cost.today), Modifier.weight(1f))
-            Figure("7 days", spend(cost.week), Modifier.weight(1f))
-            Figure("30 days", spend(cost.month), Modifier.weight(1f))
+            Figure(stringResource(R.string.analytics_today), spend(cost.today), Modifier.weight(1f))
+            Figure(stringResource(R.string.analytics_period_7_days), spend(cost.week), Modifier.weight(1f))
+            Figure(stringResource(R.string.analytics_period_30_days), spend(cost.month), Modifier.weight(1f))
         }
         costNote(cost, catalogLoaded, prices)?.let { note ->
             Row(Modifier.padding(top = Spacing.sm), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
@@ -415,9 +415,9 @@ private fun ToolsCard(report: AnalyticsReport, modifier: Modifier = Modifier) {
     var selected by remember(report.period, report.buckets.size) { mutableStateOf<Int?>(null) }
     LocusCard(modifier) {
         Row {
-            Figure("Calls", compactCount(tools.calls.toLong()), Modifier.weight(1f))
-            Figure("Succeeded", tools.successRate?.let { "${(it * 100).roundToInt()}%" } ?: "–", Modifier.weight(1f))
-            Figure("Failed", tools.failures.toString(), Modifier.weight(1f), tone = if (tools.failures > 0) Tone.Critical else Tone.Neutral)
+            Figure(stringResource(R.string.analytics_calls), compactCount(tools.calls.toLong()), Modifier.weight(1f))
+            Figure(stringResource(R.string.analytics_succeeded), tools.successRate?.let { "${(it * 100).roundToInt()}%" } ?: "–", Modifier.weight(1f))
+            Figure(stringResource(R.string.analytics_failed), tools.failures.toString(), Modifier.weight(1f), tone = if (tools.failures > 0) Tone.Critical else Tone.Neutral)
         }
         BarChart(
             values = report.buckets.map { listOf((it.toolCalls - it.toolFailures).toFloat(), it.toolFailures.toFloat()) },
@@ -440,7 +440,7 @@ private fun DecisionSplit(tools: ToolStats, modifier: Modifier = Modifier) {
     val approved = MaterialTheme.colorScheme.primary
     val denied = Locus.colors.caution
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
-        SupportingText("Approvals", style = LocusType.label)
+        SupportingText(stringResource(R.string.analytics_approvals), style = LocusType.label)
         SplitBar(listOf(tools.autoAllowed to auto, tools.userApproved to approved, tools.denied to denied))
         Row(horizontalArrangement = Arrangement.spacedBy(Spacing.md)) {
             ChartLegend(auto, "auto ${tools.autoAllowed}")
@@ -515,8 +515,8 @@ private fun TasksCard(report: AnalyticsReport, modifier: Modifier = Modifier) {
                 },
                 trailing = {
                     when (t.enabled) {
-                        false -> LocusChip("Paused")
-                        null -> LocusChip("Removed")
+                        false -> LocusChip(stringResource(R.string.analytics_paused))
+                        null -> LocusChip(stringResource(R.string.analytics_removed))
                         true -> Unit
                     }
                 },
