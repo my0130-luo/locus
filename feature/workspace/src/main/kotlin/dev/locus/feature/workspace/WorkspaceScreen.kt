@@ -26,6 +26,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
+import dev.locus.feature.workspace.R
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -200,11 +202,11 @@ fun WorkspaceRoute(
                             Box {
                                 IconButton(onClick = { menuOpen = true }) { Icon(LocusIcons.More, contentDescription = "File actions") }
                                 DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
-                                    DropdownMenuItem(text = { Text("Open with…") }, onClick = { menuOpen = false; openWith(context, open, feedback) })
-                                    DropdownMenuItem(text = { Text("Share") }, onClick = { menuOpen = false; share(context, open, feedback) })
-                                    DropdownMenuItem(text = { Text("Export") }, onClick = { menuOpen = false; exportLauncher.launch(open.name) })
+                                    DropdownMenuItem(text = { Text(stringResource(R.string.workspace_open_with)) }, onClick = { menuOpen = false; openWith(context, open, feedback) })
+                                    DropdownMenuItem(text = { Text(stringResource(R.string.workspace_share)) }, onClick = { menuOpen = false; share(context, open, feedback) })
+                                    DropdownMenuItem(text = { Text(stringResource(R.string.workspace_export)) }, onClick = { menuOpen = false; exportLauncher.launch(open.name) })
                                     if (open.text != null) {
-                                        DropdownMenuItem(text = { Text("Copy text") }, onClick = {
+                                        DropdownMenuItem(text = { Text(stringResource(R.string.workspace_copy_text)) }, onClick = {
                                             menuOpen = false
                                             val cm = context.getSystemService(android.content.ClipboardManager::class.java)
                                             cm?.setPrimaryClip(android.content.ClipData.newPlainText(open.name, open.text))
@@ -247,14 +249,14 @@ fun WorkspaceRoute(
             state.showTrash -> TrashList(state, viewModel::restore, viewModel::purge, Modifier.padding(padding))
             state.loading -> LoadingState(Modifier.padding(padding))
             state.folderError != null -> dev.locus.core.designsystem.ErrorState(
-                title = "Can't open this folder",
+                title = stringResource(R.string.workspace_cannot_open_folder),
                 message = state.folderError.orEmpty(),
                 onRetry = viewModel::refresh,
                 modifier = Modifier.padding(padding),
-                action = if (inConnected != null) ({ TextButton(onClick = { pickFolder(inConnected.id) }) { Text("Reconnect") } }) else null,
+                action = if (inConnected != null) ({ TextButton(onClick = { pickFolder(inConnected.id) }) { Text(stringResource(R.string.workspace_reconnect)) } }) else null,
             )
             state.entries.isEmpty() && inConnected != null -> EmptyState(
-                title = "This folder is empty",
+                title = stringResource(R.string.workspace_folder_empty),
                 body = "Files you or Locus add to ${inConnected.name} appear here, and in the app that keeps it.",
                 modifier = Modifier.padding(padding),
                 icon = LocusIcons.Folder,
@@ -284,7 +286,7 @@ fun WorkspaceRoute(
                     if (state.entries.isEmpty()) {
                         item(key = "files-empty") {
                             EmptyState(
-                                title = "The workspace is empty",
+                                title = stringResource(R.string.workspace_workspace_empty),
                                 body = "Files Locus creates appear here. You can also import files, or open the workspace from your phone's Files app under “Locus workspace”.",
                                 icon = LocusIcons.Folder,
                             )
@@ -320,14 +322,14 @@ fun WorkspaceRoute(
 @Composable
 private fun TrashList(state: WorkspaceUiState, onRestore: (String) -> Unit, onPurge: (String) -> Unit, modifier: Modifier) {
     if (state.trash.isEmpty()) {
-        EmptyState("Trash is empty", "Files Locus deletes or overwrites are kept here so you can undo its changes.", modifier, icon = LocusIcons.Restore)
+        EmptyState(stringResource(R.string.workspace_trash_empty), "Files Locus deletes or overwrites are kept here so you can undo its changes.", modifier, icon = LocusIcons.Restore)
         return
     }
     // The trash entry waiting for "Delete permanently" to be confirmed.
     var purging by remember { mutableStateOf<String?>(null) }
     state.trash.firstOrNull { it.id == purging }?.let { entry ->
         ConfirmSheet(
-            title = "Delete permanently?",
+            title = stringResource(R.string.workspace_delete_permanently_question),
             message = "${entry.originalPath} can't be restored after this.",
             confirmLabel = "Delete",
             tone = Tone.Critical,
