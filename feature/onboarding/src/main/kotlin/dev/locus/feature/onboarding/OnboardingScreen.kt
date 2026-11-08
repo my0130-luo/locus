@@ -1,5 +1,6 @@
 package dev.locus.feature.onboarding
 
+import dev.locus.feature.onboarding.R
 import dev.locus.core.designsystem.CodeSurface
 import dev.locus.core.designsystem.Emphasis
 import dev.locus.core.designsystem.LocusType
@@ -40,6 +41,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -86,7 +88,7 @@ fun OnboardingRoute(
                     step.title,
                     onBack = { if (!viewModel.back()) onExit() },
                     status = { SupportingText("Step ${step.ordinal + 1} of ${Step.entries.size}", style = LocusType.mono) },
-                    actions = { if (step.skippable) TextButton(onClick = viewModel::next) { Text("Skip") } },
+                    actions = { if (step.skippable) TextButton(onClick = viewModel::next) { Text(stringResource(R.string.onboarding_skip)) } },
                 )
                 StepProgress(step)
             }
@@ -122,20 +124,20 @@ private fun StepProgress(step: Step) {
         (step.ordinal + 1f) / Step.entries.size,
         Modifier.padding(horizontal = Spacing.lg),
         tone = Tone.Brand,
-        contentDescription = "Setup progress",
+        contentDescription = stringResource(R.string.onboarding_setup_progress),
     )
 }
 
 @Composable
 private fun BottomAction(step: Step, state: OnboardingUiState, viewModel: OnboardingViewModel, onFinish: (String?) -> Unit) {
     val (label, enabled) = when (step) {
-        Step.Intro -> "Get started" to true
-        Step.Privacy -> "Continue" to viewModel.consent
-        Step.Provider -> (if (state.providers.isEmpty()) "Set up a model to continue" else "Continue") to state.providers.isNotEmpty()
-        Step.Identity -> (if (viewModel.identitySave.running) "Saving…" else "Save and continue") to (viewModel.personaLoaded && !viewModel.identitySave.running)
-        Step.Done -> (if (state.providers.isEmpty()) "Finish" else "Start chatting") to !viewModel.finishing
-        Step.Linux -> (if (state.linux == dev.locus.core.linux.LinuxStatus.Ready) "Continue" else "Continue without Linux") to true
-        else -> "Continue" to true
+        Step.Intro -> stringResource(R.string.onboarding_get_started) to true
+        Step.Privacy -> stringResource(R.string.onboarding_continue) to viewModel.consent
+        Step.Provider -> (if (state.providers.isEmpty()) stringResource(R.string.onboarding_set_up_model_continue) else stringResource(R.string.onboarding_continue)) to state.providers.isNotEmpty()
+        Step.Identity -> (if (viewModel.identitySave.running) stringResource(R.string.onboarding_saving) else stringResource(R.string.onboarding_save_continue)) to (viewModel.personaLoaded && !viewModel.identitySave.running)
+        Step.Done -> (if (state.providers.isEmpty()) stringResource(R.string.onboarding_finish) else stringResource(R.string.onboarding_start_chatting)) to !viewModel.finishing
+        Step.Linux -> (if (state.linux == dev.locus.core.linux.LinuxStatus.Ready) stringResource(R.string.onboarding_continue) else stringResource(R.string.onboarding_continue_without_linux)) to true
+        else -> stringResource(R.string.onboarding_continue) to true
     }
     Column(Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background).navigationBarsPadding().imePadding().padding(Spacing.lg)) {
         // With a model set up, the model step offers Quick start as the main way on; the full setup stays
@@ -145,12 +147,12 @@ private fun BottomAction(step: Step, state: OnboardingUiState, viewModel: Onboar
                 onClick = { viewModel.quickStart(state, onFinish) },
                 enabled = !viewModel.finishing,
                 modifier = Modifier.fillMaxWidth().height(Sizes.touchTarget),
-            ) { Text("Quick start") }
+            ) { Text(stringResource(R.string.onboarding_quick_start)) }
             TextButton(
                 onClick = viewModel::next,
                 enabled = !viewModel.finishing,
                 modifier = Modifier.fillMaxWidth().heightIn(min = Sizes.touchTarget),
-            ) { Text("Continue full setup") }
+            ) { Text(stringResource(R.string.onboarding_continue_full_setup)) }
             return@Column
         }
         Button(
@@ -172,16 +174,16 @@ private fun BottomAction(step: Step, state: OnboardingUiState, viewModel: Onboar
 
 @Composable
 private fun ColumnScope.IntroStep() {
-    StepHeading("Your agent, on your phone", "Locus is an AI agent that works for you: it reads, writes, browses and runs code to get things done.", Modifier.entrance(0))
+    StepHeading(stringResource(R.string.onboarding_intro_title), stringResource(R.string.onboarding_intro_body), Modifier.entrance(0))
     CardGroup(Modifier.entrance(1)) {
-        Fact(LocusIcons.Phone, "Runs here", "The agent, its tools, your files and its memory all live on this phone.")
+        Fact(LocusIcons.Phone, stringResource(R.string.onboarding_runs_here), stringResource(R.string.onboarding_runs_here_body))
         GroupDivider(Insets.iconRow)
-        Fact(LocusIcons.Key, "Your keys", "Bring a key from the AI provider you choose, or run a model on the phone itself. No Locus account.")
+        Fact(LocusIcons.Key, stringResource(R.string.onboarding_your_keys), stringResource(R.string.onboarding_your_keys_body))
         GroupDivider(Insets.iconRow)
-        Fact(LocusIcons.Shield, "You decide", "Every action goes through your approval rules, and everything it does is logged.")
+        Fact(LocusIcons.Shield, stringResource(R.string.onboarding_you_decide), stringResource(R.string.onboarding_you_decide_body))
     }
     SupportingText(
-        "Setup takes a few minutes. Everything after the model step is optional and can be changed later in Settings.",
+        stringResource(R.string.onboarding_intro_footer),
         Modifier.entrance(2),
         style = LocusType.rowSupporting,
     )
@@ -189,13 +191,13 @@ private fun ColumnScope.IntroStep() {
 
 @Composable
 private fun ColumnScope.PrivacyStep(viewModel: OnboardingViewModel) {
-    StepHeading("What leaves your phone", "Locus has no servers. Here is exactly where your data goes.")
+    StepHeading(stringResource(R.string.onboarding_privacy_title), stringResource(R.string.onboarding_privacy_body))
     CardGroup {
-        Fact(LocusIcons.Send, "Straight to your provider", "Your messages and the files the agent reads go directly to the AI provider you pick, under that provider's terms. With the on-device model, nothing leaves at all.")
+        Fact(LocusIcons.Send, stringResource(R.string.onboarding_provider_privacy_title), "Your messages and the files the agent reads go directly to the AI provider you pick, under that provider's terms. With the on-device model, nothing leaves at all.")
         GroupDivider(Insets.iconRow)
-        Fact(LocusIcons.Key, "Keys stay encrypted", "API keys and passwords are kept in an encrypted vault on this phone, never shown to the model.")
+        Fact(LocusIcons.Key, stringResource(R.string.onboarding_keys_privacy_title), "API keys and passwords are kept in an encrypted vault on this phone, never shown to the model.")
         GroupDivider(Insets.iconRow)
-        Fact(LocusIcons.Globe, "Only where you point it", "Websites, services and machines are contacted only when you, or the agent with your approval, use them.")
+        Fact(LocusIcons.Globe, stringResource(R.string.onboarding_network_privacy_title), "Websites, services and machines are contacted only when you, or the agent with your approval, use them.")
     }
     // The one request Locus would make on its own, so it's asked here, off by default (docs/design/updates.md).
     if (viewModel.offerUpdateCheck) {
@@ -210,15 +212,15 @@ private fun ColumnScope.PrivacyStep(viewModel: OnboardingViewModel) {
             )
         }
     }
-    SectionLabel("Approvals")
+    SectionLabel(stringResource(R.string.onboarding_approvals))
     CardGroup {
-        Fact(LocusIcons.Check, "Allow", "Runs without asking.")
+        Fact(LocusIcons.Check, stringResource(R.string.onboarding_allow), "Runs without asking.")
         GroupDivider(Insets.iconRow)
-        Fact(LocusIcons.Shield, "Ask", "Waits for you to approve each time, in the app or from a notification.")
+        Fact(LocusIcons.Shield, stringResource(R.string.onboarding_ask), "Waits for you to approve each time, in the app or from a notification.")
         GroupDivider(Insets.iconRow)
-        Fact(LocusIcons.Close, "Deny", "Never runs.")
+        Fact(LocusIcons.Close, stringResource(R.string.onboarding_deny), "Never runs.")
     }
-    SectionLabel("Starting point")
+    SectionLabel(stringResource(R.string.onboarding_starting_point))
     CardGroup {
         PermissionProfile.entries.forEachIndexed { i, p ->
             // The text starts after the radio button's touch target.
@@ -256,7 +258,7 @@ private fun ColumnScope.DoneStep(state: OnboardingUiState, viewModel: Onboarding
         GroupDivider(Insets.iconRow)
         Summary(LocusIcons.Note, "Agent", "${viewModel.answers.agentName.trim().ifBlank { "Locus" }} · ${viewModel.answers.style.label.lowercase()}", null)
         GroupDivider(Insets.iconRow)
-        Summary(LocusIcons.Shield, "Approvals", viewModel.profile?.title ?: "Unchanged", null)
+        Summary(LocusIcons.Shield, stringResource(R.string.onboarding_approvals), viewModel.profile?.title ?: "Unchanged", null)
         GroupDivider(Insets.iconRow)
         Summary(
             LocusIcons.Terminal, "Linux", if (state.linux == dev.locus.core.linux.LinuxStatus.Ready) "Installed" else null,
