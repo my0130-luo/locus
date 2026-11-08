@@ -251,4 +251,25 @@
     <string name="network_trust_everywhere">在所有服务商中信任</string>
     <string name="network_remove">移除</string>
     <string name="network_direct">直连</string>
+    <string name="integrations_title">集成与连接器</string>
+    <string name="integrations_section">集成</string>
+    <string name="integrations_using_mcp">正在使用 MCP 服务端</string>
+    <string name="integrations_mcp_available">MCP 服务端可用</string>
+    <string name="integrations_connected">已连接</string>
+    <string name="integrations_set_up">配置</string>
+    <string name="integrations_add_key">添加密钥</string>
+    <string name="integrations_connectors">连接器</string>
+    <string name="integrations_connectors_mcp">连接器与 MCP 服务端</string>
+    <string name="integrations_intro">添加 MCP 服务端，并审核 Locus 为你拟定的连接器配置。</string>
+    <string name="integrations_home_services">家庭与自托管服务</string>
+    <string name="integrations_home_services_examples">支持 Home Assistant、Miniflux、Paperless、Immich、Mastodon、Todoist 等服务。</string>
+    <string name="integrations_use_builtin">改用内置工具</string>
+    <string name="integrations_use_mcp_new_chats">在新对话中使用 MCP 服务端</string>
+    <string name="integrations_using_builtin">在新对话中使用内置工具</string>
+    <string name="integrations_mcp_not_working">MCP 服务端无法正常工作</string>
+    <string name="integrations_official_mcp">使用官方 MCP 服务端</string>
+    <string name="integrations_save">保存</string>
+    <string name="integrations_secret_stored">已在此手机上加密保存。AI 无法看到密钥内容。</string>
+    <string name="integrations_remove_key">移除密钥</string>
+    <string name="integrations_remove">移除</string>
 </resources>
