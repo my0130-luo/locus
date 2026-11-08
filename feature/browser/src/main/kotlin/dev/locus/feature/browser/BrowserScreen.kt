@@ -320,11 +320,11 @@ internal fun BrowserScreen(
             Box(Modifier.fillMaxWidth().weight(1f)) {
                 when {
                     !state.hasPage -> EmptyState(
-                        if (ui.standalone) "Browse on your own" else "Nothing open yet",
+                        if (ui.standalone) stringResource(R.string.browser_standalone_title) else stringResource(R.string.browser_nothing_open_title),
                         if (ui.standalone) {
-                            "Type an address above. Sites you sign in to here stay signed in for Locus's browser in every chat, until you clear browsing data."
+                            stringResource(R.string.browser_standalone_help)
                         } else {
-                            "Type an address above, or ask Locus to browse. Its page shows here live, and you can take over whenever you like."
+                            stringResource(R.string.browser_agent_help)
                         },
                         icon = LocusIcons.Globe,
                     )
@@ -398,7 +398,7 @@ internal fun BrowserScreen(
         ConfirmSheet(
             title = stringResource(R.string.browser_handoff_title),
             message = stringResource(R.string.browser_handoff_message),
-            confirmLabel = "Hand back",
+            confirmLabel = stringResource(R.string.browser_confirm_hand_back),
             onConfirm = { actions.handBack(note); handingBack = false },
             onDismiss = { handingBack = false },
             content = {
@@ -466,7 +466,7 @@ internal fun BrowserScreen(
         ConfirmSheet(
             title = stringResource(R.string.browser_clear_data_title),
             message = stringResource(R.string.browser_clear_data_message),
-            confirmLabel = "Clear",
+            confirmLabel = stringResource(R.string.browser_confirm_clear),
             tone = Tone.Critical,
             busy = clearing,
             error = clearError,
@@ -507,9 +507,9 @@ private fun ControlBanner(ui: BrowserUi, onTakeOver: () -> Unit, onHandBack: () 
         }
         state.userControl -> Banner(
             if (state.agentWaiting) {
-                "Locus is waiting for you. It sees nothing of this page until you hand it back, and never what you type."
+                stringResource(R.string.browser_user_control_waiting)
             } else {
-                "Locus is paused on this page. It sees nothing of it until you hand it back, and never what you type."
+                stringResource(R.string.browser_user_control_paused)
             },
             Tone.Caution,
             modifier,
@@ -517,7 +517,7 @@ private fun ControlBanner(ui: BrowserUi, onTakeOver: () -> Unit, onHandBack: () 
         ) { Button(onClick = onHandBack) { Text(stringResource(R.string.browser_hand_back)) } }
         // While Locus waits for an answer the card above takes this place: nothing is browsing then.
         ui.agentDriving && state.hasPage && !ui.waitingForAnswer -> Banner(
-            "Take over to scroll, type or sign in yourself. Locus waits until you hand back.",
+            stringResource(R.string.browser_takeover_help),
             Tone.Live,
             modifier,
             title = stringResource(R.string.browser_browsing_title),
