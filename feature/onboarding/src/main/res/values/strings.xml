@@ -137,4 +137,8 @@
     <string name="onboarding_quick_start_explanation">That’s all Locus needs. Quick start opens Home now; naming your agent, Linux, SSH machines and connectors wait there as cards you can finish or dismiss. Continue full setup goes through them now.</string>
     <string name="onboarding_context_window_detail">Context window: %1$s tokens</string>
     <string name="onboarding_chatgpt_signing_in">Finish signing in in the browser…</string>
+    <string name="onb_identity_remember_title">Here’s what %1$s will remember</string>
+    <string name="onb_identity_changed_outside">%1$s changed outside Locus</string>
+    <string name="onb_identity_external_change_note">Made outside Locus. Keep it only if you made it yourself: your agent reads this file at the start of every chat.</string>
+    <string name="onb_identity_edit_files_directly">Edit files directly</string>
 </resources>
