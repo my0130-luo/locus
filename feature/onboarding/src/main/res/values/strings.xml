@@ -87,4 +87,13 @@
     <string name="onboarding_checking_download">Checking the download</string>
     <string name="onboarding_on_wifi_only">On Wi-Fi only: waits while you\'re on mobile data.</string>
     <string name="onboarding_context">context</string>
+    <string name="onboarding_step_welcome">Welcome</string>
+    <string name="onboarding_step_privacy">Privacy</string>
+    <string name="onboarding_step_model">Model</string>
+    <string name="onboarding_step_agent">Your agent</string>
+    <string name="onboarding_step_workspace">Workspace</string>
+    <string name="onboarding_step_machines">Machines</string>
+    <string name="onboarding_step_connectors">Connectors</string>
+    <string name="onboarding_step_check">Check</string>
+    <string name="onboarding_step_ready">Ready</string>
 </resources>
