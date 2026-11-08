@@ -12,6 +12,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,8 +48,7 @@ internal fun AgentsTab(library: Library, viewModel: LibraryViewModel, modifier: 
     LazyColumn(modifier.fillMaxSize(), contentPadding = padding, verticalArrangement = Arrangement.spacedBy(Spacing.md)) {
         item {
             SectionNote(
-                "Helpers are agents Locus can hand a focused job to, each with its own fresh context and only the tools its role needs. " +
-                    "They ask you before anything that needs approval, and their work shows as nested steps in the chat.",
+                stringResource(R.string.helpers_intro),
             )
         }
         if (library.agents.isNotEmpty()) {
@@ -63,20 +63,20 @@ internal fun AgentsTab(library: Library, viewModel: LibraryViewModel, modifier: 
         } else {
             item {
                 SectionNote(
-                    "You have no helpers of your own yet. Ask Locus to “make a helper that…” and it drafts one for you to review here.",
+                    stringResource(R.string.helpers_empty),
                 )
             }
         }
-        item { SectionLabel("Built in", Modifier.padding(start = 0.dp)) }
+        item { SectionLabel(stringResource(R.string.built_in), Modifier.padding(start = 0.dp)) }
         item {
             CardGroup {
                 AgentProfile.BUILT_IN.forEachIndexed { i, profile ->
                     if (i > 0) GroupDivider(inset = Insets.iconRow)
-                    ExpandableRow(profile.label, profile.description, helperIcon(profile.type), iconDescription = "Built-in helper") {
+                    ExpandableRow(profile.label, profile.description, helperIcon(profile.type), iconDescription = stringResource(R.string.built_in_helper)) {
                         ToolsLine(profile.tools)
                         SupportingText(
                             buildString {
-                                append(if (profile.model == AgentProfile.MODEL_HELPER) "Helper model" else "Chat's model")
+                                append(if (profile.model == AgentProfile.MODEL_HELPER) stringResource(R.string.helper_model) else stringResource(R.string.chat_model))
                                 profile.effort?.let { append(" · ${it.label} effort") }
                                 append(" · up to ${profile.maxSteps} steps")
                             },
@@ -105,7 +105,7 @@ private fun DefinitionRow(agent: AgentHome.AgentDefinition, viewModel: LibraryVi
         ConfirmRemove(
             title = "Remove “${agent.name}”?",
             body = "Locus can't start this helper any more. Its definition is deleted from this phone.",
-            action = "Remove",
+            action = stringResource(R.string.remove),
             onDismiss = { confirmRemove = false },
             onConfirm = { confirmRemove = false; viewModel.removeAgent(agent.name) },
         )
@@ -116,12 +116,12 @@ private fun DefinitionRow(agent: AgentHome.AgentDefinition, viewModel: LibraryVi
         LocusIcons.Sparkle,
         badge = when {
             agent.changedOutside -> CHANGED_OUTSIDE
-            agent.draft -> "Needs review"
+            agent.draft -> stringResource(R.string.needs_review)
             else -> null
         },
         badgeTone = if (agent.changedOutside) Tone.Critical else Tone.Caution,
         startExpanded = agent.draft,
-        iconDescription = "Your helper",
+        iconDescription = stringResource(R.string.your_helper),
     ) {
         if (agent.changedOutside) ChangedOutsideBanner("helper", approvedActive)
         ToolsLine(agent.tools)
@@ -129,8 +129,8 @@ private fun DefinitionRow(agent: AgentHome.AgentDefinition, viewModel: LibraryVi
             buildString {
                 append(
                     when (agent.model.lowercase()) {
-                        "inherit", "same" -> "Chat's model"
-                        "helper" -> "Helper model"
+                        "inherit", "same" -> stringResource(R.string.chat_model)
+                        "helper" -> stringResource(R.string.helper_model)
                         else -> agent.model
                     },
                 )
@@ -148,10 +148,10 @@ private fun DefinitionRow(agent: AgentHome.AgentDefinition, viewModel: LibraryVi
         @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
         androidx.compose.foundation.layout.FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.sm, Alignment.End), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
             if (agent.draft) {
-                OutlinedButton(onClick = { viewModel.rejectAgent(agent.name) }) { Text(if (agent.changedOutside) "Discard change" else "Reject") }
-                Button(onClick = { if (agent.changedOutside) confirmChanged = true else viewModel.approveAgent(agent.name) }) { Text("Approve") }
+                OutlinedButton(onClick = { viewModel.rejectAgent(agent.name) }) { Text(if (agent.changedOutside) stringResource(R.string.discard_change) else stringResource(R.string.reject)) }
+                Button(onClick = { if (agent.changedOutside) confirmChanged = true else viewModel.approveAgent(agent.name) }) { Text(stringResource(R.string.approve)) }
             } else {
-                TextButton(onClick = { confirmRemove = true }) { Text("Remove", color = Locus.colors.critical) }
+                TextButton(onClick = { confirmRemove = true }) { Text(stringResource(R.string.remove), color = Locus.colors.critical) }
             }
         }
     }
