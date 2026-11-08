@@ -327,4 +327,20 @@
     <string name="diagnostics_locus_error">Locus 遇到错误并停止运行</string>
     <string name="diagnostics_android_closed">Android 关闭了 Locus</string>
     <string name="diagnostics_request_failed">请求或任务执行失败</string>
+    <string name="extras_title">辅助模型与其他选项</string>
+    <string name="extras_helper_model">辅助模型</string>
+    <string name="extras_automatic">自动 · 默认</string>
+    <string name="extras_same_as_chat">与当前对话使用相同模型</string>
+    <string name="extras_chat_extras">对话附加功能</string>
+    <string name="extras_auto_name">自动命名对话</string>
+    <string name="extras_auto_name_body">每次对话收到第一条回复后，自动生成一个简短标题。</string>
+    <string name="extras_suggest_followups">推荐后续问题</string>
+    <string name="extras_suggest_body">在每条回复下方显示一些你可能想继续提出的问题。</string>
+    <string name="extras_learn_after_tasks">任务完成后学习</string>
+    <string name="extras_learn_body">较长的任务结束后，Locus 可能会将简短经验保存到记忆中。</string>
+    <string name="extras_prompts">提示词</string>
+    <string name="extras_edited">已编辑</string>
+    <string name="extras_default">默认</string>
+    <string name="extras_automatic_label">自动</string>
+    <string name="extras_save">保存</string>
 </resources>
