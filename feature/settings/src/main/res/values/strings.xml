@@ -72,4 +72,5 @@
     <string name="agent_helper_timeout_body2">hands back what it had: its last reply, its tool results and the files it changed, marked as a partial result.</string>
     <string name="agent_helper_timeout_body3">The agent can continue it from there. Applies to helpers started from now on.</string>
     <string name="agent_save">Save</string>
+    <string name="settings_loading">Loading…</string>
 </resources>
