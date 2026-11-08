@@ -22,6 +22,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import dev.locus.feature.tasks.R
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
@@ -123,13 +125,13 @@ internal fun CalendarAccessBanner(reason: String, denied: Boolean, onAllow: () -
     Banner(
         if (denied) "$reason Android said no; allow Calendar for Locus in its app settings." else reason,
         Tone.Caution,
-        title = "Calendar access needed",
+        title = stringResource(R.string.tasks_calendar_access_needed),
         actionsBelow = true,
     ) {
         if (denied) {
-            TextButton(onClick = { context.startActivity(appSettingsIntent(context.packageName)) }) { Text("Open app settings") }
+            TextButton(onClick = { context.startActivity(appSettingsIntent(context.packageName)) }) { Text(stringResource(R.string.tasks_open_app_settings)) }
         } else {
-            TextButton(onClick = onAllow) { Text("Allow calendar access") }
+            TextButton(onClick = onAllow) { Text(stringResource(R.string.tasks_allow_calendar)) }
         }
     }
 }
@@ -145,23 +147,23 @@ internal fun TriggerFields(
 ) {
     val trigger = draft.trigger
     fun set(t: TaskTrigger) = onChange(draft.copy(trigger = t))
-    Text("When", style = LocusType.cardTitle)
+    Text(stringResource(R.string.tasks_when), style = LocusType.cardTitle)
     ChoiceChips(SOURCE_LABELS, trigger.source.ordinal) { set(trigger.copy(source = TriggerSource.entries[it])) }
     SupportingText(sourceHelp(trigger.source))
     when (trigger.source) {
         TriggerSource.CALENDAR -> {
-            if (!setup.calendarAllowed) CalendarAccessBanner("Locus needs to read your calendar to see entries coming up.", calendarDenied, onAllowCalendar)
-            Text("How long before it starts", style = LocusType.cardTitle)
-            ChoiceChips(listOf("At start", "10 min", "30 min", "1 hour"), TaskTrigger.LEADS.indexOf(trigger.minutesBefore)) {
+            if (!setup.calendarAllowed) CalendarAccessBanner(stringResource(R.string.tasks_calendar_access_note), calendarDenied, onAllowCalendar)
+            Text(stringResource(R.string.tasks_lead_time), style = LocusType.cardTitle)
+            ChoiceChips(listOf(stringResource(R.string.tasks_at_start), stringResource(R.string.tasks_10_min), stringResource(R.string.tasks_30_min), stringResource(R.string.tasks_1_hour)), TaskTrigger.LEADS.indexOf(trigger.minutesBefore)) {
                 set(trigger.copy(minutesBefore = TaskTrigger.LEADS[it]))
             }
             OutlinedTextField(
                 trigger.contains, { set(trigger.copy(contains = it)) },
-                label = { Text("Mentions (optional)") }, singleLine = true, modifier = Modifier.fillMaxWidth(),
-                supportingText = { Text("Words in the title, place or notes, e.g. “standup”. Empty for every entry.") },
+                label = { Text(stringResource(R.string.tasks_mentions_optional)) }, singleLine = true, modifier = Modifier.fillMaxWidth(),
+                supportingText = { Text(stringResource(R.string.tasks_calendar_mentions_note)) },
             )
             if (setup.calendars.isNotEmpty()) {
-                Text("Calendar", style = LocusType.cardTitle)
+                Text(stringResource(R.string.tasks_calendar), style = LocusType.cardTitle)
                 ChipFlow {
                     LocusChip("Any", variant = ChipVariant.Filter, selected = trigger.calendar.isBlank(), onClick = { set(trigger.copy(calendar = "")) })
                     setup.calendars.forEach { name ->
@@ -173,23 +175,23 @@ internal fun TriggerFields(
         TriggerSource.NTFY -> {
             OutlinedTextField(
                 trigger.topicUrl, { set(trigger.copy(topicUrl = it.trim())) },
-                label = { Text("Topic address") }, singleLine = true, modifier = Modifier.fillMaxWidth(),
+                label = { Text(stringResource(R.string.tasks_topic_address)) }, singleLine = true, modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text("https://ntfy.sh/a-long-secret-name") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
-                supportingText = { Text("Not the topic task results go to. A long, random name keeps others from posting to it.") },
+                supportingText = { Text(stringResource(R.string.tasks_topic_address_note)) },
             )
             OutlinedTextField(
                 draft.token, { onChange(draft.copy(token = it, clearToken = false)) },
                 label = { Text(if (draft.hasToken && !draft.clearToken) "Access token (saved)" else "Access token (optional)") },
                 singleLine = true, modifier = Modifier.fillMaxWidth(),
                 visualTransformation = PasswordVisualTransformation(),
-                placeholder = { Text(if (draft.hasToken && !draft.clearToken) "Leave empty to keep it" else "tk_…") },
-                supportingText = { Text("Kept in Locus's encrypted vault and sent only to this server.") },
+                placeholder = { Text(if (draft.hasToken && !draft.clearToken) stringResource(R.string.tasks_keep_token_hint) else "tk_…") },
+                supportingText = { Text(stringResource(R.string.tasks_token_storage_note)) },
             )
             if (draft.hasToken && !draft.clearToken && draft.token.isBlank()) {
-                TextButton(onClick = { onChange(draft.copy(clearToken = true)) }) { Text("Remove the saved token", color = Locus.colors.critical) }
+                TextButton(onClick = { onChange(draft.copy(clearToken = true)) }) { Text(stringResource(R.string.tasks_remove_saved_token), color = Locus.colors.critical) }
             }
-            Text("Lowest priority", style = LocusType.cardTitle)
+            Text(stringResource(R.string.tasks_lowest_priority), style = LocusType.cardTitle)
             val priorities = listOf(1, 3, 4, 5)
             ChoiceChips(listOf("Any", "Default", "High", "Urgent"), priorities.indexOf(trigger.minPriority).coerceAtLeast(0)) {
                 set(trigger.copy(minPriority = priorities[it]))
@@ -207,26 +209,26 @@ internal fun TriggerFields(
             }
             OutlinedTextField(
                 trigger.from, { set(trigger.copy(from = it)) },
-                label = { Text("From (optional)") }, singleLine = true, modifier = Modifier.fillMaxWidth(),
-                supportingText = { Text("Part of the sender's name or address, e.g. “@github.com”.") },
+                label = { Text(stringResource(R.string.tasks_from_optional)) }, singleLine = true, modifier = Modifier.fillMaxWidth(),
+                supportingText = { Text(stringResource(R.string.tasks_sender_filter_note)) },
             )
             OutlinedTextField(
                 trigger.contains, { set(trigger.copy(contains = it)) },
-                label = { Text("Subject mentions (optional)") }, singleLine = true, modifier = Modifier.fillMaxWidth(),
+                label = { Text(stringResource(R.string.tasks_subject_mentions_optional)) }, singleLine = true, modifier = Modifier.fillMaxWidth(),
             )
         }
         TriggerSource.APP -> {
             OutlinedTextField(
                 trigger.eventName, { set(trigger.copy(eventName = it.trim())) },
-                label = { Text("Event name") }, singleLine = true, modifier = Modifier.fillMaxWidth(),
+                label = { Text(stringResource(R.string.tasks_event_name)) }, singleLine = true, modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text("backup-failed") },
-                supportingText = { Text("Empty takes any event name.") },
+                supportingText = { Text(stringResource(R.string.tasks_event_name_note)) },
             )
             OutlinedTextField(
                 draft.apps, { onChange(draft.copy(apps = it)) },
-                label = { Text("Allowed apps (optional)") }, modifier = Modifier.fillMaxWidth(),
+                label = { Text(stringResource(R.string.tasks_allowed_apps_optional)) }, modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text("net.dinglisch.android.taskerm") },
-                supportingText = { Text("Package names, separated by commas. Android must say which app sent the event for it to count.") },
+                supportingText = { Text(stringResource(R.string.tasks_allowed_apps_note)) },
             )
             SupportingText(
                 "The app sends an activity intent with action dev.locus.action.EVENT, the extra dev.locus.extra.EVENT set to the event name " +
@@ -235,25 +237,25 @@ internal fun TriggerFields(
             SettingsLinkIn("Who may send it is set in Settings → Automation.")
         }
     }
-    Text("At most one run every", style = LocusType.cardTitle)
+    Text(stringResource(R.string.tasks_max_run_frequency), style = LocusType.cardTitle)
     ChoiceChips(listOf("5 min", "15 min", "1 hour", "6 hours"), TaskTrigger.GAPS.indexOf(trigger.minGapMinutes)) {
         set(trigger.copy(minGapMinutes = TaskTrigger.GAPS[it]))
     }
-    SupportingText("Events in between are skipped and listed in the task's history. Events found in one check run together, once.")
+    SupportingText(stringResource(R.string.tasks_event_skip_note))
     CardGroup {
-        SwitchRow("Quiet hours", draft.quietOn, { onChange(draft.copy(quietOn = it)) }, subtitle = "Events in these hours start nothing.")
+        SwitchRow(stringResource(R.string.tasks_quiet_hours), draft.quietOn, { onChange(draft.copy(quietOn = it)) }, subtitle = stringResource(R.string.tasks_quiet_hours_note))
     }
     if (draft.quietOn) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
             OutlinedTextField(
                 draft.quietFrom, { onChange(draft.copy(quietFrom = it)) },
-                label = { Text("From") }, singleLine = true, modifier = Modifier.weight(1f),
+                label = { Text(stringResource(R.string.tasks_from)) }, singleLine = true, modifier = Modifier.weight(1f),
                 isError = QuietHours.parse(draft.quietFrom) == null,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             )
             OutlinedTextField(
                 draft.quietTo, { onChange(draft.copy(quietTo = it)) },
-                label = { Text("To") }, singleLine = true, modifier = Modifier.weight(1f),
+                label = { Text(stringResource(R.string.tasks_to)) }, singleLine = true, modifier = Modifier.weight(1f),
                 isError = QuietHours.parse(draft.quietTo) == null,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             )
@@ -276,8 +278,8 @@ internal fun TestEventSheet(task: ScheduledTask, onDismiss: () -> Unit, onSend: 
     val trigger = task.trigger ?: return
     var text by remember { mutableStateOf(trigger.contains.ifBlank { "" }) }
     LocusSheet(
-        title = "Send a test event",
-        subtitle = "Goes through “${task.title}”'s filter as a ${trigger.source.noun}. If it matches, the task runs now, even when paused, rate-limited or in quiet hours.",
+        title = stringResource(R.string.tasks_send_test_event),
+        subtitle = stringResource(R.string.tasks_test_event_note, task.title, trigger.source.noun),
         onDismiss = onDismiss,
         action = "Send",
         onAction = { onSend(text) },
@@ -288,7 +290,7 @@ internal fun TestEventSheet(task: ScheduledTask, onDismiss: () -> Unit, onSend: 
             TriggerSource.MAIL -> "The subject, e.g. Your invoice is ready"
             TriggerSource.APP -> "What happened, e.g. Phone left home Wi-Fi"
         })
-        SupportingText("The run reads it as untrusted outside text, like a real event: it can look things up but can't send, save to memory or open addresses you didn't name.")
+        SupportingText(stringResource(R.string.tasks_test_event_safety_note))
     }
 }
 
@@ -307,8 +309,8 @@ internal fun eventLine(event: TriggerEventRecord): Pair<String, Tone> = when {
 @Composable
 internal fun HistorySheet(task: ScheduledTask, events: List<TriggerEventRecord>?, onDismiss: () -> Unit, onOpenChat: (String) -> Unit) {
     LocusSheet(
-        title = "History",
-        subtitle = "What reached “${task.title}” and what it did. The latest ${dev.locus.core.data.tasks.triggers.TriggerEngine.KEEP} events are kept.",
+        title = stringResource(R.string.tasks_history),
+        subtitle = stringResource(R.string.tasks_history_note, task.title, dev.locus.core.data.tasks.triggers.TriggerEngine.KEEP),
         onDismiss = onDismiss,
     ) {
         when {
@@ -352,11 +354,11 @@ internal fun eventMark(event: TriggerEventRecord): EventMark = when {
 private fun EventGlyph(event: TriggerEventRecord) {
     when (eventMark(event)) {
         EventMark.RUNNING -> Box(Modifier.size(IconSize.tile), contentAlignment = Alignment.Center) {
-            InlineSpinner(color = Tone.Brand.color(), contentDescription = "Running")
+            InlineSpinner(color = Tone.Brand.color(), contentDescription = stringResource(R.string.tasks_running))
         }
-        EventMark.DONE -> IconTile(LocusIcons.Check, tint = Tone.Live.color(), contentDescription = "Ran")
-        EventMark.SKIPPED -> IconTile(LocusIcons.Skip, contentDescription = "Skipped")
-        EventMark.FAILED -> IconTile(LocusIcons.Error, tint = Tone.Critical.color(), contentDescription = "Failed")
+        EventMark.DONE -> IconTile(LocusIcons.Check, tint = Tone.Live.color(), contentDescription = stringResource(R.string.tasks_ran))
+        EventMark.SKIPPED -> IconTile(LocusIcons.Skip, contentDescription = stringResource(R.string.tasks_skipped))
+        EventMark.FAILED -> IconTile(LocusIcons.Error, tint = Tone.Critical.color(), contentDescription = stringResource(R.string.tasks_failed))
     }
 }
 
