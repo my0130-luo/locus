@@ -12,7 +12,7 @@
     <string name="workspace_terminal">Terminal</string>
     <string name="workspace_browser">Browser</string>
     <string name="workspace_import_files">Import files</string>
-    <string name="workspace_cannot_open_folder">Can't open this folder</string>
+    <string name="workspace_cannot_open_folder">Can’t open this folder</string>
     <string name="workspace_reconnect">Reconnect</string>
     <string name="workspace_folder_empty">This folder is empty</string>
     <string name="workspace_files_label">Files</string>
@@ -40,7 +40,7 @@
     <string name="workspace_always_allow">Always allow</string>
     <string name="workspace_folder_not_found">Folder not found</string>
     <string name="workspace_linux_health_details">Health & details</string>
-    <string name="workspace_linux_install_failed">Linux couldn't be installed</string>
+    <string name="workspace_linux_install_failed">Linux couldn’t be installed</string>
     <string name="workspace_linux_title">Linux</string>
     <string name="workspace_linux_unavailable">Not available</string>
     <string name="workspace_linux_not_installed">Not installed</string>
@@ -57,7 +57,7 @@
     <string name="workspace_linux_services">Services</string>
     <string name="workspace_linux_none_running">None running</string>
     <string name="workspace_linux_add_tools">Add tools</string>
-    <string name="workspace_linux_failed_title">That didn't work</string>
+    <string name="workspace_linux_failed_title">That didn’t work</string>
     <string name="workspace_linux_open_terminal">Open terminal</string>
     <string name="workspace_linux_manage">Manage</string>
     <string name="workspace_linux_manage_title">Manage Linux</string>
