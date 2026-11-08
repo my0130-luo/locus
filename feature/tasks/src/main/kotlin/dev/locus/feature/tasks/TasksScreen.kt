@@ -420,6 +420,44 @@ private fun RowAction(
 }
 
 /** "Last run failed" or "Last run stopped" when the last run didn't finish; null when it did (or hasn't run). */
+@Composable
+private fun localizedTaskStatusLine(task: ScheduledTask): String {
+    val trigger = task.trigger
+    val lastAt = task.lastRunAt?.let { relativeTime(it).lowercase() }.orEmpty()
+    val problem = when (task.lastOutcome) {
+        TaskRunOutcome.FAILED -> stringResource(R.string.tasks_last_run_failed)
+        TaskRunOutcome.STOPPED -> stringResource(R.string.tasks_last_run_stopped)
+        TaskRunOutcome.DONE, null -> null
+    }
+    if (trigger != null) {
+        val source = when (trigger.source) {
+            TriggerSource.CALENDAR -> stringResource(R.string.tasks_source_calendar)
+            TriggerSource.NTFY -> "ntfy"
+            TriggerSource.MAIL -> stringResource(R.string.tasks_source_mail)
+            TriggerSource.APP -> stringResource(R.string.tasks_source_app)
+        }
+        return when {
+            !task.enabled -> stringResource(R.string.tasks_trigger_status_paused, source)
+            task.triggerHealth == TriggerHealth.NO_PERMISSION -> stringResource(R.string.tasks_trigger_status_no_access, source)
+            task.triggerHealth == TriggerHealth.NOT_SET_UP -> stringResource(R.string.tasks_trigger_status_not_setup, source)
+            task.triggerHealth == TriggerHealth.OFFLINE -> stringResource(R.string.tasks_trigger_status_offline, source)
+            task.triggerHealth == TriggerHealth.ERROR -> stringResource(R.string.tasks_trigger_status_check_failed, source)
+            problem != null -> stringResource(R.string.tasks_trigger_status_problem, source, problem.lowercase())
+            task.lastRunAt != null -> stringResource(R.string.tasks_trigger_status_ran, source, lastAt)
+            trigger.source == TriggerSource.APP -> stringResource(R.string.tasks_trigger_status_waiting, source)
+            task.triggerCheckedAt != null -> stringResource(R.string.tasks_trigger_status_checked, source, relativeTime(task.triggerCheckedAt!!).lowercase())
+            else -> stringResource(R.string.tasks_trigger_status_not_checked, source)
+        }
+    }
+    val schedule = ScheduleIntervals.label(task.intervalMinutes)
+    return when {
+        !task.enabled -> stringResource(R.string.tasks_schedule_status_paused, schedule)
+        problem != null -> stringResource(R.string.tasks_schedule_status_problem, schedule, problem.lowercase(), lastAt)
+        task.lastRunAt != null -> stringResource(R.string.tasks_schedule_status_ran, schedule, lastAt)
+        else -> stringResource(R.string.tasks_schedule_status_not_run, schedule)
+    }
+}
+
 internal fun lastRunProblem(task: ScheduledTask): String? = when (task.lastOutcome) {
     TaskRunOutcome.FAILED -> "Last run failed"
     TaskRunOutcome.STOPPED -> "Last run stopped"
