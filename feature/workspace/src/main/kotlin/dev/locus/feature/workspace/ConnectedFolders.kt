@@ -46,7 +46,7 @@ import dev.locus.core.model.Project
 /** What a connected folder's row says about it, and in which tone. */
 internal fun folderStatus(row: ConnectedFolderRow): Pair<String, Tone> = when (row.status) {
     FolderStatus.PERMISSION_LOST -> "Access lost · reconnect it" to Tone.Critical
-    FolderStatus.GONE -> stringResource(R.string.workspace_folder_not_found) to Tone.Critical
+    FolderStatus.GONE -> "未找到文件夹" to Tone.Critical
     FolderStatus.PROVIDER_READ_ONLY -> "Read-only (storage app)" to Tone.Caution
     null -> "Checking…" to Tone.Neutral
     FolderStatus.OK -> if (row.folder.readOnly) "Read-only" to Tone.Neutral else "Can edit · asks first" to Tone.Live
