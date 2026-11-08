@@ -57,4 +57,5 @@
     <string name="browser_page_says">%1$s 提示</string>
     <string name="browser_this_page">此页面</string>
     <string name="browser_ok">确定</string>
+    <string name="browser_no_web_app">这台手机上没有可以打开网页链接的应用。</string>
 </resources>
