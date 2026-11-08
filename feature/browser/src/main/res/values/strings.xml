@@ -57,4 +57,5 @@
     <string name="browser_page_says">%1$s says</string>
     <string name="browser_this_page">This page</string>
     <string name="browser_ok">OK</string>
+    <string name="browser_no_web_app">No app on this phone opens web links.</string>
 </resources>
