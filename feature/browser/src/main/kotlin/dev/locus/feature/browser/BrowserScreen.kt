@@ -186,7 +186,7 @@ fun BrowserRoute(
 @Composable
 internal fun PagePlaceholder() {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        SupportingText("The page shows here", style = LocusType.rowSupporting)
+        SupportingText(stringResource(R.string.browser_page_placeholder), style = LocusType.rowSupporting)
     }
 }
 
@@ -396,16 +396,16 @@ internal fun BrowserScreen(
     if (handingBack) {
         var note by rememberSaveable { mutableStateOf(startHandBack.orEmpty()) }
         ConfirmSheet(
-            title = "Hand back to Locus?",
-            message = "Locus carries on from this page. What you typed into the page stays hidden from it.",
+            title = stringResource(R.string.browser_handoff_title),
+            message = stringResource(R.string.browser_handoff_message),
             confirmLabel = "Hand back",
             onConfirm = { actions.handBack(note); handingBack = false },
             onDismiss = { handingBack = false },
             content = {
                 OutlinedTextField(
                     note, { note = it }, Modifier.fillMaxWidth(),
-                    label = { Text("Note (optional)") },
-                    placeholder = { Text("e.g. Signed in. Book the 9:40 train.") },
+                    label = { Text(stringResource(R.string.browser_note_optional)) },
+                    placeholder = { Text(stringResource(R.string.browser_note_hint)) },
                     maxLines = 4,
                 )
             },
@@ -424,7 +424,7 @@ internal fun BrowserScreen(
     }
 
     if (showTabs) {
-        LocusSheet(title = "Tabs", subtitle = "Pages Locus's browser has open. Locus works in the selected one.", onDismiss = { showTabs = false }) {
+        LocusSheet(title = "Tabs", subtitle = stringResource(R.string.browser_tabs_description), onDismiss = { showTabs = false }) {
             CardGroup {
                 state.tabs.forEachIndexed { i, tab ->
                     if (i > 0) GroupDivider()
@@ -433,11 +433,11 @@ internal fun BrowserScreen(
                         subtitle = displayAddress(tab.url),
                         onClick = { actions.selectTab(i); showTabs = false },
                         leading = if (i == state.activeTab) {
-                            { Icon(LocusIcons.Check, contentDescription = "Current tab", tint = Locus.colors.live) }
+                            { Icon(LocusIcons.Check, contentDescription = stringResource(R.string.browser_current_tab), tint = Locus.colors.live) }
                         } else {
                             null
                         },
-                        trailing = { IconButton(onClick = { actions.closeTab(i) }) { Icon(LocusIcons.Close, contentDescription = "Close tab") } },
+                        trailing = { IconButton(onClick = { actions.closeTab(i) }) { Icon(LocusIcons.Close, contentDescription = stringResource(R.string.browser_close_tab)) } },
                     )
                 }
             }
@@ -464,8 +464,8 @@ internal fun BrowserScreen(
 
     if (confirmClear) {
         ConfirmSheet(
-            title = "Clear browsing data?",
-            message = "Signs Locus's browser out of every site and deletes its cookies, storage and history. Your own browser is not affected.",
+            title = stringResource(R.string.browser_clear_data_title),
+            message = stringResource(R.string.browser_clear_data_message),
             confirmLabel = "Clear",
             tone = Tone.Critical,
             busy = clearing,
@@ -501,7 +501,7 @@ private fun ControlBanner(ui: BrowserUi, onTakeOver: () -> Unit, onHandBack: () 
     val state = ui.page
     val modifier = Modifier.padding(Spacing.lg)
     when {
-        state.handoffReason != null -> Banner(state.handoffReason.orEmpty(), Tone.Caution, modifier, title = "Your turn") {
+        state.handoffReason != null -> Banner(state.handoffReason.orEmpty(), Tone.Caution, modifier, title = stringResource(R.string.browser_your_turn_title)) {
             // "Done", the word browser_ask_user's own description tells the model to use ("…, then tap Done"); it opens the same hand-back sheet.
             Button(onClick = onHandBack) { Text(stringResource(R.string.browser_done)) }
         }
@@ -513,14 +513,14 @@ private fun ControlBanner(ui: BrowserUi, onTakeOver: () -> Unit, onHandBack: () 
             },
             Tone.Caution,
             modifier,
-            title = "You have control",
+            title = stringResource(R.string.browser_control_title),
         ) { Button(onClick = onHandBack) { Text(stringResource(R.string.browser_hand_back)) } }
         // While Locus waits for an answer the card above takes this place: nothing is browsing then.
         ui.agentDriving && state.hasPage && !ui.waitingForAnswer -> Banner(
             "Take over to scroll, type or sign in yourself. Locus waits until you hand back.",
             Tone.Live,
             modifier,
-            title = "Locus is browsing",
+            title = stringResource(R.string.browser_browsing_title),
         ) { Button(onClick = onTakeOver) { Text(stringResource(R.string.browser_take_over)) } }
     }
 }
@@ -653,7 +653,7 @@ internal fun ColumnScope.BrowserMenuItems(
         HorizontalDivider(color = Locus.colors.hairline, thickness = Stroke.hairline)
         // The browser's own data: the logins Locus can fill here, and clearing its cookies and history.
         if (onSavedLogins != null) {
-            DropdownMenuItem(text = { Text("Saved logins") }, leadingIcon = { Icon(LocusIcons.Key, null) }, onClick = onSavedLogins)
+            DropdownMenuItem(text = { Text(stringResource(R.string.browser_saved_logins)) }, leadingIcon = { Icon(LocusIcons.Key, null) }, onClick = onSavedLogins)
         }
         DropdownMenuItem(text = { Text(stringResource(R.string.browser_clear_data)) }, leadingIcon = { Icon(LocusIcons.Trash, null) }, onClick = onClear)
     }
@@ -705,7 +705,7 @@ private fun TabCount(count: Int, onClick: () -> Unit) {
                 .sizeIn(minWidth = IconSize.medium, minHeight = IconSize.medium)
                 // design-exception: the tab-switcher glyph is an icon drawn in code; its corner scales with the icon, not a surface radius
                 .border(Stroke.bold, MaterialTheme.colorScheme.onSurface, RoundedCornerShape(IconSize.medium / 4))
-                .semantics { contentDescription = "$count tabs" },
+                .semantics { contentDescription = stringResource(R.string.browser_tabs_count, count) },
             contentAlignment = Alignment.Center,
         ) {
             Text(count.toString(), Modifier.padding(horizontal = Spacing.xs), style = LocusType.chip, color = MaterialTheme.colorScheme.onSurface)
