@@ -187,4 +187,9 @@
     <string name="preview_pdf_open">Open</string>
     <string name="preview_pdf_page">Page %1$d</string>
     <string name="preview_pdf_render_failed">Couldn’t render this page</string>
+    <string name="preview_open_file_with">Open %1$s with</string>
+    <string name="preview_no_app_open">No app here can open %1$s</string>
+    <string name="preview_no_app_share">No app here can share %1$s</string>
+    <string name="preview_code_cut_lines">%1$d long line(s) are cut at %2$s characters here.</string>
+    <string name="preview_code_plain">Too large to colour; shown plain.</string>
 </resources>
