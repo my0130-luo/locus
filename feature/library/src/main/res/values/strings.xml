@@ -53,4 +53,28 @@
     <string name="published_at">Published at</string>
     <string name="version">Version</string>
     <string name="content_hash">Content hash</string>
+
+    <string name="library_title">Library</string>
+    <string name="memory">Memory</string>
+    <string name="skills">Skills</string>
+    <string name="connectors">Connectors</string>
+    <string name="helpers">Helpers</string>
+    <string name="couldnt_open_library">Couldn't open the Library</string>
+    <string name="try_again">Try again</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="nothing_remembered_yet">Nothing remembered yet</string>
+    <string name="general">General</string>
+    <string name="save">Save</string>
+    <string name="summary">Summary</string>
+    <string name="note">Note</string>
+    <string name="forget">Forget</string>
+    <string name="move">Move</string>
+    <string name="no_summary">No summary</string>
+    <string name="project_memory_note">Project memory note</string>
+    <string name="memory_note">Memory note</string>
+    <string name="needs_a_look">Needs a look</string>
+    <string name="move_to_general">Move to general</string>
+    <string name="edit">Edit</string>
+    <string name="open_the_chat">Open the chat</string>
+    <string name="saved_chat_deleted">The chat it was saved in has been deleted.</string>
 </resources>
