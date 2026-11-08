@@ -37,4 +37,13 @@
     <string name="browser_browsing_title">Locus is browsing</string>
     <string name="browser_saved_logins">Saved logins</string>
     <string name="browser_tabs_count">%1$d tabs</string>
+    <string name="browser_standalone_title">Browse on your own</string>
+    <string name="browser_nothing_open_title">Nothing open yet</string>
+    <string name="browser_standalone_help">Type an address above. Sites you sign in to here stay signed in for Locus’s browser in every chat, until you clear browsing data.</string>
+    <string name="browser_agent_help">Type an address above, or ask Locus to browse. Its page shows here live, and you can take over whenever you like.</string>
+    <string name="browser_confirm_hand_back">Hand back</string>
+    <string name="browser_confirm_clear">Clear</string>
+    <string name="browser_user_control_waiting">Locus is waiting for you. It sees nothing of this page until you hand it back, and never what you type.</string>
+    <string name="browser_user_control_paused">Locus is paused on this page. It sees nothing of it until you hand it back, and never what you type.</string>
+    <string name="browser_takeover_help">Take over to scroll, type or sign in yourself. Locus waits until you hand back.</string>
 </resources>
