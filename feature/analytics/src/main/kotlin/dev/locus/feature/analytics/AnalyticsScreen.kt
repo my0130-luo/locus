@@ -23,6 +23,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import dev.locus.feature.analytics.R
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
@@ -113,9 +115,9 @@ internal fun AnalyticsScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             LocusTopBar(
-                "Insights",
+                stringResource(R.string.analytics_title),
                 onBack = onBack,
-                subtitle = "Counted on this phone from your chats",
+                subtitle = stringResource(R.string.analytics_subtitle),
             )
         },
     ) { padding ->
@@ -135,8 +137,8 @@ internal fun AnalyticsScreen(
                 report == null -> item(key = "loading") { LoadingState(Modifier.fillParentMaxHeight(StateHeight)) }
                 report.isEmpty -> item(key = "empty") {
                     EmptyState(
-                        title = "Nothing to count yet",
-                        body = "Token use, reply times and tool calls show up here once you've chatted with Locus in this period.",
+                        title = stringResource(R.string.analytics_empty_title),
+                        body = stringResource(R.string.analytics_empty_body),
                         icon = LocusIcons.Activity,
                         modifier = Modifier.fillParentMaxHeight(StateHeight),
                     )
@@ -144,39 +146,39 @@ internal fun AnalyticsScreen(
                 else -> {
                     item(key = "hero") { TokensCard(report, Modifier.padding(top = Spacing.md).entrance(0)) }
                     item(key = "speed") { SpeedRow(report, Modifier.padding(top = Spacing.md).entrance(1)) }
-                    item(key = "cost-label") { SectionLabel("Estimated spend") }
+                    item(key = "cost-label") { SectionLabel(stringResource(R.string.analytics_estimated_spend)) }
                     item(key = "cost") { CostCard(report, state.catalog != null, state.prices, onTurnOnPrices, Modifier.entrance(1)) }
                     // A breakdown is only worth showing once something has a price.
                     if (report.cost.models.any { it.cost.priced > 0 }) {
-                        item(key = "cost-models-label") { SectionLabel("Spend by model") }
+                        item(key = "cost-models-label") { SectionLabel(stringResource(R.string.analytics_spend_by_model)) }
                         item(key = "cost-models") { CostRows(report.cost.models.map { m -> costModelTitle(m, report, state.catalog, state.listed) to m.cost }, Modifier.entrance(2)) }
-                        item(key = "cost-sources-label") { SectionLabel("Spend by source") }
+                        item(key = "cost-sources-label") { SectionLabel(stringResource(R.string.analytics_spend_by_source)) }
                         item(key = "cost-sources") { CostRows(report.cost.sources.map { sourceLabel(it.source) to it.cost }, Modifier.entrance(2)) }
                     }
                     if (report.models.isNotEmpty()) {
-                        item(key = "models-label") { SectionLabel("By model") }
+                        item(key = "models-label") { SectionLabel(stringResource(R.string.analytics_by_model)) }
                         item(key = "models") { ModelsCard(report, state.catalog, state.listed, Modifier.entrance(2)) }
                     }
                     // Only worth a section once something besides chat replies used tokens.
                     if (report.sources.any { it.source != UsageSource.CHAT }) {
-                        item(key = "sources-label") { SectionLabel("Where tokens went") }
+                        item(key = "sources-label") { SectionLabel(stringResource(R.string.analytics_where_tokens_went)) }
                         item(key = "sources") { SourcesCard(report, Modifier.entrance(2)) }
                     }
                     if (report.tools.calls > 0) {
-                        item(key = "tools-label") { SectionLabel("Tools") }
+                        item(key = "tools-label") { SectionLabel(stringResource(R.string.analytics_tools)) }
                         item(key = "tools") { ToolsCard(report, Modifier.entrance(3)) }
                         if (report.tools.slowest.isNotEmpty()) {
-                            item(key = "slow-label") { SectionLabel("Slowest tools") }
-                            item(key = "slow-note") { SectionNote("Timed on calls that ran without asking you.", Modifier.padding(start = Spacing.xs)) }
+                            item(key = "slow-label") { SectionLabel(stringResource(R.string.analytics_slowest_tools)) }
+                            item(key = "slow-note") { SectionNote(stringResource(R.string.analytics_slowest_note), Modifier.padding(start = Spacing.xs)) }
                             item(key = "slow") { SlowestTools(report.tools, Modifier.entrance(4)) }
                         }
                     }
                     if (report.chats.isNotEmpty()) {
-                        item(key = "chats-label") { SectionLabel("Busiest chats") }
+                        item(key = "chats-label") { SectionLabel(stringResource(R.string.analytics_busiest_chats)) }
                         item(key = "chats") { BusiestChats(report, onOpenConversation, Modifier.entrance(5)) }
                     }
                     if (report.tasks.isNotEmpty()) {
-                        item(key = "tasks-label") { SectionLabel("Scheduled tasks") }
+                        item(key = "tasks-label") { SectionLabel(stringResource(R.string.analytics_scheduled_tasks)) }
                         item(key = "tasks") { TasksCard(report, Modifier.entrance(6)) }
                     }
                 }
@@ -197,7 +199,7 @@ private fun TokensCard(report: AnalyticsReport, modifier: Modifier = Modifier) {
     val inputColor = brand.copy(alpha = Emphasis.series)
     var selected by remember(report.period, report.buckets.size) { mutableStateOf<Int?>(null) }
     LocusCard(modifier, glow = brand) {
-        SupportingText("Tokens", style = LocusType.label)
+        SupportingText(stringResource(R.string.analytics_tokens), style = LocusType.label)
         Text(compactCount(t.total), style = LocusType.heroFigure, color = MaterialTheme.colorScheme.onSurface)
         // Wraps at a large font instead of breaking "63% cached" a letter a line.
         @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
@@ -269,8 +271,8 @@ private fun CostCard(report: AnalyticsReport, catalogLoaded: Boolean, prices: Pr
     var selected by remember(report.period, report.buckets.size) { mutableStateOf<Int?>(null) }
     LocusCard(modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            SupportingText("Spend", Modifier.weight(1f), style = LocusType.label)
-            LocusChip("Estimate")
+            SupportingText(stringResource(R.string.analytics_spend), Modifier.weight(1f), style = LocusType.label)
+            LocusChip(stringResource(R.string.analytics_estimate))
         }
         FigureRow(Modifier.padding(top = Spacing.sm)) {
             // With prices off every span reads the same "–"; the note under them says why.
@@ -293,11 +295,11 @@ private fun CostCard(report: AnalyticsReport, catalogLoaded: Boolean, prices: Pr
         // Prices are opt-in, so the card offers to turn them on where it says they're off.
         when (costAction(cost, catalogLoaded, prices)) {
             CostAction.TurnOn -> Row(Modifier.padding(top = Spacing.xs), verticalAlignment = Alignment.CenterVertically) {
-                Button(onClick = onTurnOnPrices) { Text("Turn on prices") }
+                Button(onClick = onTurnOnPrices) { Text(stringResource(R.string.analytics_turn_on_prices)) }
                 Spacer(Modifier.weight(1f))
                 SettingsLink(SettingsDestination.Models)
             }
-            CostAction.TryAgain -> TextButton(onClick = onTurnOnPrices, modifier = Modifier.padding(top = Spacing.xs)) { Text("Try again") }
+            CostAction.TryAgain -> TextButton(onClick = onTurnOnPrices, modifier = Modifier.padding(top = Spacing.xs)) { Text(stringResource(R.string.analytics_try_again)) }
             null -> Unit
         }
         if (cost.pricesOn && cost.buckets.size == report.buckets.size && cost.buckets.any { it.priced > 0 }) {
@@ -581,7 +583,7 @@ private fun ChartCaption(report: AnalyticsReport, selected: Int?, describe: (Usa
         } else {
             SupportingText(date(buckets.first().start), style = LocusType.mono)
             Spacer(Modifier.weight(1f))
-            SupportingText("Today", style = LocusType.mono)
+            SupportingText(stringResource(R.string.analytics_today), style = LocusType.mono)
         }
     }
 }
