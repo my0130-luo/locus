@@ -311,4 +311,20 @@
     <string name="ssh_checking">Checking…</string>
     <string name="ssh_check_host_key">Check host key</string>
     <string name="ssh_remove_machine">Remove machine</string>
+    <string name="diagnostics_report_title">Locus diagnostics</string>
+    <string name="diagnostics_share">Share diagnostics</string>
+    <string name="diagnostics_title">Diagnostics</string>
+    <string name="diagnostics_tools">Tools</string>
+    <string name="diagnostics_self_test">Self-test</string>
+    <string name="diagnostics_self_test_body">Check keys, database, storage, notifications and Linux.</string>
+    <string name="diagnostics_storage">Storage</string>
+    <string name="diagnostics_storage_body">What each part of Locus uses, and clean-up.</string>
+    <string name="diagnostics_recent_problems">Recent problems</string>
+    <string name="diagnostics_none">No problems recorded</string>
+    <string name="diagnostics_share_report">Share report</string>
+    <string name="diagnostics_clear">Clear</string>
+    <string name="diagnostics_clear_confirm">Clear diagnostics?</string>
+    <string name="diagnostics_locus_error">Locus stopped with an error</string>
+    <string name="diagnostics_android_closed">Android closed Locus</string>
+    <string name="diagnostics_request_failed">A request or task failed</string>
 </resources>
