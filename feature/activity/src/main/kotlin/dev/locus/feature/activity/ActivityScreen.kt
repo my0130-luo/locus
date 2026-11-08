@@ -303,7 +303,7 @@ private fun LazyListScope.runItems(
         val i = index++
         item(key = "${run.key}:earlier", contentType = "earlier") {
             Text(
-                "Show ${plural(hidden, "earlier action")}",
+                stringResource(R.string.activity_show_earlier, hidden),
                 Modifier.cardSegment(i, count).fillMaxWidth().clickable(onClick = onShowAll).padding(horizontal = Spacing.lg, vertical = Spacing.md),
                 style = LocusType.label,
                 color = MaterialTheme.colorScheme.primary,
@@ -344,7 +344,7 @@ private fun RunHeader(run: Run, expanded: Boolean, inChat: Boolean, modifier: Mo
                 )
                 if (!inChat) SupportingText(timeRange(context, run.start, run.end), style = LocusType.mono)
             }
-            Icon(LocusIcons.ChevronRight, contentDescription = if (expanded) "Collapse" else "Expand", tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(IconSize.medium).rotate(turn))
+            Icon(LocusIcons.ChevronRight, contentDescription = if (expanded) stringResource(R.string.activity_collapse) else stringResource(R.string.activity_expand), tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(IconSize.medium).rotate(turn))
         }
         Row(Modifier.padding(top = Spacing.sm), verticalAlignment = Alignment.CenterVertically) {
             run.accents.take(4).forEach { a ->
@@ -353,19 +353,19 @@ private fun RunHeader(run: Run, expanded: Boolean, inChat: Boolean, modifier: Mo
             }
             val critical = Locus.colors.critical
             val counts = buildAnnotatedString {
-                append(plural(run.actions, "action"))
+                append(stringResource(R.string.activity_action_count, run.actions))
                 if (run.failed > 0) {
                     append(" · ")
-                    withStyle(SpanStyle(color = critical)) { append("${run.failed} failed") }
+                    withStyle(SpanStyle(color = critical)) { append(stringResource(R.string.activity_failed_count, run.failed)) }
                 }
-                if (run.asked > 0) append(" · " + plural(run.asked, "approval"))
+                if (run.asked > 0) append(" · " + stringResource(R.string.activity_approval_count, run.asked))
             }
             SupportingText(counts, Modifier.padding(start = Spacing.xs), maxLines = 1)
         }
         if (!expanded) {
             val e = run.latest
             SupportingText(
-                "Last: " + toolLabel(e.toolName, e.argumentsJson, done = !e.isError && !e.refused),
+                stringResource(R.string.activity_last_action, toolLabel(e.toolName, e.argumentsJson, done = !e.isError && !e.refused)),
                 Modifier.padding(top = Spacing.xs),
                 style = LocusType.rowSupporting,
                 maxLines = 1,
@@ -420,9 +420,9 @@ private fun DetailSheet(entry: AuditEntry, chat: RunChat, onDismiss: () -> Unit,
             SupportingText(entry.toolName, Modifier.weight(1f).padding(horizontal = Spacing.sm), style = LocusType.mono)
             LocusChip(decisionText(entry), tone = decisionPill(entry)?.second ?: Tone.Neutral)
         }
-        SupportingText("In “${chat.title}”", style = LocusType.rowSupporting)
-        CodeBlock("Arguments", pretty(entry.argumentsJson))
-        CodeBlock(if (entry.failed) "Error" else "Result", pretty(entry.resultPreview).ifBlank { "(empty)" })
+        SupportingText(stringResource(R.string.activity_in_chat, chat.title), style = LocusType.rowSupporting)
+        CodeBlock(stringResource(R.string.activity_arguments), pretty(entry.argumentsJson))
+        CodeBlock(stringResource(if (entry.failed) R.string.activity_error else R.string.activity_result), pretty(entry.resultPreview).ifBlank { stringResource(R.string.activity_empty_result) })
     }
 }
 
