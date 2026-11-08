@@ -204,6 +204,8 @@ internal fun BrowserScreen(
 ) {
     val state = ui.page
     val feedback = Locus.feedback
+    val loginUpdatedLabel = stringResource(R.string.browser_login_updated)
+    val loginSavedLabel = stringResource(R.string.browser_login_saved)
     // The approval whose Details sheet is open, by call id: it closes by itself once the request is answered anywhere.
     var detailsFor by rememberSaveable { mutableStateOf(startDetails) }
 
@@ -213,7 +215,7 @@ internal fun BrowserScreen(
             host = SiteOrigin.host(offer.origin),
             username = offer.username,
             isUpdate = offer.isUpdate,
-            onSave = { user -> actions.saveLogin(user); feedback.show(if (offer.isUpdate) "Login updated" else "Login saved", Tone.Live) },
+            onSave = { user -> actions.saveLogin(user); feedback.show(if (offer.isUpdate) loginUpdatedLabel else loginSavedLabel, Tone.Live) },
             onNever = actions.neverSaveLogin,
             onDismiss = actions.dismissLogin,
         )
@@ -227,6 +229,9 @@ internal fun BrowserScreen(
     var handingBack by rememberSaveable { mutableStateOf(startHandBack != null) }
     var menu by rememberSaveable { mutableStateOf(false) }
     val canDrive = ui.userDriving && state.hasPage
+    val waitingAnswerLabel = stringResource(R.string.browser_waiting_answer)
+    val usingPageLabel = stringResource(R.string.browser_using_page)
+    val takeOverLabel = stringResource(R.string.browser_take_over)
     val context = LocalContext.current
     val clipboard = LocalClipboard.current
     val scope = rememberCoroutineScope()
@@ -242,12 +247,12 @@ internal fun BrowserScreen(
     }
 
     LocusScreen(
-        if (ui.standalone) "Your browsing" else "Browser",
+        if (ui.standalone) stringResource(R.string.browser_your_browsing) else stringResource(R.string.browser_title),
         snackbarHost = snackbarHost,
         topBar = {
             BrowserToolbar(
                 onClose = actions.onBack,
-                closeLabel = if (ui.standalone) "Close browser" else "Back to chat",
+                closeLabel = if (ui.standalone) stringResource(R.string.browser_close) else stringResource(R.string.browser_back_to_chat),
                 editing = editing,
                 // A thin progress line while loading, in place of the bar's hairline edge.
                 progress = if (state.loading && !editing) state.progress / 100f else null,
@@ -255,7 +260,7 @@ internal fun BrowserScreen(
                     // Only once a page opened a second tab (a sign-in pop-up, a link to a new tab).
                     if (state.tabs.size > 1) TabCount(state.tabs.size) { showTabs = true }
                     Box {
-                        IconButton(onClick = { menu = true }) { Icon(LocusIcons.More, contentDescription = "More options") }
+                        IconButton(onClick = { menu = true }) { Icon(LocusIcons.More, contentDescription = stringResource(R.string.browser_more_options)) }
                         BrowserMenu(
                             expanded = menu,
                             onDismiss = { menu = false },
@@ -263,8 +268,8 @@ internal fun BrowserScreen(
                             onNavigate = { menu = false; actions.navigate(it) },
                             onCopy = {
                                 menu = false
-                                scope.launch { clipboard.setClipEntry(ClipEntry(ClipData.newPlainText("Link", state.url))) }
-                                feedback.show("Link copied", Tone.Live)
+                                scope.launch { clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(stringResource(R.string.browser_link_label), state.url))) }
+                                feedback.show(stringResource(R.string.browser_link_copied), Tone.Live)
                             },
                             onOpenElsewhere = {
                                 menu = false
@@ -294,11 +299,11 @@ internal fun BrowserScreen(
                         {
                             if (state.loading) {
                                 IconButton(onClick = { actions.navigate(AgentBrowser.UserNavigation.STOP) }, enabled = canDrive) {
-                                    Icon(LocusIcons.Close, contentDescription = "Stop loading")
+                                    Icon(LocusIcons.Close, contentDescription = stringResource(R.string.browser_stop_loading))
                                 }
                             } else {
                                 IconButton(onClick = { actions.navigate(AgentBrowser.UserNavigation.RELOAD) }, enabled = canDrive) {
-                                    Icon(LocusIcons.Regenerate, contentDescription = "Reload")
+                                    Icon(LocusIcons.Regenerate, contentDescription = stringResource(R.string.browser_reload))
                                 }
                             }
                         }
@@ -334,7 +339,7 @@ internal fun BrowserScreen(
                             // Over the WebView's own error page, which is the browser engine's, not ours.
                             Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                                 ErrorState(
-                                    "Couldn't open this page",
+                                    stringResource(R.string.browser_could_not_open),
                                     error,
                                     onRetry = if (ui.userDriving) ({ actions.navigate(AgentBrowser.UserNavigation.RELOAD) }) else null,
                                 )
@@ -424,12 +429,12 @@ internal fun BrowserScreen(
     }
 
     if (showTabs) {
-        LocusSheet(title = "Tabs", subtitle = stringResource(R.string.browser_tabs_description), onDismiss = { showTabs = false }) {
+        LocusSheet(title = stringResource(R.string.browser_tabs), subtitle = stringResource(R.string.browser_tabs_description), onDismiss = { showTabs = false }) {
             CardGroup {
                 state.tabs.forEachIndexed { i, tab ->
                     if (i > 0) GroupDivider()
                     ListRow(
-                        tab.title.ifBlank { "Untitled" },
+                        tab.title.ifBlank { stringResource(R.string.browser_untitled) },
                         subtitle = displayAddress(tab.url),
                         onClick = { actions.selectTab(i); showTabs = false },
                         leading = if (i == state.activeTab) {
@@ -449,9 +454,9 @@ internal fun BrowserScreen(
     state.dialog?.let { dialog ->
         var answer by remember(dialog) { mutableStateOf(dialog.defaultText) }
         ConfirmSheet(
-            title = state.url.substringAfter("://").substringBefore('/').ifBlank { "This page" } + " says",
+            title = stringResource(R.string.browser_page_says, state.url.substringAfter("://").substringBefore('/').ifBlank { stringResource(R.string.browser_this_page) }),
             message = dialog.message,
-            confirmLabel = "OK",
+            confirmLabel = stringResource(R.string.browser_ok),
             onConfirm = { actions.answerDialog(true, answer) },
             onDismiss = { actions.answerDialog(false, null) },
             content = if (dialog.type == "prompt") {
@@ -480,7 +485,7 @@ internal fun BrowserScreen(
                     when {
                         cleared -> {
                             confirmClear = false
-                            feedback.show("Browsing data cleared", Tone.Live)
+                            feedback.show(stringResource(R.string.browser_data_cleared), Tone.Live)
                         }
                         // Still open: say so where the user is looking, next to Try again.
                         confirmClear -> clearError = failed
