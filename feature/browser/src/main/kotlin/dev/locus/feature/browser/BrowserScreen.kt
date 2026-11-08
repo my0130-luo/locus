@@ -696,7 +696,7 @@ private fun openElsewhere(context: Context, url: String): String? = try {
     context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addCategory(Intent.CATEGORY_BROWSABLE).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     null
 } catch (_: ActivityNotFoundException) {
-    "No app on this phone opens web links."
+    context.getString(R.string.browser_no_web_app)
 }
 
 /** "booking.com/hotel/…" for "https://www.booking.com/hotel/…": what a person reads in an address bar. */
