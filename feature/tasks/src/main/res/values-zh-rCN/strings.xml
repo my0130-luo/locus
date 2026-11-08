@@ -84,4 +84,21 @@
     <string name="tasks_5_min">5 分钟</string>
     <string name="tasks_15_min">15 分钟</string>
     <string name="tasks_6_hours">6 小时</string>
+    <string name="tasks_start_from_digest">从每日早报开始</string>
+    <string name="tasks_morning_digest_note">每天 7:00：当天日程和准备事项</string>
+    <string name="tasks_news_digest_note">每天 7:00：Miniflux 中未读的文章</string>
+    <string name="tasks_delete_title">删除“%1$s”？</string>
+    <string name="tasks_delete_trigger_message">它将停止监听事件，历史记录也会被删除。此前运行产生的对话会保留。</string>
+    <string name="tasks_delete_schedule_message">它将停止运行。此前运行产生的对话会保留。</string>
+    <string name="tasks_edit_title">编辑“%1$s”</string>
+    <string name="tasks_digest_editor_note">自动运行，只读，并通过简短摘要通知你。</string>
+    <string name="tasks_schedule_interval_now">当前间隔：%1$s。选择其他间隔即可更改。</string>
+    <string name="tasks_first_run_note">首次运行时间为 %1$s，之后按周期运行。手机空闲时，Android 可能会稍晚执行。</string>
+    <string name="tasks_digest_ntfy_note">摘要也会发送到你的 ntfy 主题，以便在其他设备上接收。</string>
+    <string name="tasks_only_run">仅在以下条件下运行</string>
+    <string name="tasks_when_charging">正在充电时</string>
+    <string name="tasks_when_charging_note">等待手机接通电源后再运行。</string>
+    <string name="tasks_on_wifi">连接 Wi-Fi 时</string>
+    <string name="tasks_on_wifi_note">不使用移动数据或其他按流量计费的网络。</string>
+    <string name="tasks_battery_not_low_note">Android 显示低电量警告时跳过运行。</string>
 </resources>
