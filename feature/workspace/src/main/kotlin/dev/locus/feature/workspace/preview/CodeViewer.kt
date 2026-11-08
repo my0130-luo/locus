@@ -25,6 +25,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import dev.locus.feature.workspace.R
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
@@ -126,8 +128,8 @@ internal fun CodeViewer(text: String, syntax: SyntaxLanguage?, modifier: Modifie
 
     val allNotices = buildList {
         addAll(notices)
-        if (m.cutLines > 0) add("${m.cutLines} long line(s) are cut at ${"%,d".format(MAX_LINE_CHARS)} characters here.")
-        if (syntax != null && m.text.length > MAX_HIGHLIGHT_CHARS) add("Too large to colour; shown plain.")
+        if (m.cutLines > 0) add(stringResource(R.string.preview_code_cut_lines, m.cutLines, "%,d".format(MAX_LINE_CHARS)))
+        if (syntax != null && m.text.length > MAX_HIGHLIGHT_CHARS) add(stringResource(R.string.preview_code_plain))
     }
     val codeColor = MaterialTheme.colorScheme.onSurface
     // onSurfaceVariant, not a faded onSurface: line numbers stay readable (4.5:1) on the gutter's tint.
