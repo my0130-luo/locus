@@ -25,6 +25,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.heading
@@ -93,7 +94,7 @@ fun LinuxCard(
             is LinuxPanel.Working -> Working(panel, viewModel::cancel)
             is LinuxPanel.Installed -> Installed(panel, state, viewModel, onOpenTerminal, onOpenHealth)
             is LinuxPanel.Failed -> ErrorState(
-                title = "Linux couldn't be installed",
+                title = stringResource(R.string.workspace_linux_install_failed),
                 message = panel.reason,
                 onRetry = viewModel::install,
                 icon = LocusIcons.Terminal,
@@ -162,7 +163,7 @@ private fun Working(panel: LinuxPanel.Working, onCancel: () -> Unit) {
         )
         if (panel.cancellable) {
             SupportingText("You can leave this screen; it carries on with a notification.")
-            OutlinedButton(onClick = onCancel, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text("Cancel") }
+            OutlinedButton(onClick = onCancel, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text(stringResource(R.string.workspace_linux_cancel)) }
         }
     }
 }
@@ -216,12 +217,12 @@ private fun Installed(
         FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.sm), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
             Button(onClick = onOpenTerminal, modifier = Modifier.heightIn(min = Sizes.touchTarget)) {
                 Icon(LocusIcons.Terminal, contentDescription = null, modifier = Modifier.padding(end = Spacing.sm).size(IconSize.small))
-                Text("Open terminal")
+                Text(stringResource(R.string.workspace_linux_open_terminal))
             }
             if (onOpenHealth != null) {
-                OutlinedButton(onClick = onOpenHealth, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text("Health & details") }
+                OutlinedButton(onClick = onOpenHealth, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text(stringResource(R.string.workspace_linux_health_details)) }
             }
-            TextButton(onClick = { confirm = MANAGE }, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text("Manage") }
+            TextButton(onClick = { confirm = MANAGE }, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text(stringResource(R.string.workspace_linux_manage)) }
         }
     }
     when (confirm) {
@@ -282,8 +283,8 @@ private fun KillNotice(what: String, whenText: String, onDismiss: () -> Unit) {
         title = "Killed by Android (phantom process limit)",
         actionsBelow = true,
     ) {
-        TextButton(onClick = onDismiss) { Text("Dismiss") }
-        TextButton(onClick = { runCatching { uri.openUri(AndroidKill.HELP_URL) } }) { Text("How to fix it") }
+        TextButton(onClick = onDismiss) { Text(stringResource(R.string.workspace_linux_dismiss)) }
+        TextButton(onClick = { runCatching { uri.openUri(AndroidKill.HELP_URL) } }) { Text(stringResource(R.string.workspace_linux_how_to_fix)) }
     }
 }
 
