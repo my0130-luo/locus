@@ -272,4 +272,20 @@
     <string name="integrations_secret_stored">已在此手机上加密保存。AI 无法看到密钥内容。</string>
     <string name="integrations_remove_key">移除密钥</string>
     <string name="integrations_remove">移除</string>
+    <string name="battery_saver">省电模式</string>
+    <string name="battery_memory_low">内存不足</string>
+    <string name="battery_offline">离线</string>
+    <string name="battery_metered_network">按流量计费的网络</string>
+    <string name="battery_wifi">Wi-Fi</string>
+    <string name="battery_title">电池与温度</string>
+    <string name="battery_right_now">当前状态</string>
+    <string name="battery_current_summary">手机温度过高或处于省电模式时</string>
+    <string name="battery_pause_extras">暂停非必要功能</string>
+    <string name="battery_ask_before_reply">本地模型回复前先询问</string>
+    <string name="battery_when_not_low">电量不低时</string>
+    <string name="battery_when_charging">充电时</string>
+    <string name="battery_on_wifi">连接 Wi-Fi 时</string>
+    <string name="battery_downloads">下载</string>
+    <string name="battery_download_wifi_only">仅通过 Wi-Fi 下载模型</string>
+    <string name="battery_use_mobile_data">使用移动数据</string>
 </resources>
