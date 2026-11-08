@@ -327,4 +327,20 @@
     <string name="diagnostics_locus_error">Locus stopped with an error</string>
     <string name="diagnostics_android_closed">Android closed Locus</string>
     <string name="diagnostics_request_failed">A request or task failed</string>
+    <string name="extras_title">Helper model &amp; extras</string>
+    <string name="extras_helper_model">Helper model</string>
+    <string name="extras_automatic">Automatic · default</string>
+    <string name="extras_same_as_chat">Same as each chat</string>
+    <string name="extras_chat_extras">Chat extras</string>
+    <string name="extras_auto_name">Name chats automatically</string>
+    <string name="extras_auto_name_body">Gives each chat a short title after the first reply</string>
+    <string name="extras_suggest_followups">Suggest follow-ups</string>
+    <string name="extras_suggest_body">Shows a few things you might say next under each reply</string>
+    <string name="extras_learn_after_tasks">Learn after tasks</string>
+    <string name="extras_learn_body">After a longer task, Locus may save a short lesson to memory</string>
+    <string name="extras_prompts">Prompts</string>
+    <string name="extras_edited">Edited</string>
+    <string name="extras_default">Default</string>
+    <string name="extras_automatic_label">Automatic</string>
+    <string name="extras_save">Save</string>
 </resources>
