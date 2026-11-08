@@ -173,4 +173,18 @@
     <string name="automation_developers">应用开发者</string>
     <string name="automation_permission">权限</string>
     <string name="automation_intents">Intent（应用意图）</string>
+    <string name="voice_settings_title">语音</string>
+    <string name="voice_speaking">语音朗读</string>
+    <string name="voice_speaking_body">用于朗读回复和语音模式。</string>
+    <string name="voice_engine">语音与朗读引擎</string>
+    <string name="voice_engine_body">Android 文字转语音设置：选择引擎、声音和语言。</string>
+    <string name="voice_mode">语音模式</string>
+    <string name="voice_speech_settings">语音设置</string>
+    <string name="voice_listen_after_reply">每次回复后自动朗读</string>
+    <string name="voice_listen_body">免提继续对话。关闭后，每次需要点击圆形按钮才能说话。</string>
+    <string name="voice_status">播报当前操作</string>
+    <string name="voice_status_body">工具运行期间简短播报状态，例如“正在处理，正在运行命令”。</string>
+    <string name="voice_interrupt">通过说话打断</string>
+    <string name="voice_interrupt_body">可以直接说话打断 Locus。若扬声器播放时总是误识别自己的声音，可以关闭此项；点击按钮始终有效。</string>
+    <string name="voice_no_recognizer">此手机没有语音识别器，因此语音模式无法接收语音。</string>
 </resources>
