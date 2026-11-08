@@ -192,4 +192,6 @@
     <string name="preview_no_app_share">No app here can share %1$s</string>
     <string name="preview_code_cut_lines">%1$d long line(s) are cut at %2$s characters here.</string>
     <string name="preview_code_plain">Too large to colour; shown plain.</string>
+    <string name="preview_pause">Pause</string>
+    <string name="preview_play">Play</string>
 </resources>
