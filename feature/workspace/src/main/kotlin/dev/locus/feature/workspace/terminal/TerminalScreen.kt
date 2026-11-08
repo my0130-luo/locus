@@ -36,6 +36,8 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import dev.locus.feature.workspace.R
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -134,24 +136,24 @@ fun TerminalRoute(
                 },
                 actions = {
                     if (linux == LinuxStatus.Ready) {
-                        IconButton(onClick = viewModel::open, enabled = tabs.size < TabRegistry.MAX_TABS) { Icon(LocusIcons.Add, contentDescription = "New terminal") }
+                        IconButton(onClick = viewModel::open, enabled = tabs.size < TabRegistry.MAX_TABS) { Icon(LocusIcons.Add, contentDescription = stringResource(R.string.terminal_new_terminal)) }
                     }
                     Box {
-                        IconButton(onClick = { menuOpen = true }) { Icon(LocusIcons.More, contentDescription = "Terminal actions") }
+                        IconButton(onClick = { menuOpen = true }) { Icon(LocusIcons.More, contentDescription = stringResource(R.string.terminal_actions)) }
                         DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                             DropdownMenuItem(
-                                text = { Text("Ask Locus about the selection") },
+                                text = { Text(stringResource(R.string.terminal_ask_about_selection)) },
                                 leadingIcon = { Icon(LocusIcons.Sparkle, contentDescription = null) },
                                 enabled = client.selecting,
                                 onClick = { menuOpen = false; ask(client.view?.selectedText); client.view?.stopTextSelectionMode() },
                             )
                             DropdownMenuItem(
-                                text = { Text("Paste") },
+                                text = { Text(stringResource(R.string.terminal_paste)) },
                                 enabled = selectedTab?.running == true,
                                 onClick = { menuOpen = false; selected?.let { viewModel.sessions.session(it) }?.onPasteTextFromClipboard() },
                             )
-                            DropdownMenuItem(text = { Text("Bigger text") }, enabled = fontSp < dev.locus.core.terminal.TerminalSessions.MAX_FONT_SP, onClick = { viewModel.setFontSize(fontSp + 1) })
-                            DropdownMenuItem(text = { Text("Smaller text") }, enabled = fontSp > dev.locus.core.terminal.TerminalSessions.MIN_FONT_SP, onClick = { viewModel.setFontSize(fontSp - 1) })
+                            DropdownMenuItem(text = { Text(stringResource(R.string.terminal_bigger_text)) }, enabled = fontSp < dev.locus.core.terminal.TerminalSessions.MAX_FONT_SP, onClick = { viewModel.setFontSize(fontSp + 1) })
+                            DropdownMenuItem(text = { Text(stringResource(R.string.terminal_smaller_text)) }, enabled = fontSp > dev.locus.core.terminal.TerminalSessions.MIN_FONT_SP, onClick = { viewModel.setFontSize(fontSp - 1) })
                             if (selectedTab != null) {
                                 DropdownMenuItem(
                                     text = { Text(if (selectedTab.running) "Close this terminal" else "Close tab", color = Locus.colors.critical) },
@@ -168,7 +170,7 @@ fun TerminalRoute(
         Column(Modifier.fillMaxSize().padding(top = padding.calculateTopPadding()).imePadding().navigationBarsPadding()) {
             when {
                 linux != LinuxStatus.Ready && tabs.isEmpty() -> EmptyState(
-                    title = if (linux is LinuxStatus.Installing) "Linux is installing" else "Linux isn't installed",
+                    title = if (linux is LinuxStatus.Installing) stringResource(R.string.terminal_linux_installing) else stringResource(R.string.terminal_linux_not_installed),
                     body = when (val s = linux) {
                         is LinuxStatus.Installing -> "The terminal opens when the install finishes: ${s.step}"
                         is LinuxStatus.Unavailable -> s.reason
@@ -178,15 +180,15 @@ fun TerminalRoute(
                     icon = LocusIcons.Terminal,
                     action = when (linux) {
                         is LinuxStatus.Unavailable -> null
-                        is LinuxStatus.Installing -> ({ Button(onClick = onInstallLinux) { Text("See progress") } })
-                        else -> ({ Button(onClick = onInstallLinux) { Text("Set up Linux") } })
+                        is LinuxStatus.Installing -> ({ Button(onClick = onInstallLinux) { Text(stringResource(R.string.terminal_see_progress)) } })
+                        else -> ({ Button(onClick = onInstallLinux) { Text(stringResource(R.string.terminal_setup_linux)) } })
                     },
                 )
                 tabs.isEmpty() -> EmptyState(
-                    title = "No terminal open",
-                    body = "Each terminal is a shell in Locus's Alpine Linux, isolated like the agent's commands, with your workspace at /workspace. Nothing you type here is sent to the model.",
+                    title = stringResource(R.string.terminal_none_open),
+                    body = stringResource(R.string.terminal_empty_explanation),
                     icon = LocusIcons.Terminal,
-                    action = { Button(onClick = viewModel::open) { Text("Open a terminal") } },
+                    action = { Button(onClick = viewModel::open) { Text(stringResource(R.string.terminal_open_terminal)) } },
                 )
                 else -> {
                     if (tabs.size > 1) TabStrip(tabs, selected, viewModel::select, viewModel::close)
@@ -227,7 +229,7 @@ private fun TabStrip(tabs: List<TerminalTab>, selected: Int?, onSelect: (Int) ->
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
-                    CompactIconButton(LocusIcons.Close, contentDescription = "Close ${tab.label}", onClick = { onClose(tab.id) }, tint = LocalContentColor.current)
+                    CompactIconButton(LocusIcons.Close, contentDescription = stringResource(R.string.terminal_close_tab, tab.label), onClick = { onClose(tab.id) }, tint = LocalContentColor.current)
                 }
             }
         }
