@@ -19,9 +19,9 @@
     <string name="skills">Skills</string>
     <string name="binary_file_not_shown">A binary file, not shown here.</string>
     <string name="approve_new_permissions">Approve new permissions?</string>
-    <string name="approve">Approve</string>
-    <string name="remove">Remove</string>
-    <string name="needs_review">Needs review</string>
+
+
+
     <string name="undeclared">Undeclared</string>
     <string name="manifest_parse_error">Its manifest doesn't parse</string>
     <string name="inferred_manifest">Inferred manifest</string>
@@ -29,8 +29,8 @@
     <string name="skill_md">SKILL.md</string>
     <string name="read_the_file">Read the file</string>
     <string name="script">Script</string>
-    <string name="discard_change">Discard change</string>
-    <string name="reject">Reject</string>
+
+
     <string name="importing">Importing</string>
     <string name="cancel">Cancel</string>
     <string name="couldnt_import">Couldn't import</string>
