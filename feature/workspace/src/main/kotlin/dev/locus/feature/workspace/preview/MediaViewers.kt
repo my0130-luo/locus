@@ -71,9 +71,9 @@ internal fun openWith(context: Context, file: OpenFile, feedback: LocusFeedback)
     val uri = file.contentUri?.let(Uri::parse) ?: workspaceUri(context, file.path)
     val view = Intent(Intent.ACTION_VIEW).setDataAndType(uri, mimeTypeFor(file.name, file.kind)).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     try {
-        context.startActivity(Intent.createChooser(view, "Open ${file.name} with"))
+        context.startActivity(Intent.createChooser(view, context.getString(R.string.preview_open_file_with, file.name)))
     } catch (_: ActivityNotFoundException) {
-        feedback.show("No app here can open ${file.name}", Tone.Caution)
+        feedback.show(context.getString(R.string.preview_no_app_open, file.name), Tone.Caution)
     }
 }
 
@@ -87,7 +87,7 @@ internal fun share(context: Context, file: OpenFile, feedback: LocusFeedback) {
     try {
         context.startActivity(Intent.createChooser(send, null))
     } catch (_: ActivityNotFoundException) {
-        feedback.show("No app here can share ${file.name}", Tone.Caution)
+        feedback.show(context.getString(R.string.preview_no_app_share, file.name), Tone.Caution)
     }
 }
 
