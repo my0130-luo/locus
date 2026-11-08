@@ -6,7 +6,7 @@
     <string name="activity_no_actions_in_chat">No actions in this chat</string>
     <string name="activity_empty_explanation">Every tool the agent uses is recorded here: what it ran, whether you approved it, and what happened.</string>
     <string name="activity_load_older">Load older activity</string>
-    <string name="activity_search_chat_actions">Search this chat's actions</string>
+    <string name="activity_search_chat_actions">Search this chat’s actions</string>
     <string name="activity_search_actions_chats">Search actions and chats</string>
     <string name="activity_nothing_period">Nothing in this period</string>
     <string name="activity_no_matching_actions">No matching actions</string>
