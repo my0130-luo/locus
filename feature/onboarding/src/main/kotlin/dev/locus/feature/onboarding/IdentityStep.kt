@@ -135,7 +135,7 @@ internal fun ColumnScope.IdentityFields(state: OnboardingUiState, viewModel: Onb
         }
     }
 
-    SectionLabel("Here's what ${a.agentName.trim().ifBlank { AgentHome.DEFAULT_NAME }} will remember", action = stringResource(R.string.onb_identity_edit_files), onAction = { editing = PersonaFile.IDENTITY.name })
+    SectionLabel(stringResource(R.string.onb_identity_remember_title, a.agentName.trim().ifBlank { AgentHome.DEFAULT_NAME }), action = stringResource(R.string.onb_identity_edit_files), onAction = { editing = PersonaFile.IDENTITY.name })
     val override = viewModel.personaOverride
     if (override != null) {
         Banner(
@@ -193,7 +193,7 @@ private fun PersonaChanges(viewModel: OnboardingViewModel) {
             "${f.fileName} was changed by something other than Locus, for example a program in Linux. " +
                 "Locus isn't using the change: new chats get the version you saved.",
             Tone.Critical,
-            title = "${f.title()} changed outside Locus",
+            title = stringResource(R.string.onb_identity_changed_outside, f.title()),
             actions = { TextButton(onClick = { reviewing = f.name }) { Text(stringResource(R.string.onb_identity_review)) } },
         )
     }
@@ -202,7 +202,7 @@ private fun PersonaChanges(viewModel: OnboardingViewModel) {
     val text = changes[file] ?: return
     LocusSheet(
         title = "The change to ${file.fileName}",
-        subtitle = "Made outside Locus. Keep it only if you made it yourself: your agent reads this file at the start of every chat.",
+        subtitle = stringResource(R.string.onb_identity_external_change_note),
         onDismiss = { reviewing = null },
         action = stringResource(R.string.onb_identity_keep_version),
         actionTone = Tone.Caution,
@@ -228,7 +228,7 @@ private fun PersonaEditorSheet(initial: PersonaFiles, start: PersonaFile, onSave
     var agents by rememberSaveable { mutableStateOf(initial.agents) }
     val files = PersonaFiles(identity, soul, user, agents)
     LocusSheet(
-        title = "Edit files directly",
+        title = stringResource(R.string.onb_identity_edit_files_directly),
         subtitle = stringResource(R.string.onb_identity_optional_markdown),
         onDismiss = onDismiss,
         action = "Done",
@@ -292,7 +292,7 @@ fun PersonaRoute(onBack: () -> Unit, viewModel: OnboardingViewModel = hiltViewMo
 private fun PersonaFile.title() = when (this) {
     PersonaFile.IDENTITY -> stringResource(R.string.onb_identity_agent_identity)
     PersonaFile.SOUL -> stringResource(R.string.onb_identity_personality)
-    PersonaFile.USER -> "About you"
+    PersonaFile.USER -> stringResource(R.string.onb_identity_about_you)
     PersonaFile.AGENTS -> stringResource(R.string.onb_identity_rules_tab)
 }
 
