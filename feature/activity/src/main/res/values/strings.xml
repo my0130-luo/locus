@@ -18,4 +18,11 @@
     <string name="activity_arguments">Arguments</string>
     <string name="activity_error">Error</string>
     <string name="activity_result">Result</string>
+    <string name="activity_show_earlier">Show %1$d earlier actions</string>
+    <string name="activity_action_count">%1$d actions</string>
+    <string name="activity_failed_count">%1$d failed</string>
+    <string name="activity_approval_count">%1$d approvals</string>
+    <string name="activity_last_action">Last: %1$s</string>
+    <string name="activity_in_chat">In “%1$s”</string>
+    <string name="activity_empty_result">(empty)</string>
 </resources>
