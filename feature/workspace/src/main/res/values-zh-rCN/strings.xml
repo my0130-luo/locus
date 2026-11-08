@@ -119,4 +119,19 @@
     <string name="linux_packages_more_updates">以及另外 %1$d 项</string>
     <string name="linux_packages_install_updates">在终端中运行 `apk upgrade` 以安装这些更新。</string>
     <string name="linux_packages_open_terminal">打开终端</string>
+    <string name="terminal_new_terminal">新建终端</string>
+    <string name="terminal_actions">终端操作</string>
+    <string name="terminal_ask_about_selection">向 Locus 询问所选内容</string>
+    <string name="terminal_paste">粘贴</string>
+    <string name="terminal_bigger_text">放大文字</string>
+    <string name="terminal_smaller_text">缩小文字</string>
+    <string name="terminal_close_this">关闭此终端</string>
+    <string name="terminal_linux_installing">Linux 正在安装</string>
+    <string name="terminal_linux_not_installed">尚未安装 Linux</string>
+    <string name="terminal_see_progress">查看进度</string>
+    <string name="terminal_setup_linux">设置 Linux</string>
+    <string name="terminal_none_open">没有打开的终端</string>
+    <string name="terminal_empty_explanation">每个终端都是 Locus 的 Alpine Linux Shell，与智能体执行的命令相互隔离，工作区位于 /workspace。你在这里输入的任何内容都不会发送给模型。</string>
+    <string name="terminal_open_terminal">打开终端</string>
+    <string name="terminal_close_tab">关闭 %1$s</string>
 </resources>
