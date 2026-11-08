@@ -6,6 +6,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,7 +51,7 @@ internal class ChatGptActions(
 }
 
 /**
- * The ChatGPT part of the provider editor, in place of the API key: "Continue with ChatGPT" when
+ * The ChatGPT part of the provider editor, in place of the API key: stringResource(R.string.chatgpt_continue) when
  * signed out, then the account with Manage usage and Sign out. After a first sign-in it confirms
  * once that requests now use the user's plan, as OpenAI's UI guidelines ask.
  */
@@ -69,18 +70,18 @@ internal fun ChatGptAccountSection(providerId: String, signedIn: Boolean, email:
         // The account and what can be done with it, in one card.
         CardGroup {
             ListRow(
-                title = email ?: "ChatGPT account",
-                subtitle = "Using your ChatGPT plan",
+                title = email ?: stringResource(R.string.chatgpt_account),
+                subtitle = stringResource(R.string.chatgpt_using_plan),
                 titleMaxLines = 2,
                 subtitleMaxLines = 2,
                 leading = { LogoTile(BrandLogo.OpenAI, size = IconSize.tile) },
                 // Under the text, so the address has the row's whole width.
-                meta = { StatusPill("Signed in", Tone.Live) },
+                meta = { StatusPill(stringResource(R.string.chatgpt_signed_in), Tone.Live) },
             )
             GroupDivider(inset = Insets.iconRow)
             ListRow(
-                title = "Manage usage",
-                subtitle = "Opens ChatGPT settings",
+                title = stringResource(R.string.chatgpt_manage_usage),
+                subtitle = stringResource(R.string.chatgpt_opens_settings),
                 subtitleMaxLines = 2,
                 onClick = { uriHandler.openUri(ChatGptErrors.USAGE_URL) },
                 leading = { IconTile(LocusIcons.Gauge) },
@@ -88,7 +89,7 @@ internal fun ChatGptAccountSection(providerId: String, signedIn: Boolean, email:
             )
             GroupDivider(inset = Insets.iconRow)
             ListRow(
-                title = "Sign out",
+                title = stringResource(R.string.chatgpt_sign_out),
                 subtitle = "This provider stops working until you sign in again",
                 subtitleMaxLines = 2,
                 onClick = { confirmSignOut = true },
@@ -120,23 +121,23 @@ internal fun ChatGptAccountSection(providerId: String, signedIn: Boolean, email:
         )
         // Changed their mind in the browser: stop waiting for it.
         if (busy && signInJob != null) {
-            TextButton(onClick = { signInJob?.cancel(); signInJob = null; busy = false }) { Text("Cancel") }
+            TextButton(onClick = { signInJob?.cancel(); signInJob = null; busy = false }) { Text(stringResource(R.string.chatgpt_cancel)) }
         }
     }
     message?.let {
         Banner(
             text = it,
             tone = if (messageFailed) Tone.Critical else Tone.Caution,
-            title = if (messageFailed) "Couldn't sign in" else "Sign-out not confirmed",
+            title = if (messageFailed) stringResource(R.string.chatgpt_sign_in_failed) else stringResource(R.string.chatgpt_sign_out_unconfirmed),
             modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
         )
     }
 
     if (confirmSignOut) {
         ConfirmSheet(
-            title = "Sign out of ChatGPT?",
+            title = stringResource(R.string.chatgpt_sign_out_confirm),
             message = "Locus deletes the sign-in from this phone and asks OpenAI to revoke it. This provider stops working until you sign in again.",
-            confirmLabel = "Sign out",
+            confirmLabel = stringResource(R.string.chatgpt_sign_out),
             tone = Tone.Critical,
             onConfirm = {
                 confirmSignOut = false
@@ -153,10 +154,10 @@ internal fun ChatGptAccountSection(providerId: String, signedIn: Boolean, email:
 
     if (welcome) {
         // An information sheet: the words first, then the button that closes it.
-        LocusSheet(title = "You're using your ChatGPT plan", onDismiss = { welcome = false }) {
+        LocusSheet(title = stringResource(R.string.chatgpt_using_plan_title), onDismiss = { welcome = false }) {
             SupportingText("Requests to this provider now use your ChatGPT plan. You can review and manage that usage in ChatGPT settings.")
-            TextButton(onClick = { uriHandler.openUri(ChatGptErrors.USAGE_URL) }, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text("Manage usage") }
-            Button(onClick = { welcome = false }, modifier = Modifier.fillMaxWidth().heightIn(min = Sizes.touchTarget)) { Text("Got it") }
+            TextButton(onClick = { uriHandler.openUri(ChatGptErrors.USAGE_URL) }, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text(stringResource(R.string.chatgpt_manage_usage)) }
+            Button(onClick = { welcome = false }, modifier = Modifier.fillMaxWidth().heightIn(min = Sizes.touchTarget)) { Text(stringResource(R.string.chatgpt_got_it)) }
         }
     }
 }
