@@ -1,10 +1,12 @@
 package dev.locus.feature.settings
 
+import dev.locus.feature.settings.R
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -39,12 +41,12 @@ internal fun SettingsHub(state: SettingsUiState, onBack: () -> Unit, onOpen: (Se
     // Until the settings have loaded, every summary shows the same placeholder rather than a guess.
     fun summary(text: String) = if (state.loading) LOADING_SUMMARY else text
 
-    SettingsPageScaffold("Settings", onBack) {
-        item { SectionLabel("Providers", SectionPadding) }
+    SettingsPageScaffold(stringResource(R.string.settings_title), onBack) {
+        item { SectionLabel(stringResource(R.string.settings_providers), SectionPadding) }
         item {
             CardGroup {
                 HubRow(
-                    title = "Models",
+                    title = stringResource(R.string.settings_models),
                     summary = summary(modelsSummary(state)),
                     onClick = { onOpen(SettingsPage.Models) },
                     leading = {
@@ -55,69 +57,69 @@ internal fun SettingsHub(state: SettingsUiState, onBack: () -> Unit, onOpen: (Se
                         }
                     },
                     pill = when {
-                        // A draft from the agent waits for the user: first, like Library's own "Needs review".
-                        state.providerDrafts.isNotEmpty() -> ("Needs review" to Tone.Caution)
-                        !state.loading && state.providers.isEmpty() -> ("Set up" to Tone.Caution)
-                        missingCredential != null -> ((if (missingCredential.signsIn) "Signed out" else "No key") to Tone.Caution)
+                        // A draft from the agent waits for the user: first, like Library's own stringResource(R.string.settings_needs_review).
+                        state.providerDrafts.isNotEmpty() -> (stringResource(R.string.settings_needs_review) to Tone.Caution)
+                        !state.loading && state.providers.isEmpty() -> (stringResource(R.string.settings_set_up) to Tone.Caution)
+                        missingCredential != null -> ((if (missingCredential.signsIn) stringResource(R.string.settings_signed_out) else stringResource(R.string.settings_no_key)) to Tone.Caution)
                         else -> null
                     },
                 )
                 GroupDivider(inset = Insets.iconRow)
-                HubRow("Helper model & extras", summary(extrasSummary(state)), LocusIcons.Chats) { onOpen(SettingsPage.Extras) }
+                HubRow(stringResource(R.string.settings_helper_extras), summary(extrasSummary(state)), LocusIcons.Chats) { onOpen(SettingsPage.Extras) }
                 GroupDivider(inset = Insets.iconRow)
                 // Proxy and certificates apply to model providers only.
-                HubRow("Network", summary(networkHubSummary(state.network)), LocusIcons.Globe) { onOpen(SettingsPage.Network) }
+                HubRow(stringResource(R.string.settings_network), summary(networkHubSummary(state.network)), LocusIcons.Globe) { onOpen(SettingsPage.Network) }
             }
         }
 
-        item { SectionLabel("How Locus works", SectionPadding) }
+        item { SectionLabel(stringResource(R.string.settings_how_locus_works), SectionPadding) }
         item {
             CardGroup {
-                HubRow("Agent", summary(agentSummary(state)), LocusIcons.Note) { onOpen(SettingsPage.Agent) }
+                HubRow(stringResource(R.string.settings_agent), summary(agentSummary(state)), LocusIcons.Note) { onOpen(SettingsPage.Agent) }
                 GroupDivider(inset = Insets.iconRow)
-                HubRow("Permissions", summary(permissionsSummary(state.tools) + reviewerSummary(state.reviewerMode)), LocusIcons.Shield) { onOpen(SettingsPage.Permissions) }
+                HubRow(stringResource(R.string.settings_permissions), summary(permissionsSummary(state.tools) + reviewerSummary(state.reviewerMode)), LocusIcons.Shield) { onOpen(SettingsPage.Permissions) }
                 GroupDivider(inset = Insets.iconRow)
-                HubRow("Battery & heat", "What waits when the phone is hot or low", LocusIcons.Gauge) { onOpen(SettingsPage.Battery) }
+                HubRow(stringResource(R.string.settings_battery_heat), stringResource(R.string.settings_battery_summary), LocusIcons.Gauge) { onOpen(SettingsPage.Battery) }
                 GroupDivider(inset = Insets.iconRow)
-                HubRow("Voice", "Read-aloud speed and voice mode", LocusIcons.Mic) { onOpen(SettingsPage.Voice) }
+                HubRow(stringResource(R.string.settings_voice), stringResource(R.string.settings_voice_summary), LocusIcons.Mic) { onOpen(SettingsPage.Voice) }
                 GroupDivider(inset = Insets.iconRow)
-                HubRow("Automation", "Other apps, and Locus as your assistant", LocusIcons.Play) { onOpen(SettingsPage.Automation) }
+                HubRow(stringResource(R.string.settings_automation), stringResource(R.string.settings_automation_summary), LocusIcons.Play) { onOpen(SettingsPage.Automation) }
                 GroupDivider(inset = Insets.iconRow)
-                HubRow("Phone", "Calendar edits and reminders", LocusIcons.Phone) { onOpen(SettingsPage.Phone) }
+                HubRow(stringResource(R.string.settings_phone), stringResource(R.string.settings_phone_summary), LocusIcons.Phone) { onOpen(SettingsPage.Phone) }
             }
         }
 
-        item { SectionLabel("Connections", SectionPadding) }
+        item { SectionLabel(stringResource(R.string.settings_connections), SectionPadding) }
         item {
             CardGroup {
                 // Remote mode keeps a connection to Telegram open (battery), so it shows here until it times out.
                 val remoteOn by rememberBefore(state.telegramRemote.switchesOffAt)
                 HubRow(
-                    "Integrations & connectors",
+                    stringResource(R.string.settings_integrations),
                     summary(integrationsSummary(state)),
                     onClick = { onOpen(SettingsPage.Integrations) },
                     leading = { IconTile(LocusIcons.Plug) },
-                    chip = if (remoteOn) ({ LocusChip("Remote on", tone = Tone.Live, dot = true, contentDescription = "Telegram remote mode is on") }) else null,
+                    chip = if (remoteOn) ({ LocusChip(stringResource(R.string.settings_remote_on), tone = Tone.Live, dot = true, contentDescription = stringResource(R.string.settings_telegram_remote_on)) }) else null,
                 )
                 GroupDivider(inset = Insets.iconRow)
-                HubRow("SSH machines", summary(sshSummary(state)), LocusIcons.Server) { onOpen(SettingsPage.Ssh) }
+                HubRow(stringResource(R.string.settings_ssh_machines), summary(sshSummary(state)), LocusIcons.Server) { onOpen(SettingsPage.Ssh) }
                 GroupDivider(inset = Insets.iconRow)
-                HubRow("Saved logins", "Sites Locus can sign in to for you", LocusIcons.Key) { onOpen(SettingsPage.Logins) }
+                HubRow(stringResource(R.string.settings_saved_logins), stringResource(R.string.settings_saved_logins_summary), LocusIcons.Key) { onOpen(SettingsPage.Logins) }
             }
         }
 
-        item { SectionLabel("Data", SectionPadding) }
+        item { SectionLabel(stringResource(R.string.settings_data), SectionPadding) }
         item {
             CardGroup {
-                HubRow("Backup & restore", "An encrypted file you keep", LocusIcons.Restore) { onOpen(SettingsPage.Backup) }
+                HubRow(stringResource(R.string.settings_backup_restore), stringResource(R.string.settings_backup_summary), LocusIcons.Restore) { onOpen(SettingsPage.Backup) }
             }
         }
 
-        // No label: a lone "About" label over "About & privacy" would say the same thing twice.
+        // No label: a lone "About" label over stringResource(R.string.settings_about_privacy) would say the same thing twice.
         item { Spacer(Modifier.height(Spacing.xl)) }
         item {
             CardGroup {
-                HubRow("About & privacy", "What leaves this phone, and setup", LocusIcons.Info, meta = version?.let { "v$it" }) { onOpen(SettingsPage.About) }
+                HubRow(stringResource(R.string.settings_about_privacy), stringResource(R.string.settings_about_summary), LocusIcons.Info, meta = version?.let { "v$it" }) { onOpen(SettingsPage.About) }
             }
         }
     }
@@ -183,7 +185,7 @@ internal const val LOADING_SUMMARY = "Loading…"
 
 /**
  * "OpenAI · default", "OpenAI · default · 3 providers", or "No provider yet". When a provider has no
- * key (or is signed out) it says which, since the row's "No key" pill sits beside the default's logo.
+ * key (or is signed out) it says which, since the row's stringResource(R.string.settings_no_key) pill sits beside the default's logo.
  */
 internal fun modelsSummary(state: SettingsUiState): String {
     val drafts = state.providerDrafts.size
