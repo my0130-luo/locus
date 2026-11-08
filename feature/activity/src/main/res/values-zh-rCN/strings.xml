@@ -18,4 +18,11 @@
     <string name="activity_arguments">参数</string>
     <string name="activity_error">错误</string>
     <string name="activity_result">结果</string>
+    <string name="activity_show_earlier">显示更早的 %1$d 条操作</string>
+    <string name="activity_action_count">%1$d 项操作</string>
+    <string name="activity_failed_count">%1$d 项失败</string>
+    <string name="activity_approval_count">%1$d 次审批</string>
+    <string name="activity_last_action">最近：%1$s</string>
+    <string name="activity_in_chat">位于对话“%1$s”中</string>
+    <string name="activity_empty_result">（空）</string>
 </resources>
