@@ -53,7 +53,7 @@
     <string name="onboarding_pause">Pause</string>
     <string name="onboarding_use_mobile_data">Use mobile data</string>
     <string name="onboarding_retry">Retry</string>
-    <string name="onboarding_provider_privacy_body">Your messages and the files the agent reads go directly to the AI provider you pick, under that provider's terms. With the on-device model, nothing leaves at all.</string>
+    <string name="onboarding_provider_privacy_body">Your messages and the files the agent reads go directly to the AI provider you pick, under that provider\'s terms. With the on-device model, nothing leaves at all.</string>
     <string name="onboarding_keys_privacy_body">API keys and passwords are kept in an encrypted vault on this phone, never shown to the model.</string>
     <string name="onboarding_network_privacy_body">Websites, services and machines are contacted only when you, or the agent with your approval, use them.</string>
     <string name="onboarding_update_check_title">Check GitHub for new versions?</string>
@@ -77,14 +77,14 @@
     <string name="onboarding_installed">Installed</string>
     <string name="onboarding_ready">Ready</string>
     <string name="onboarding_done">Done</string>
-    <string name="onboarding_provider_key_stored">Stored encrypted on this phone. Only sent to {host}.</string>
+    <string name="onboarding_provider_key_stored">Stored encrypted on this phone. Only sent to %1$s.</string>
     <string name="onboarding_context_window">Context window: {count} tokens</string>
-    <string name="onboarding_chatgpt_plan">Use your ChatGPT Plus or Pro plan instead of an API key. Usage counts toward your plan's limits.</string>
-    <string name="onboarding_chatgpt_welcome_title">You're using your ChatGPT plan</string>
-    <string name="onboarding_chatgpt_welcome_body">Locus's requests to this model now use your ChatGPT plan. You can review and manage that usage in ChatGPT settings.</string>
+    <string name="onboarding_chatgpt_plan">Use your ChatGPT Plus or Pro plan instead of an API key. Usage counts toward your plan\'s limits.</string>
+    <string name="onboarding_chatgpt_welcome_title">You\'re using your ChatGPT plan</string>
+    <string name="onboarding_chatgpt_welcome_body">Locus\'s requests to this model now use your ChatGPT plan. You can review and manage that usage in ChatGPT settings.</string>
     <string name="onboarding_ondevice_body">Runs entirely on this phone: no internet, no key, nothing leaves the device. Smaller than cloud models, so best for everyday tasks. You can keep setting up while it downloads.</string>
     <string name="onboarding_downloaded">Downloaded</string>
     <string name="onboarding_checking_download">Checking the download</string>
-    <string name="onboarding_on_wifi_only">On Wi-Fi only: waits while you're on mobile data.</string>
+    <string name="onboarding_on_wifi_only">On Wi-Fi only: waits while you\'re on mobile data.</string>
     <string name="onboarding_context">context</string>
 </resources>
