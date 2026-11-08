@@ -46,6 +46,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
+import dev.locus.feature.browser.R
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
@@ -453,7 +455,7 @@ internal fun BrowserScreen(
             onConfirm = { actions.answerDialog(true, answer) },
             onDismiss = { actions.answerDialog(false, null) },
             content = if (dialog.type == "prompt") {
-                { OutlinedTextField(answer, { answer = it }, Modifier.fillMaxWidth(), singleLine = true, label = { Text("Answer") }) }
+                { OutlinedTextField(answer, { answer = it }, Modifier.fillMaxWidth(), singleLine = true, label = { Text(stringResource(R.string.browser_answer)) }) }
             } else {
                 null
             },
@@ -501,7 +503,7 @@ private fun ControlBanner(ui: BrowserUi, onTakeOver: () -> Unit, onHandBack: () 
     when {
         state.handoffReason != null -> Banner(state.handoffReason.orEmpty(), Tone.Caution, modifier, title = "Your turn") {
             // "Done", the word browser_ask_user's own description tells the model to use ("…, then tap Done"); it opens the same hand-back sheet.
-            Button(onClick = onHandBack) { Text("Done") }
+            Button(onClick = onHandBack) { Text(stringResource(R.string.browser_done)) }
         }
         state.userControl -> Banner(
             if (state.agentWaiting) {
@@ -512,14 +514,14 @@ private fun ControlBanner(ui: BrowserUi, onTakeOver: () -> Unit, onHandBack: () 
             Tone.Caution,
             modifier,
             title = "You have control",
-        ) { Button(onClick = onHandBack) { Text("Hand back") } }
+        ) { Button(onClick = onHandBack) { Text(stringResource(R.string.browser_hand_back)) } }
         // While Locus waits for an answer the card above takes this place: nothing is browsing then.
         ui.agentDriving && state.hasPage && !ui.waitingForAnswer -> Banner(
             "Take over to scroll, type or sign in yourself. Locus waits until you hand back.",
             Tone.Live,
             modifier,
             title = "Locus is browsing",
-        ) { Button(onClick = onTakeOver) { Text("Take over") } }
+        ) { Button(onClick = onTakeOver) { Text(stringResource(R.string.browser_take_over)) } }
     }
 }
 
@@ -630,20 +632,20 @@ internal fun ColumnScope.BrowserMenuItems(
             HorizontalDivider(color = Locus.colors.hairline, thickness = Stroke.hairline)
         }
         DropdownMenuItem(
-            text = { Text("Back") },
+            text = { Text(stringResource(R.string.browser_back)) },
             leadingIcon = { Icon(LocusIcons.ChevronLeft, null) },
             enabled = canDrive && state.canGoBack,
             onClick = { onNavigate(AgentBrowser.UserNavigation.BACK) },
         )
         DropdownMenuItem(
-            text = { Text("Forward") },
+            text = { Text(stringResource(R.string.browser_forward)) },
             leadingIcon = { Icon(LocusIcons.ChevronRight, null) },
             enabled = canDrive && state.canGoForward,
             onClick = { onNavigate(AgentBrowser.UserNavigation.FORWARD) },
         )
-        DropdownMenuItem(text = { Text("Copy link") }, leadingIcon = { Icon(LocusIcons.Copy, null) }, enabled = state.hasPage && state.url.isNotBlank(), onClick = onCopy)
+        DropdownMenuItem(text = { Text(stringResource(R.string.browser_copy_link)) }, leadingIcon = { Icon(LocusIcons.Copy, null) }, enabled = state.hasPage && state.url.isNotBlank(), onClick = onCopy)
         DropdownMenuItem(
-            text = { Text("Open in another app") },
+            text = { Text(stringResource(R.string.browser_open_external)) },
             leadingIcon = { Icon(LocusIcons.OpenExternal, null) },
             enabled = state.hasPage && isWebAddress(state.url),
             onClick = onOpenElsewhere,
@@ -653,7 +655,7 @@ internal fun ColumnScope.BrowserMenuItems(
         if (onSavedLogins != null) {
             DropdownMenuItem(text = { Text("Saved logins") }, leadingIcon = { Icon(LocusIcons.Key, null) }, onClick = onSavedLogins)
         }
-        DropdownMenuItem(text = { Text("Clear browsing data") }, leadingIcon = { Icon(LocusIcons.Trash, null) }, onClick = onClear)
+        DropdownMenuItem(text = { Text(stringResource(R.string.browser_clear_data)) }, leadingIcon = { Icon(LocusIcons.Trash, null) }, onClick = onClear)
     }
 }
 
