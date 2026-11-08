@@ -98,4 +98,25 @@
     <string name="linux_health_copy_command">Copy the command</string>
     <string name="linux_health_developer_options">Developer options</string>
     <string name="linux_health_read_guide">Read the guide</string>
+    <string name="linux_packages_you_installed">You installed</string>
+    <string name="linux_packages_title">Packages</string>
+    <string name="linux_packages_user_total">%1$d you installed · %2$d total</string>
+    <string name="linux_packages_not_installed">Linux isn't installed</string>
+    <string name="linux_packages_empty_intro">Packages show here once Linux is set up.</string>
+    <string name="linux_packages_setup">Set up Linux</string>
+    <string name="linux_packages_list_error">Couldn't list packages</string>
+    <string name="linux_packages_empty_user">You haven't installed any packages yet. Ask the agent, or run `apk add <name>` in the terminal.</string>
+    <string name="linux_packages_uninstall_title">Uninstall %1$s?</string>
+    <string name="linux_packages_uninstall_message">Runs `apk del %1$s`. Packages it pulled in that nothing else needs go too. Your workspace files stay, and you can install it again.</string>
+    <string name="linux_packages_uninstall">Uninstall</string>
+    <string name="linux_packages_checking_updates">Checking Alpine's repositories for updates…</string>
+    <string name="linux_packages_update_error">Couldn't check for updates</string>
+    <string name="linux_packages_try_again">Try again</string>
+    <string name="linux_packages_update_explanation">Updates are checked when you ask; it downloads Alpine's package index.</string>
+    <string name="linux_packages_check_updates">Check for updates</string>
+    <string name="linux_packages_up_to_date">Everything is up to date.</string>
+    <string name="linux_packages_updates_available">%1$d updates available</string>
+    <string name="linux_packages_more_updates">and %1$d more</string>
+    <string name="linux_packages_install_updates">Install them with `apk upgrade` in the terminal.</string>
+    <string name="linux_packages_open_terminal">Open terminal</string>
 </resources>
