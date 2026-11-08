@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,7 +68,7 @@ import dev.locus.core.markdown.documentTypography
  */
 internal fun LazyListScope.updatesSection(ui: UpdatesUiState, actions: UpdateActions) {
     val info = ui.info ?: return
-    item { SectionLabel("Updates", SectionPadding) }
+    item { SectionLabel(stringResource(R.string.updates_title), SectionPadding) }
     item {
         CardGroup {
             val note = availabilityNote(info.availability)
@@ -76,7 +77,7 @@ internal fun LazyListScope.updatesSection(ui: UpdatesUiState, actions: UpdateAct
             }
             if (info.availability == UpdateAvailability.Available) {
                 SwitchRow(
-                    title = "Check GitHub for updates",
+                    title = stringResource(R.string.updates_check_github),
                     subtitle = "About once a day on Wi-Fi. One request to GitHub, with nothing about you; you choose whether to install.",
                     checked = info.enabled,
                     onCheckedChange = actions.setEnabled,
@@ -86,7 +87,7 @@ internal fun LazyListScope.updatesSection(ui: UpdatesUiState, actions: UpdateAct
             if (info.availability.canCheck) {
                 if (note != null || info.availability == UpdateAvailability.Available) GroupDivider(Insets.iconRow)
                 SwitchRow(
-                    title = "Include beta versions",
+                    title = stringResource(R.string.updates_include_beta),
                     subtitle = BETA_SUBTITLE,
                     checked = info.beta,
                     onCheckedChange = actions.setBeta,
@@ -98,13 +99,13 @@ internal fun LazyListScope.updatesSection(ui: UpdatesUiState, actions: UpdateAct
                 val checking = ui.state == UpdateState.Checking
                 val busy = ui.state is UpdateState.Downloading || ui.state is UpdateState.Verifying || ui.state is UpdateState.Installing
                 ListRow(
-                    title = "Check now",
+                    title = stringResource(R.string.updates_check_now),
                     subtitle = updateStatusLine(info, ui.state, System.currentTimeMillis()) { t, n -> relativeTime(t, n) },
                     subtitleMaxLines = 2,
                     onClick = actions.checkNow,
                     enabled = !checking && !busy,
                     leading = { IconTile(LocusIcons.Regenerate) },
-                    trailing = if (checking) ({ InlineSpinner(contentDescription = "Checking for updates") }) else null,
+                    trailing = if (checking) ({ InlineSpinner(contentDescription = stringResource(R.string.updates_checking)) }) else null,
                 )
             }
         }
@@ -113,7 +114,7 @@ internal fun LazyListScope.updatesSection(ui: UpdatesUiState, actions: UpdateAct
         is UpdateState.Available -> if (s.skipped) {
             item {
                 SectionNote("You skipped ${s.release.version}. Locus won't mention it again; a newer version will show.", NotePadding)
-                TextButton(onClick = actions.unskip, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text("Show ${s.release.version} again") }
+                TextButton(onClick = actions.unskip, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text(stringResource(R.string.updates_show_again, s.release.version)) }
             }
         } else {
             item { ReleaseCard(s.release, info.availability, ui.state, actions) }
@@ -170,7 +171,7 @@ private fun ReleaseCard(release: Release, availability: UpdateAvailability, stat
                 // A beta says so before anything else: the title, then a chip a glance can't miss.
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
                     Text("Beta available: ${release.version}", Modifier.weight(1f, fill = false).semantics { heading() }, style = LocusType.cardTitle)
-                    StatusPill("Beta", Tone.Caution)
+                    StatusPill(stringResource(R.string.updates_beta), Tone.Caution)
                 }
                 SupportingText(BETA_RELEASE_NOTE)
             } else {
@@ -188,10 +189,10 @@ private fun ReleaseCard(release: Release, availability: UpdateAvailability, stat
             }
             when (state) {
                 is UpdateState.Downloading -> {
-                    Meter(state.fraction, tone = Tone.Live, size = MeterSize.Medium, contentDescription = "Download progress")
+                    Meter(state.fraction, tone = Tone.Live, size = MeterSize.Medium, contentDescription = stringResource(R.string.updates_download_progress))
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         SupportingText(downloadProgress(state.bytes, state.total), Modifier.weight(1f).semantics { liveRegion = LiveRegionMode.Polite })
-                        TextButton(onClick = actions.cancel) { Text("Cancel") }
+                        TextButton(onClick = actions.cancel) { Text(stringResource(R.string.updates_cancel)) }
                     }
                 }
                 is UpdateState.Verifying -> Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
@@ -200,7 +201,7 @@ private fun ReleaseCard(release: Release, availability: UpdateAvailability, stat
                 }
                 is UpdateState.ReadyToInstall -> {
                     SupportingText("Verified: the checksum matches the release and it's signed with the same key as this Locus. Android will ask you to confirm.")
-                    Button(onClick = actions.install, modifier = Modifier.fillMaxWidth().heightIn(min = Sizes.touchTarget)) { Text("Install update") }
+                    Button(onClick = actions.install, modifier = Modifier.fillMaxWidth().heightIn(min = Sizes.touchTarget)) { Text(stringResource(R.string.updates_install)) }
                 }
                 is UpdateState.Installing -> Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
                     InlineSpinner()
@@ -210,13 +211,13 @@ private fun ReleaseCard(release: Release, availability: UpdateAvailability, stat
                     if (availability == UpdateAvailability.DebugBuild) {
                         SupportingText("Debug build: updates come from your own builds, so there's nothing to install here.")
                     }
-                    // The main action is full width, like "Install update" in the same card.
+                    // The main action is full width, like stringResource(R.string.updates_install) in the same card.
                     if (availability == UpdateAvailability.Available) {
-                        Button(onClick = actions.download, modifier = Modifier.fillMaxWidth().heightIn(min = Sizes.touchTarget)) { Text("Download and verify") }
+                        Button(onClick = actions.download, modifier = Modifier.fillMaxWidth().heightIn(min = Sizes.touchTarget)) { Text(stringResource(R.string.updates_download_verify)) }
                     }
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.sm), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-                        TextButton(onClick = { actions.skip(release.version) }, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text("Skip this version") }
-                        TextButton(onClick = { uri.openUri(release.htmlUrl.ifBlank { RELEASES_PAGE }) }, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text("Release page") }
+                        TextButton(onClick = { actions.skip(release.version) }, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text(stringResource(R.string.updates_skip_version)) }
+                        TextButton(onClick = { uri.openUri(release.htmlUrl.ifBlank { RELEASES_PAGE }) }, modifier = Modifier.heightIn(min = Sizes.touchTarget)) { Text(stringResource(R.string.updates_release_page)) }
                     }
                 }
             }
@@ -231,7 +232,7 @@ private fun ReleaseCard(release: Release, availability: UpdateAvailability, stat
                 icon = LocusIcons.Note,
                 startExpanded = true,
                 expandKey = release.version,
-                iconDescription = "Release notes",
+                iconDescription = stringResource(R.string.updates_release_notes),
             ) {
                 ReleaseNotes(notes)
             }
@@ -242,7 +243,7 @@ private fun ReleaseCard(release: Release, availability: UpdateAvailability, stat
 /** The row that says where updates come from when this build doesn't install them itself. */
 private fun availabilityTitle(availability: UpdateAvailability): String = when (availability) {
     is UpdateAvailability.FromStore -> "Updated by ${availability.store}"
-    UpdateAvailability.DebugBuild -> "Debug build"
+    UpdateAvailability.DebugBuild -> stringResource(R.string.updates_debug_build)
     UpdateAvailability.DisabledInBuild, UpdateAvailability.Available -> "Updated by your app store"
 }
 
@@ -273,12 +274,12 @@ private fun ProblemBanner(state: UpdateState.Failed, actions: UpdateActions) {
         else -> Tone.Critical
     }
     val title = when (state.problem) {
-        UpdateProblem.SignatureMismatch -> "Signed with a different key"
-        UpdateProblem.ChecksumMismatch -> "Checksum didn't match"
-        UpdateProblem.InstallNotAllowed -> "Allow Locus to install apps"
-        UpdateProblem.NoNetwork -> "No connection"
-        UpdateProblem.InstallCancelled -> "Update cancelled"
-        else -> if (release != null) "Couldn't update to ${release.version}" else "Couldn't check for updates"
+        UpdateProblem.SignatureMismatch -> stringResource(R.string.updates_different_key)
+        UpdateProblem.ChecksumMismatch -> stringResource(R.string.updates_checksum_mismatch)
+        UpdateProblem.InstallNotAllowed -> stringResource(R.string.updates_allow_install)
+        UpdateProblem.NoNetwork -> stringResource(R.string.updates_no_connection)
+        UpdateProblem.InstallCancelled -> stringResource(R.string.updates_cancelled)
+        else -> if (release != null) "Couldn't update to ${release.version}" else stringResource(R.string.updates_check_failed)
     }
     Banner(
         text = message,
@@ -288,7 +289,7 @@ private fun ProblemBanner(state: UpdateState.Failed, actions: UpdateActions) {
         actionsBelow = true,
     ) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.xs, Alignment.End), modifier = Modifier.fillMaxWidth()) {
-            TextButton(onClick = actions.dismiss) { Text("Dismiss") }
+            TextButton(onClick = actions.dismiss) { Text(stringResource(R.string.updates_dismiss)) }
             when (state.problem) {
                 UpdateProblem.InstallNotAllowed -> TextButton(onClick = {
                     // Android 8+'s per-app "Install unknown apps" page for Locus.
@@ -301,7 +302,7 @@ private fun ProblemBanner(state: UpdateState.Failed, actions: UpdateActions) {
                 UpdateProblem.NoNetwork, UpdateProblem.ChecksumMismatch, UpdateProblem.Storage, is UpdateProblem.Server, is UpdateProblem.InstallFailed ->
                     TextButton(onClick = actions.retry) { Text("Try again") }
                 is UpdateProblem.NoApkForDevice, UpdateProblem.NoChecksum, UpdateProblem.BadApk ->
-                    TextButton(onClick = { uri.openUri(release?.htmlUrl?.ifBlank { null } ?: RELEASES_PAGE) }) { Text("Release page") }
+                    TextButton(onClick = { uri.openUri(release?.htmlUrl?.ifBlank { null } ?: RELEASES_PAGE) }) { Text(stringResource(R.string.updates_release_page)) }
                 is UpdateProblem.RateLimited -> Unit
             }
         }
