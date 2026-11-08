@@ -19,9 +19,9 @@
     <string name="skills">技能</string>
     <string name="binary_file_not_shown">二进制文件，无法在此显示。</string>
     <string name="approve_new_permissions">批准新增权限？</string>
-    <string name="approve">批准</string>
-    <string name="remove">移除</string>
-    <string name="needs_review">等待审核</string>
+
+
+
     <string name="undeclared">未声明</string>
     <string name="manifest_parse_error">清单文件无法解析</string>
     <string name="inferred_manifest">推断的权限清单</string>
@@ -29,8 +29,8 @@
     <string name="skill_md">SKILL.md</string>
     <string name="read_the_file">读取文件</string>
     <string name="script">脚本</string>
-    <string name="discard_change">放弃更改</string>
-    <string name="reject">拒绝</string>
+
+
     <string name="importing">正在导入</string>
     <string name="cancel">取消</string>
     <string name="couldnt_import">导入失败</string>
