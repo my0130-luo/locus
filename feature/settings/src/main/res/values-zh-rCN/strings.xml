@@ -365,4 +365,20 @@
     <string name="updates_cancelled">更新已取消</string>
     <string name="updates_check_failed">无法检查更新</string>
     <string name="updates_dismiss">关闭</string>
+    <string name="phone_alarms_reminders">闹钟与提醒</string>
+    <string name="phone_continue">继续</string>
+    <string name="phone_not_now">暂不</string>
+    <string name="phone_turned_off_android">已在 Android 系统中关闭</string>
+    <string name="phone_open_app_info">打开应用信息</string>
+    <string name="phone_calendar_permission_title">允许 Locus 修改你的日历？</string>
+    <string name="phone_title">手机</string>
+    <string name="phone_calendar_choose">允许 Locus 修改的日历</string>
+    <string name="phone_checking_calendar">正在检查日历权限…</string>
+    <string name="phone_allow_calendar">允许访问日历</string>
+    <string name="phone_pick_calendar_hint">然后选择 Locus 添加日程时使用的日历。</string>
+    <string name="phone_calendar_off">日历权限已关闭</string>
+    <string name="phone_no_calendar">没有可修改的日历</string>
+    <string name="phone_reminders">提醒</string>
+    <string name="phone_exact_timing">准时提醒</string>
+    <string name="phone_notifications">通知</string>
 </resources>
