@@ -73,8 +73,7 @@ internal fun ColumnScope.ProviderStep(state: OnboardingUiState, viewModel: Onboa
         }
         // What the two buttons below do (docs/design/onboarding-quick-start.md).
         SupportingText(
-            "That's all Locus needs. Quick start opens Home now; naming your agent, Linux, SSH machines and connectors " +
-                "wait there as cards you can finish or dismiss. Continue full setup goes through them now.",
+            stringResource(R.string.onboarding_quick_start_explanation),
             style = LocusType.rowSupporting,
         )
     }
@@ -149,7 +148,7 @@ private fun RemoteFields(viewModel: OnboardingViewModel, localNetwork: LocalNetw
         label = { Text(stringResource(R.string.onboarding_model)) },
         placeholder = { Text(stringResource(R.string.onboarding_model_placeholder)) },
         singleLine = true,
-        supportingText = draft.contextWindow?.let { { Text("Context window: ${compactCount(it.toLong())} tokens", style = MonoCaption) } },
+        supportingText = draft.contextWindow?.let { { Text(stringResource(R.string.onboarding_context_window_detail, compactCount(it.toLong())), style = MonoCaption) } },
         modifier = Modifier.fillMaxWidth(),
     )
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -196,7 +195,7 @@ private fun ChatGptSignInFields(viewModel: OnboardingViewModel) {
         SupportingText(stringResource(R.string.onboarding_chatgpt_plan))
         ContinueWithChatGptButton(onClick = viewModel::signInChatGpt, busy = viewModel.chatGptSignIn.running)
         Row(verticalAlignment = Alignment.CenterVertically) {
-            JobStatus(viewModel.chatGptSignIn, "Finish signing in in the browser…", Modifier.weight(1f))
+            JobStatus(viewModel.chatGptSignIn, stringResource(R.string.onboarding_chatgpt_signing_in), Modifier.weight(1f))
             if (viewModel.chatGptSignIn.running) TextButton(onClick = viewModel::cancelChatGptSignIn) { Text(stringResource(R.string.onboarding_cancel)) }
         }
     }
