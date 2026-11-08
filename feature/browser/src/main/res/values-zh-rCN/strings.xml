@@ -37,4 +37,13 @@
     <string name="browser_browsing_title">Locus 正在浏览</string>
     <string name="browser_saved_logins">已保存的登录信息</string>
     <string name="browser_tabs_count">%1$d 个标签页</string>
+    <string name="browser_standalone_title">自行浏览</string>
+    <string name="browser_nothing_open_title">尚未打开页面</string>
+    <string name="browser_standalone_help">在上方输入网址。你在这里登录的网站会在每次对话中保持登录状态，直到你清除浏览数据。</string>
+    <string name="browser_agent_help">在上方输入网址，或让 Locus 帮你浏览。页面会实时显示在这里，你也可以随时接管操作。</string>
+    <string name="browser_confirm_hand_back">交还控制权</string>
+    <string name="browser_confirm_clear">清除</string>
+    <string name="browser_user_control_waiting">Locus 正在等待你。你交还控制权之前，它看不到当前页面，也不会看到你输入的内容。</string>
+    <string name="browser_user_control_paused">Locus 已暂停在当前页面。你交还控制权之前，它看不到页面内容，也不会看到你输入的内容。</string>
+    <string name="browser_takeover_help">接管后，你可以自行滚动页面、输入内容或登录。Locus 会等待你交还控制权。</string>
 </resources>
