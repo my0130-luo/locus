@@ -124,6 +124,7 @@ private fun TasksScreen(onBack: () -> Unit, onOpenChat: (String) -> Unit, viewMo
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var sheet by remember { mutableStateOf<SheetTarget?>(null) }
     val feedback = Locus.feedback
+    val openChatLabel = stringResource(R.string.tasks_open_chat)
     val openChat by rememberUpdatedState(onOpenChat)
     val scope = androidx.compose.runtime.rememberCoroutineScope()
     LaunchedEffect(viewModel) {
@@ -132,7 +133,7 @@ private fun TasksScreen(onBack: () -> Unit, onOpenChat: (String) -> Unit, viewMo
                 is TaskEvent.RunFinished -> {
                     val message = runFinishedMessage(event)
                     val chat = event.chatId?.takeIf { event.status != RunNowStatus.SKIPPED }
-                    feedback.show(message.first, message.second, action = chat?.let { stringResource(R.string.tasks_open_chat) }, onAction = chat?.let { { openChat(it) } })
+                    feedback.show(message.first, message.second, action = chat?.let { openChatLabel }, onAction = chat?.let { { openChat(it) } })
                 }
                 is TaskEvent.TestSent -> testSentMessage(event).let { (text, tone) -> feedback.show(text, tone) }
                 is TaskEvent.Failed -> feedback.show(event.message, Tone.Critical)
