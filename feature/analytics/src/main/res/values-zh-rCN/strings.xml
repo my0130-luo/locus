@@ -20,4 +20,20 @@
     <string name="analytics_turn_on_prices">启用价格信息</string>
     <string name="analytics_try_again">重试</string>
     <string name="analytics_today">今天</string>
+    <string name="analytics_period_7_days">7 天</string>
+    <string name="analytics_period_30_days">30 天</string>
+    <string name="analytics_period_all_time">全部时间</string>
+    <string name="analytics_input_tokens">输入 %1$s</string>
+    <string name="analytics_output_tokens">输出 %1$s</string>
+    <string name="analytics_cached_percent">缓存命中 %1$d%%</string>
+    <string name="analytics_reasoning_tokens">其中思考令牌 %1$s</string>
+    <string name="analytics_requests">请求次数</string>
+    <string name="analytics_median_reply">回复中位耗时</string>
+    <string name="analytics_slowest_five_percent">最慢的 5%</string>
+    <string name="analytics_approvals">审批</string>
+    <string name="analytics_calls">调用次数</string>
+    <string name="analytics_succeeded">成功</string>
+    <string name="analytics_failed">失败</string>
+    <string name="analytics_paused">已暂停</string>
+    <string name="analytics_removed">已移除</string>
 </resources>
