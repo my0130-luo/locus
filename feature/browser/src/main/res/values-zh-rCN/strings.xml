@@ -46,4 +46,15 @@
     <string name="browser_user_control_waiting">Locus 正在等待你。你交还控制权之前，它看不到当前页面，也不会看到你输入的内容。</string>
     <string name="browser_user_control_paused">Locus 已暂停在当前页面。你交还控制权之前，它看不到页面内容，也不会看到你输入的内容。</string>
     <string name="browser_takeover_help">接管后，你可以自行滚动页面、输入内容或登录。Locus 会等待你交还控制权。</string>
+    <string name="browser_your_browsing">你的浏览</string>
+    <string name="browser_link_label">链接</string>
+    <string name="browser_login_updated">登录信息已更新</string>
+    <string name="browser_login_saved">登录信息已保存</string>
+    <string name="browser_waiting_answer">Locus 正在等待你在下方作答。</string>
+    <string name="browser_using_page">Locus 正在使用此页面。</string>
+    <string name="browser_data_cleared">浏览数据已清除</string>
+    <string name="browser_untitled">未命名页面</string>
+    <string name="browser_page_says">%1$s 提示</string>
+    <string name="browser_this_page">此页面</string>
+    <string name="browser_ok">确定</string>
 </resources>
