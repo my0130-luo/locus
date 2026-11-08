@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="analytics_title">数据洞察</string>
+    <string name="analytics_subtitle">根据本机对话统计</string>
+    <string name="analytics_empty_title">暂无可统计的数据</string>
+    <string name="analytics_empty_body">在此时间段内与 Locus 对话后，令牌用量、回复速度和工具调用情况就会显示在这里。</string>
+    <string name="analytics_estimated_spend">预估费用</string>
+    <string name="analytics_spend_by_model">按模型统计费用</string>
+    <string name="analytics_spend_by_source">按来源统计费用</string>
+    <string name="analytics_by_model">按模型统计</string>
+    <string name="analytics_where_tokens_went">令牌用途分布</string>
+    <string name="analytics_tools">工具</string>
+    <string name="analytics_slowest_tools">耗时最长的工具</string>
+    <string name="analytics_slowest_note">仅统计无需向你请求确认的调用耗时。</string>
+    <string name="analytics_busiest_chats">最活跃的对话</string>
+    <string name="analytics_scheduled_tasks">计划任务</string>
+    <string name="analytics_tokens">令牌</string>
+    <string name="analytics_spend">费用</string>
+    <string name="analytics_estimate">估算</string>
+    <string name="analytics_turn_on_prices">启用价格信息</string>
+    <string name="analytics_try_again">重试</string>
+    <string name="analytics_today">今天</string>
+</resources>
