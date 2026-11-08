@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalContext
 import dev.locus.core.designsystem.Banner
 import dev.locus.core.designsystem.Locus
@@ -55,7 +56,7 @@ internal fun FilePreview(
                 val feedback = Locus.feedback
                 // Seeing it whole means the network: the user's call, in an app of their choosing.
                 Banner(notice, Tone.Info, Modifier.padding(horizontal = Spacing.lg, vertical = Spacing.sm)) {
-                    TextButton(onClick = { openWith(context, file, feedback) }) { Text("Open with…") }
+                    TextButton(onClick = { openWith(context, file, feedback) }) { Text(stringResource(R.string.ws_open_with)) }
                 }
             }
             Box(Modifier.weight(1f)) { WebPreview(text, isSvg = extensionOf(file.name) == "svg") }
