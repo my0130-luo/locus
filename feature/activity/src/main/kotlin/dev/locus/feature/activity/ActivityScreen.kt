@@ -321,7 +321,7 @@ private fun LazyListScope.runItems(
             horizontalArrangement = Arrangement.End,
         ) {
             if (!inChat) TextButton(onClick = onViewChat) { Text(stringResource(R.string.activity_view_all_chat)) }
-            if (run.chat.exists) TextButton(onClick = onOpenChat) { Text("Open chat") }
+            if (run.chat.exists) TextButton(onClick = onOpenChat) { Text(stringResource(R.string.activity_open_chat)) }
         }
     }
 }
@@ -411,7 +411,7 @@ private fun DetailSheet(entry: AuditEntry, chat: RunChat, onDismiss: () -> Unit,
         title = toolLabel(entry.toolName, entry.argumentsJson, done = !entry.isError && !entry.refused),
         onDismiss = onDismiss,
         subtitle = "$when_ · ${durationLabel(entry.finishedAt - entry.startedAt).trim()}",
-        action = if (onOpenChat != null) "Open chat" else null,
+        action = if (onOpenChat != null) stringResource(R.string.activity_open_chat) else null,
         onAction = onOpenChat,
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
