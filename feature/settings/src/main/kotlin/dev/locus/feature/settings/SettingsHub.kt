@@ -39,7 +39,7 @@ internal fun SettingsHub(state: SettingsUiState, onBack: () -> Unit, onOpen: (Se
     val missingCredential = state.providers.firstOrNull { it.config.needsCredential && !it.hasKey }?.config
     val version = appVersion()
     // Until the settings have loaded, every summary shows the same placeholder rather than a guess.
-    fun summary(text: String) = if (state.loading) LOADING_SUMMARY else text
+    fun summary(text: String) = if (state.loading) stringResource(R.string.settings_loading) else text
 
     SettingsPageScaffold(stringResource(R.string.settings_title), onBack) {
         item { SectionLabel(stringResource(R.string.settings_providers), SectionPadding) }
