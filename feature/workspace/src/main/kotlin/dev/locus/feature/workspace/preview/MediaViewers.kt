@@ -241,7 +241,7 @@ internal fun AudioPlayer(file: File, modifier: Modifier = Modifier) {
             modifier = Modifier.padding(top = Spacing.lg),
         ) {
             if (!playing) Icon(LocusIcons.Play, contentDescription = null, modifier = Modifier.padding(end = Spacing.xs))
-            Text(if (playing) "Pause" else "Play")
+            Text(if (playing) stringResource(R.string.preview_pause) else stringResource(R.string.preview_play))
         }
     }
 }
