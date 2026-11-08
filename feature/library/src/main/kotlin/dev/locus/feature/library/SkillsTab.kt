@@ -30,6 +30,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -86,25 +87,25 @@ internal fun SkillsTab(
 
     if (library.skills.isEmpty() && status == null && savedWorkflows.isEmpty()) {
         EmptyState(
-            "No skills yet",
+            stringResource(R.string.no_skills_yet),
             "Skills are reusable how-tos. Ask Locus to “save that as a skill” after a task, or import one from GitHub or a zip. Either way you review it here first. " +
                 "To repeat a whole task with new inputs, open its receipt and tap Save as workflow.",
             modifier,
             icon = LocusIcons.Library,
-            action = { Button(onClick = { importing = true }) { Text("Import a skill") } },
+            action = { Button(onClick = { importing = true }) { Text(stringResource(R.string.import_a_skill)) } },
         )
     } else {
         LazyColumn(modifier.fillMaxSize(), contentPadding = listPadding) {
             status?.let { item { ImportBanner(it, viewModel) } }
             if (savedWorkflows.isNotEmpty()) {
                 item {
-                    SectionLabel("Workflows")
+                    SectionLabel(stringResource(R.string.workflows))
                     SectionNote("Tasks you saved to run again with new inputs, the same tools and the same approvals.")
                 }
                 item { WorkflowsCard(workflows, onOpenChat) }
             }
             item {
-                SectionLabel("Skills")
+                SectionLabel(stringResource(R.string.skills))
                 SectionNote("Reusable how-tos Locus follows. Ones it drafts or you import wait here for your review.")
             }
             item { CardGroup {
@@ -114,7 +115,7 @@ internal fun SkillsTab(
                     SkillRow(skill, replacesActive, if (replacesActive) library.skillUpdates[skill.name] else null, viewModel)
                 }
                 if (library.skills.isNotEmpty()) GroupDivider(inset = Insets.iconRow)
-                AddRow("Import a skill", LocusIcons.Import) { importing = true }
+                AddRow(stringResource(R.string.import_a_skill), LocusIcons.Import) { importing = true }
             } }
         }
     }
@@ -134,7 +135,7 @@ internal fun SkillsTab(
             onDismiss = viewModel::closeSkillFile,
         ) {
             if (file.text == null) {
-                SupportingText("A binary file, not shown here.", style = LocusType.rowSupporting)
+                SupportingText(stringResource(R.string.binary_file_not_shown), style = LocusType.rowSupporting)
             } else {
                 CodeBox(file.text, maxHeight = 480)
             }
@@ -160,10 +161,10 @@ private fun SkillRow(skill: AgentHome.Skill, replacesActive: Boolean, update: Sk
     }
     if (confirmGrown && update != null) {
         LocusSheet(
-            title = "Approve new permissions?",
+            title = stringResource(R.string.approve_new_permissions),
             subtitle = "This version of “${skill.name}” asks for more than the one you have:\n" + update.lines().filter { it.startsWith("New") }.joinToString("\n") { "• $it" },
             onDismiss = { confirmGrown = false },
-            action = "Approve",
+            action = stringResource(R.string.approve),
             actionTone = Tone.Caution,
             onAction = { confirmGrown = false; viewModel.approveSkill(skill.name) },
         ) {}
@@ -172,7 +173,7 @@ private fun SkillRow(skill: AgentHome.Skill, replacesActive: Boolean, update: Sk
         ConfirmRemove(
             title = "Remove “${skill.name}”?",
             body = "Locus stops using this skill. Its files are deleted from this phone.",
-            action = "Remove",
+            action = stringResource(R.string.remove),
             onDismiss = { confirmRemove = false },
             onConfirm = { confirmRemove = false; viewModel.removeSkill(skill.name) },
         )
@@ -183,8 +184,8 @@ private fun SkillRow(skill: AgentHome.Skill, replacesActive: Boolean, update: Sk
         leading = { SkillTile(skill) },
         badge = when {
             skill.changedOutside -> CHANGED_OUTSIDE
-            skill.draft -> "Needs review"
-            !skill.manifest.declared -> "Undeclared"
+            skill.draft -> stringResource(R.string.needs_review)
+            !skill.manifest.declared -> stringResource(R.string.undeclared)
             else -> null
         },
         badgeTone = when {
@@ -201,13 +202,13 @@ private fun SkillRow(skill: AgentHome.Skill, replacesActive: Boolean, update: Sk
             SupportingText("Imported from ${source.describe()}")
         }
         skill.manifestProblem?.let {
-            Banner("$it Until it's fixed, every call while this skill is active asks you first.", Tone.Critical, title = "Its manifest doesn't parse")
+            Banner("$it Until it's fixed, every call while this skill is active asks you first.", Tone.Critical, title = stringResource(R.string.manifest_parse_error))
         }
         if (skill.draft && skill.manifestInferred && skill.manifest.declared) {
             Banner(
                 "Locus wrote this manifest from what the instructions mention. Check it: once approved, anything else this skill leads to asks you first.",
                 Tone.Caution,
-                title = "Inferred manifest",
+                title = stringResource(R.string.inferred_manifest),
             )
         }
         update?.let { UpdateDiff(it, current = "your active one") }
@@ -217,7 +218,7 @@ private fun SkillRow(skill: AgentHome.Skill, replacesActive: Boolean, update: Sk
                 "Someone else wrote this skill. Read SKILL.md and every file below before approving: Locus follows these instructions when it uses the skill, " +
                     "and any scripts in it run in the Linux sandbox.",
                 Tone.Caution,
-                title = "Review before approving",
+                title = stringResource(R.string.review_before_approving),
             )
         }
         if (replacesActive && !skill.changedOutside) {
@@ -229,7 +230,7 @@ private fun SkillRow(skill: AgentHome.Skill, replacesActive: Boolean, update: Sk
         }
         if (source != null && skill.raw.isNotEmpty()) {
             // Imported text is shown as written, so nothing (like an HTML comment) is hidden by rendering.
-            Text("SKILL.md", style = LocusType.label)
+            Text(stringResource(R.string.skill_md), style = LocusType.label)
             CodeBox(skill.raw, maxHeight = 360)
         } else {
             Markdown(
@@ -247,13 +248,13 @@ private fun SkillRow(skill: AgentHome.Skill, replacesActive: Boolean, update: Sk
                 skill.files.forEach { path ->
                     // A file opens to read: its type icon, the path, a Script chip for code that runs, and a chevron.
                     Row(
-                        Modifier.fillMaxWidth().heightIn(min = Sizes.touchTarget).clickable(onClickLabel = "Read the file") { viewModel.openSkillFile(skill, path) },
+                        Modifier.fillMaxWidth().heightIn(min = Sizes.touchTarget).clickable(onClickLabel = stringResource(R.string.read_the_file)) { viewModel.openSkillFile(skill, path) },
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(Spacing.sm),
                     ) {
                         FileTypeIcon(path, isDirectory = false, size = IconSize.tileSmall)
                         Text(path, Modifier.weight(1f), style = LocusType.code)
-                        if (isScript(path)) LocusChip("Script", tone = Tone.Caution)
+                        if (isScript(path)) LocusChip(stringResource(R.string.script), tone = Tone.Caution)
                         RowChevron()
                     }
                 }
@@ -263,7 +264,7 @@ private fun SkillRow(skill: AgentHome.Skill, replacesActive: Boolean, update: Sk
         @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
         androidx.compose.foundation.layout.FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.sm, Alignment.End), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
             if (skill.draft) {
-                OutlinedButton(onClick = { viewModel.rejectSkill(skill.name) }) { Text(if (skill.changedOutside) "Discard change" else "Reject") }
+                OutlinedButton(onClick = { viewModel.rejectSkill(skill.name) }) { Text(if (skill.changedOutside) stringResource(R.string.discard_change) else stringResource(R.string.reject)) }
                 Button(
                     onClick = {
                         when {
@@ -272,9 +273,9 @@ private fun SkillRow(skill: AgentHome.Skill, replacesActive: Boolean, update: Sk
                             else -> viewModel.approveSkill(skill.name)
                         }
                     },
-                ) { Text("Approve") }
+                ) { Text(stringResource(R.string.approve)) }
             } else {
-                TextButton(onClick = { confirmRemove = true }) { Text("Remove", color = Locus.colors.critical) }
+                TextButton(onClick = { confirmRemove = true }) { Text(stringResource(R.string.remove), color = Locus.colors.critical) }
             }
         }
     }
@@ -313,20 +314,20 @@ private fun CodeBox(text: String, maxHeight: Int) {
 private fun ImportBanner(status: SkillImportStatus, viewModel: LibraryViewModel) {
     val modifier = Modifier.padding(bottom = Spacing.md)
     when (status) {
-        is SkillImportStatus.Working -> Banner("${status.label}…", Tone.Live, modifier, title = "Importing") {
-            TextButton(onClick = viewModel::cancelImport) { Text("Cancel") }
+        is SkillImportStatus.Working -> Banner("${status.label}…", Tone.Live, modifier, title = stringResource(R.string.importing)) {
+            TextButton(onClick = viewModel::cancelImport) { Text(stringResource(R.string.cancel)) }
         }
-        is SkillImportStatus.Failed -> Banner(status.message, Tone.Critical, modifier, title = "Couldn't import") {
-            TextButton(onClick = viewModel::cancelImport) { Text("OK") }
+        is SkillImportStatus.Failed -> Banner(status.message, Tone.Critical, modifier, title = stringResource(R.string.couldnt_import)) {
+            TextButton(onClick = viewModel::cancelImport) { Text(stringResource(R.string.ok)) }
         }
         is SkillImportStatus.Imported -> Banner(
             "“${status.name}” is a draft below. Nothing in it is used until you approve it.",
             Tone.Brand,
             modifier,
-            title = "Imported for review",
-        ) { TextButton(onClick = viewModel::cancelImport) { Text("OK") } }
-        is SkillImportStatus.Review -> Banner("“${status.bundle.name}” is waiting for you to read what it needs.", Tone.Caution, modifier, title = "Review the import") {
-            TextButton(onClick = viewModel::cancelImport) { Text("Cancel") }
+            title = stringResource(R.string.imported_for_review),
+        ) { TextButton(onClick = viewModel::cancelImport) { Text(stringResource(R.string.ok)) } }
+        is SkillImportStatus.Review -> Banner("“${status.bundle.name}” is waiting for you to read what it needs.", Tone.Caution, modifier, title = stringResource(R.string.review_the_import)) {
+            TextButton(onClick = viewModel::cancelImport) { Text(stringResource(R.string.cancel)) }
         }
     }
 }
@@ -335,23 +336,23 @@ private fun ImportBanner(status: SkillImportStatus, viewModel: LibraryViewModel)
 private fun ImportSheet(onDismiss: () -> Unit, onGitHub: (String) -> Unit, onZip: () -> Unit) {
     var url by rememberSaveable { mutableStateOf("https://github.com/") }
     LocusSheet(
-        title = "Import a skill",
+        title = stringResource(R.string.import_a_skill),
         subtitle = "An Agent Skill is a folder with a SKILL.md. It's saved as a draft for you to review; nothing runs until you approve it.",
         onDismiss = onDismiss,
-        action = "Import",
+        action = stringResource(R.string.import_action),
         actionEnabled = url.trim().let { it.contains("github.com/") && it.substringAfter("github.com/").count { c -> c == '/' } >= 1 },
         onAction = { onGitHub(url.trim()) },
     ) {
         OutlinedTextField(
             url,
             { url = it.trim() },
-            label = { Text("GitHub link") },
+            label = { Text(stringResource(R.string.github_link)) },
             supportingText = { Text("A skill folder (…/tree/main/skills/name) or a repository with SKILL.md at the top. Uses your GitHub token from Integrations if you added one.") },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
             modifier = Modifier.fillMaxWidth(),
         )
-        OutlinedButton(onClick = onZip, modifier = Modifier.fillMaxWidth()) { Text("Choose a zip file instead") }
+        OutlinedButton(onClick = onZip, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.choose_zip_instead)) }
     }
 }
 
@@ -387,7 +388,7 @@ private fun ImportReviewSheet(status: SkillImportStatus.Review, viewModel: Libra
             OutlinedTextField(
                 name,
                 { name = it.trim().lowercase() },
-                label = { Text("New name") },
+                label = { Text(stringResource(R.string.new_name)) },
                 isError = problem != null,
                 supportingText = problem?.let { { Text(it) } },
                 singleLine = true,
@@ -397,14 +398,14 @@ private fun ImportReviewSheet(status: SkillImportStatus.Review, viewModel: Libra
             if (grown) {
                 Row(Modifier.fillMaxWidth().clickable { accepted = !accepted }, verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(checked = accepted, onCheckedChange = { accepted = it })
-                    Text("I accept the new permissions", style = LocusType.rowSupporting)
+                    Text(stringResource(R.string.accept_new_permissions), style = LocusType.rowSupporting)
                 }
             }
             // Actions wrap to a second line at a large font instead of running off the card.
             @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
             androidx.compose.foundation.layout.FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Spacing.sm, Alignment.End), verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
                 TextButton(onClick = { viewModel.saveImport(acceptedNewPermissions = accepted) }, enabled = !grown || accepted) {
-                    Text(if (clash == SkillClash.Active) "Replace yours" else "Replace the draft", color = if (!grown || accepted) Locus.colors.onCautionContainer else MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(if (clash == SkillClash.Active) stringResource(R.string.replace_yours) else stringResource(R.string.replace_draft), color = if (!grown || accepted) Locus.colors.onCautionContainer else MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         }
@@ -417,13 +418,13 @@ internal fun UpdateDiff(diff: SkillManifestDiff, current: String) {
     when {
         diff.grown -> Banner(diff.lines().joinToString("\n"), Tone.Critical, title = "This version asks for more than $current")
         diff.shrunk -> Banner(diff.lines().joinToString("\n"), Tone.Brand, title = "This version asks for less than $current")
-        diff.same -> Banner("It's the same as $current: same files, same version.", Tone.Neutral, title = "No changes")
+        diff.same -> Banner("It's the same as $current: same files, same version.", Tone.Neutral, title = stringResource(R.string.no_changes))
     }
     if (diff.changedWithoutVersionBump) {
         Banner(
             "The files differ from $current but the version (${diff.versionAfter ?: "none"}) didn't change. It may be a changed copy rather than a release; read the files.",
             Tone.Caution,
-            title = "Changed without a new version",
+            title = stringResource(R.string.changed_without_new_version),
         )
     } else if (diff.versionBefore != diff.versionAfter) {
         SupportingText("Version ${diff.versionBefore ?: "none"} → ${diff.versionAfter ?: "none"}")
@@ -438,9 +439,9 @@ internal fun UpdateDiff(diff: SkillManifestDiff, current: String) {
 private fun ManifestSummary(review: SkillReview) {
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
         if (!review.declared) {
-            Banner(SkillReview.UNDECLARED, Tone.Caution, title = "Undeclared")
+            Banner(SkillReview.UNDECLARED, Tone.Caution, title = stringResource(R.string.undeclared))
         } else {
-            Text("What it can do", style = LocusType.label)
+            Text(stringResource(R.string.what_it_can_do), style = LocusType.label)
             val can = review.capabilities + review.network
             if (can.isEmpty()) Bullet("Nothing beyond reading its own instructions") else can.forEach { Bullet(it) }
             SupportingText(
@@ -448,17 +449,17 @@ private fun ManifestSummary(review: SkillReview) {
             )
         }
         if (review.dependencies.isNotEmpty()) {
-            Text("It installs", style = LocusType.label)
+            Text(stringResource(R.string.it_installs), style = LocusType.label)
             review.dependencies.forEach { Bullet(it) }
         }
         review.notes.filter { it != SkillReview.UNDECLARED }.forEach {
             Text(it, style = LocusType.supporting, color = Locus.colors.onCautionContainer)
         }
-        Text("Where it's from", style = LocusType.label)
-        review.source?.let { Detail("Imported from", it) }
-        review.declaredSource?.let { Detail("Published at", it) }
-        Detail("Version", review.version ?: "none given")
-        if (review.hash.isNotEmpty()) Detail(if (review.hashDeclared) "Content hash (matches the author's pin)" else "Content hash", review.hash)
+        Text(stringResource(R.string.where_its_from), style = LocusType.label)
+        review.source?.let { Detail(stringResource(R.string.imported_from), it) }
+        review.declaredSource?.let { Detail(stringResource(R.string.published_at), it) }
+        Detail(stringResource(R.string.version), review.version ?: "none given")
+        if (review.hash.isNotEmpty()) Detail(if (review.hashDeclared) "Content hash (matches the author's pin)" else stringResource(R.string.content_hash), review.hash)
     }
 }
 
