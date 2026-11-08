@@ -8,7 +8,7 @@
     <string name="tasks_title">Scheduled tasks</string>
     <string name="tasks_open_chat">Open chat</string>
     <string name="tasks_all_paused">All paused</string>
-    <string name="tasks_load_error">Couldn't load your tasks</string>
+    <string name="tasks_load_error">Couldn’t load your tasks</string>
     <string name="tasks_empty_title">No tasks yet</string>
     <string name="tasks_new_task">New task</string>
     <string name="tasks_morning_digest">Morning digest</string>
