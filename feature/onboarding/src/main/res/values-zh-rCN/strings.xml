@@ -87,4 +87,13 @@
     <string name="onboarding_checking_download">正在检查下载内容</string>
     <string name="onboarding_on_wifi_only">仅限 Wi-Fi：使用移动数据时会暂停等待。</string>
     <string name="onboarding_context">上下文</string>
+    <string name="onboarding_step_welcome">欢迎</string>
+    <string name="onboarding_step_privacy">隐私</string>
+    <string name="onboarding_step_model">模型</string>
+    <string name="onboarding_step_agent">你的智能体</string>
+    <string name="onboarding_step_workspace">工作区</string>
+    <string name="onboarding_step_machines">设备</string>
+    <string name="onboarding_step_connectors">连接器</string>
+    <string name="onboarding_step_check">检查</string>
+    <string name="onboarding_step_ready">已就绪</string>
 </resources>
