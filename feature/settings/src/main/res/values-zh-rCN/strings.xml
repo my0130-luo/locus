@@ -301,4 +301,14 @@
     <string name="chatgpt_sign_out_confirm">退出 ChatGPT？</string>
     <string name="chatgpt_using_plan_title">你正在使用 ChatGPT 方案</string>
     <string name="chatgpt_got_it">知道了</string>
+    <string name="ssh_title">SSH 设备</string>
+    <string name="ssh_machines">设备</string>
+    <string name="ssh_add_machine">添加设备</string>
+    <string name="ssh_add_ssh_machine">添加 SSH 设备</string>
+    <string name="ssh_trust_save">信任并保存</string>
+    <string name="ssh_user">用户名</string>
+    <string name="ssh_host_key">主机密钥</string>
+    <string name="ssh_checking">正在检查…</string>
+    <string name="ssh_check_host_key">检查主机密钥</string>
+    <string name="ssh_remove_machine">移除设备</string>
 </resources>
