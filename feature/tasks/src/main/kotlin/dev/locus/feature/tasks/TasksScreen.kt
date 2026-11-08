@@ -317,7 +317,11 @@ private fun TaskRow(
             onDismiss = { confirmDelete = false },
         )
     }
-    val problem = lastRunProblem(task)
+    val problem = when (task.lastOutcome) {
+        TaskRunOutcome.FAILED -> stringResource(R.string.tasks_last_run_failed)
+        TaskRunOutcome.STOPPED -> stringResource(R.string.tasks_last_run_stopped)
+        TaskRunOutcome.DONE, null -> null
+    }
     val red = if (trigger != null) triggerHasProblem(task) else task.enabled && problem != null
     Column(Modifier.fillMaxWidth()) {
         ListRow(
