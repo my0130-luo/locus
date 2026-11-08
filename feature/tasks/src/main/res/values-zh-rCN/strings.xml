@@ -111,4 +111,20 @@
     <string name="tasks_running_now">正在运行</string>
     <string name="tasks_enable_trigger_description">收到事件时运行“%1$s”</string>
     <string name="tasks_enable_schedule_description">按计划运行“%1$s”</string>
+    <string name="tasks_last_run_failed">上次运行失败</string>
+    <string name="tasks_last_run_stopped">上次运行已停止</string>
+    <string name="tasks_trigger_status_paused">%1$s · 已暂停</string>
+    <string name="tasks_trigger_status_no_access">%1$s · 无访问权限</string>
+    <string name="tasks_trigger_status_not_setup">%1$s · 尚未设置</string>
+    <string name="tasks_trigger_status_offline">%1$s · 离线</string>
+    <string name="tasks_trigger_status_check_failed">%1$s · 检查失败</string>
+    <string name="tasks_trigger_status_problem">%1$s · %2$s</string>
+    <string name="tasks_trigger_status_ran">%1$s · 已于 %2$s 运行</string>
+    <string name="tasks_trigger_status_waiting">%1$s · 等待事件</string>
+    <string name="tasks_trigger_status_checked">%1$s · 已于 %2$s 检查</string>
+    <string name="tasks_trigger_status_not_checked">%1$s · 尚未检查</string>
+    <string name="tasks_schedule_status_paused">%1$s · 已暂停</string>
+    <string name="tasks_schedule_status_problem">%1$s · %2$s %3$s</string>
+    <string name="tasks_schedule_status_ran">%1$s · 已于 %2$s 运行</string>
+    <string name="tasks_schedule_status_not_run">%1$s · 尚未运行</string>
 </resources>
