@@ -343,4 +343,26 @@
     <string name="extras_default">默认</string>
     <string name="extras_automatic_label">自动</string>
     <string name="extras_save">保存</string>
+    <string name="updates_title">更新</string>
+    <string name="updates_check_github">检查 GitHub 更新</string>
+    <string name="updates_include_beta">包含测试版</string>
+    <string name="updates_check_now">立即检查</string>
+    <string name="updates_checking">正在检查更新</string>
+    <string name="updates_show_again">再次显示 %1$s</string>
+    <string name="updates_beta">测试版</string>
+    <string name="updates_download_progress">下载进度</string>
+    <string name="updates_cancel">取消</string>
+    <string name="updates_install">安装更新</string>
+    <string name="updates_download_verify">下载并验证</string>
+    <string name="updates_skip_version">跳过此版本</string>
+    <string name="updates_release_page">版本发布页面</string>
+    <string name="updates_release_notes">版本说明</string>
+    <string name="updates_debug_build">调试版本</string>
+    <string name="updates_different_key">签名密钥不同</string>
+    <string name="updates_checksum_mismatch">校验和不匹配</string>
+    <string name="updates_allow_install">允许 Locus 安装应用</string>
+    <string name="updates_no_connection">无法连接</string>
+    <string name="updates_cancelled">更新已取消</string>
+    <string name="updates_check_failed">无法检查更新</string>
+    <string name="updates_dismiss">关闭</string>
 </resources>
