@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="helpers_intro">Helpers are agents Locus can hand a focused job to, each with its own fresh context and only the tools its role needs. They ask you before anything that needs approval, and their work shows as nested steps in the chat.</string>
+    <string name="helpers_empty">You have no helpers of your own yet. Ask Locus to “make a helper that…” and it drafts one for you to review here.</string>
+    <string name="built_in">Built in</string>
+    <string name="built_in_helper">Built-in helper</string>
+    <string name="helper_model">Helper model</string>
+    <string name="chat_model">Chat's model</string>
+    <string name="needs_review">Needs review</string>
+    <string name="your_helper">Your helper</string>
+    <string name="discard_change">Discard change</string>
+    <string name="reject">Reject</string>
+    <string name="approve">Approve</string>
+    <string name="remove">Remove</string>
+</resources>
