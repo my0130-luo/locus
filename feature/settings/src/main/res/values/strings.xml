@@ -272,4 +272,20 @@
     <string name="integrations_secret_stored">Stored encrypted on this phone. The AI never sees it.</string>
     <string name="integrations_remove_key">Remove key</string>
     <string name="integrations_remove">Remove</string>
+    <string name="battery_saver">Battery saver</string>
+    <string name="battery_memory_low">Memory low</string>
+    <string name="battery_offline">Offline</string>
+    <string name="battery_metered_network">Metered network</string>
+    <string name="battery_wifi">Wi-Fi</string>
+    <string name="battery_title">Battery &amp; heat</string>
+    <string name="battery_right_now">Right now</string>
+    <string name="battery_current_summary">When the phone is hot or in battery saver</string>
+    <string name="battery_pause_extras">Pause extras</string>
+    <string name="battery_ask_before_reply">Ask before on-device replies</string>
+    <string name="battery_when_not_low">When the battery isn\'t low</string>
+    <string name="battery_when_charging">When charging</string>
+    <string name="battery_on_wifi">On Wi-Fi</string>
+    <string name="battery_downloads">Downloads</string>
+    <string name="battery_download_wifi_only">Download models on Wi-Fi only</string>
+    <string name="battery_use_mobile_data">Use mobile data</string>
 </resources>
