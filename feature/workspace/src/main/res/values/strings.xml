@@ -25,4 +25,18 @@
     <string name="workspace_replaced_by_move">Replaced by a move</string>
     <string name="workspace_before_move">Before a move</string>
     <string name="workspace_deleted">Deleted</string>
+    <string name="workspace_connected_folders">Connected folders</string>
+    <string name="workspace_connect_folder">Connect a folder</string>
+    <string name="workspace_connect">Connect</string>
+    <string name="workspace_folder_name">Name</string>
+    <string name="workspace_access_lost">Access lost</string>
+    <string name="workspace_reconnect_folder">Reconnect</string>
+    <string name="workspace_disconnect">Disconnect</string>
+    <string name="workspace_pick_folder_again">Pick the folder again</string>
+    <string name="workspace_read_only">Read-only</string>
+    <string name="workspace_edit_files">Locus can edit files</string>
+    <string name="workspace_projects">Projects</string>
+    <string name="workspace_edit_hidden_folders">Edit hidden folders</string>
+    <string name="workspace_always_allow">Always allow</string>
+    <string name="workspace_folder_not_found">Folder not found</string>
 </resources>
