@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="workspace_title">工作区</string>
+    <string name="workspace_preview">预览</string>
+    <string name="workspace_source">源文件</string>
+    <string name="workspace_file_actions">文件操作</string>
+    <string name="workspace_open_with">打开方式…</string>
+    <string name="workspace_share">分享</string>
+    <string name="workspace_export">导出</string>
+    <string name="workspace_copy_text">复制文本</string>
+    <string name="workspace_delete">删除</string>
+    <string name="workspace_terminal">终端</string>
+    <string name="workspace_browser">浏览器</string>
+    <string name="workspace_import_files">导入文件</string>
+    <string name="workspace_cannot_open_folder">无法打开此文件夹</string>
+    <string name="workspace_reconnect">重新连接</string>
+    <string name="workspace_folder_empty">此文件夹为空</string>
+    <string name="workspace_files_label">文件</string>
+    <string name="workspace_workspace_empty">工作区为空</string>
+    <string name="workspace_trash_empty">回收站为空</string>
+    <string name="workspace_delete_permanently">永久删除</string>
+    <string name="workspace_delete_permanently_question">确定永久删除吗？</string>
+    <string name="workspace_overwritten">已覆盖</string>
+    <string name="workspace_earlier_version">早期版本</string>
+    <string name="workspace_replaced_by_move">已被移动操作替换</string>
+    <string name="workspace_before_move">移动前的版本</string>
+    <string name="workspace_deleted">已删除</string>
+</resources>
