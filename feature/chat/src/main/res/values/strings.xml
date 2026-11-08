@@ -141,4 +141,22 @@
     <string name="composer_summarise_available">Available once the chat is longer and nothing is running.</string>
     <string name="composer_controls_hint">Model, thinking and tools are one tap away in the bar below the text box.</string>
     <string name="composer_remove_attachment">Remove %1$s</string>
+    <string name="model_sheet_title">Model</string>
+    <string name="model_sheet_scope">For this chat only; other chats keep their own.</string>
+    <string name="model_sheet_search">Search all models</string>
+    <string name="model_sheet_all">All models</string>
+    <string name="model_sheet_get_on_device">Get an on-device model</string>
+    <string name="model_sheet_cache_note">Switching model starts a fresh prompt cache for this chat, so the next reply reads the whole conversation again.</string>
+    <string name="model_sheet_hide">Hide models</string>
+    <string name="model_sheet_show">Show models</string>
+    <string name="model_sheet_expanded">Expanded</string>
+    <string name="model_sheet_collapsed">Collapsed</string>
+    <string name="model_sheet_loading">Loading models…</string>
+    <string name="model_sheet_no_tools_note">This chat started on a model that can\'t use tools, so it has none. Switching model keeps it that way; start a new chat for tools.</string>
+    <string name="model_sheet_chat_only_note">Models marked Chat only start this chat without tools: they\'re too small, or not built, to use them.</string>
+    <string name="model_sheet_default">Default</string>
+    <string name="model_sheet_in_use">In use</string>
+    <string name="model_sheet_catalogue_title">Show context sizes and abilities?</string>
+    <string name="model_sheet_turn_on">Turn on</string>
+    <string name="model_sheet_on_device">On-device</string>
 </resources>
