@@ -53,4 +53,28 @@
     <string name="published_at">发布地址</string>
     <string name="version">版本</string>
     <string name="content_hash">内容哈希</string>
+
+    <string name="library_title">资料库</string>
+    <string name="memory">记忆</string>
+    <string name="skills">技能</string>
+    <string name="connectors">连接器</string>
+    <string name="helpers">助手</string>
+    <string name="couldnt_open_library">无法打开资料库</string>
+    <string name="try_again">重试</string>
+    <string name="dismiss">关闭</string>
+    <string name="nothing_remembered_yet">还没有记忆内容</string>
+    <string name="general">通用记忆</string>
+    <string name="save">保存</string>
+    <string name="summary">摘要</string>
+    <string name="note">笔记</string>
+    <string name="forget">忘记</string>
+    <string name="move">移动</string>
+    <string name="no_summary">暂无摘要</string>
+    <string name="project_memory_note">项目记忆笔记</string>
+    <string name="memory_note">记忆笔记</string>
+    <string name="needs_a_look">需要留意</string>
+    <string name="move_to_general">移至通用记忆</string>
+    <string name="edit">编辑</string>
+    <string name="open_the_chat">打开聊天</string>
+    <string name="saved_chat_deleted">保存这条记忆的聊天已被删除。</string>
 </resources>
