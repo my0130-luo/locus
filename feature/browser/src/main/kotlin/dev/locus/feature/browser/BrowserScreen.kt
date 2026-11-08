@@ -206,6 +206,9 @@ internal fun BrowserScreen(
     val feedback = Locus.feedback
     val loginUpdatedLabel = stringResource(R.string.browser_login_updated)
     val loginSavedLabel = stringResource(R.string.browser_login_saved)
+    val linkLabel = stringResource(R.string.browser_link_label)
+    val linkCopiedLabel = stringResource(R.string.browser_link_copied)
+    val dataClearedLabel = stringResource(R.string.browser_data_cleared)
     // The approval whose Details sheet is open, by call id: it closes by itself once the request is answered anywhere.
     var detailsFor by rememberSaveable { mutableStateOf(startDetails) }
 
@@ -268,8 +271,8 @@ internal fun BrowserScreen(
                             onNavigate = { menu = false; actions.navigate(it) },
                             onCopy = {
                                 menu = false
-                                scope.launch { clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(stringResource(R.string.browser_link_label), state.url))) }
-                                feedback.show(stringResource(R.string.browser_link_copied), Tone.Live)
+                                scope.launch { clipboard.setClipEntry(ClipEntry(ClipData.newPlainText(linkLabel, state.url))) }
+                                feedback.show(linkCopiedLabel, Tone.Live)
                             },
                             onOpenElsewhere = {
                                 menu = false
@@ -485,7 +488,7 @@ internal fun BrowserScreen(
                     when {
                         cleared -> {
                             confirmClear = false
-                            feedback.show(stringResource(R.string.browser_data_cleared), Tone.Live)
+                            feedback.show(dataClearedLabel, Tone.Live)
                         }
                         // Still open: say so where the user is looking, next to Try again.
                         confirmClear -> clearError = failed
