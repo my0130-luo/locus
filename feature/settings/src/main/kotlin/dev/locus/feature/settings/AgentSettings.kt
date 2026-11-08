@@ -1,5 +1,6 @@
 package dev.locus.feature.settings
 
+import dev.locus.feature.settings.R
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -37,13 +39,13 @@ internal fun AgentSettings(
     onSetHelperReports: (Boolean) -> Unit = {},
     onSetHelperTimeout: (Int) -> Unit = {},
 ) {
-    SettingsPageScaffold("Agent", onBack) {
-        item { SectionLabel("Identity", SectionPadding) }
+    SettingsPageScaffold(stringResource(R.string.agent_settings_title), onBack) {
+        item { SectionLabel(stringResource(R.string.agent_identity), SectionPadding) }
         item {
             CardGroup {
                 ListRow(
-                    title = "Agent identity",
-                    subtitle = "Name and personality, from setup",
+                    title = stringResource(R.string.agent_identity_title),
+                    subtitle = stringResource(R.string.agent_identity_body),
                     subtitleMaxLines = 2,
                     onClick = onOpenAgentSetup,
                     leading = { IconTile(LocusIcons.Edit) },
@@ -51,39 +53,39 @@ internal fun AgentSettings(
                 )
             }
         }
-        item { SectionLabel("Custom instructions", SectionPadding) }
+        item { SectionLabel(stringResource(R.string.agent_custom_instructions), SectionPadding) }
         item { InstructionsEditor(state.customInstructions, onSaveInstructions) }
-        item { SectionNote("Added to every new chat. Keep it short; Locus also learns from memory and skills.", NotePadding) }
-        item { SectionLabel("Task budget", SectionPadding) }
+        item { SectionNote(stringResource(R.string.agent_custom_instructions_body), NotePadding) }
+        item { SectionLabel(stringResource(R.string.agent_task_budget), SectionPadding) }
         item {
             LocusCard {
                 dev.locus.core.designsystem.TaskBudgetEditor(
                     state.taskBudget,
                     onChange = onSetTaskBudget,
-                    costNote = "Cost needs model prices: turn on model details (models.dev) in Settings → Models.".takeIf { !state.modelCatalog },
+                    costNote = stringResource(R.string.agent_task_budget_prices).takeIf { !state.modelCatalog },
                 )
             }
         }
         item {
             SectionNote(
-                "The default limit for each task and the helpers it starts. At a limit Locus pauses between steps and asks whether to go on. " +
-                    "Cached input counts at a tenth, and time waiting for you doesn't count. A chat can set its own in the composer's options.",
+                stringResource(R.string.agent_task_budget_body) +
+                    stringResource(R.string.agent_task_budget_note),
                 NotePadding,
             )
         }
-        item { SectionLabel("Helpers", SectionPadding) }
+        item { SectionLabel(stringResource(R.string.agent_helpers), SectionPadding) }
         item {
             CardGroup {
                 SwitchRow(
-                    title = "Continue when a helper reports back",
+                    title = stringResource(R.string.agent_helpers_continue),
                     checked = state.subagentReportsContinue,
                     onCheckedChange = onSetHelperReports,
-                    subtitle = "When a background helper finishes after the reply, Locus picks the chat up again with its report",
+                    subtitle = stringResource(R.string.agent_helpers_continue_body),
                     icon = LocusIcons.Branch,
                 )
             }
         }
-        item { SectionLabel("Helper time limit", SectionPadding) }
+        item { SectionLabel(stringResource(R.string.agent_helper_timeout), SectionPadding) }
         item {
             val choices = HelperTimeLimit.CHOICES
             LocusCard {
@@ -97,9 +99,9 @@ internal fun AgentSettings(
         }
         item {
             SectionNote(
-                "How long one helper may work, including time waiting for your approval. When it runs out, or you stop a helper, it " +
-                    "hands back what it had: its last reply, its tool results and the files it changed, marked as a partial result. The " +
-                    "agent can continue it from there. Applies to helpers started from now on.",
+                stringResource(R.string.agent_helper_timeout_body) +
+                    stringResource(R.string.agent_helper_timeout_body2) +
+                    stringResource(R.string.agent_helper_timeout_body3),
                 NotePadding,
             )
         }
@@ -118,7 +120,7 @@ private fun InstructionsEditor(saved: String, onSave: (String) -> Unit) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             // The note under the card says what this is; here only the button.
             Box(Modifier.weight(1f))
-            TextButton(onClick = { onSave(text) }, enabled = text != saved) { Text("Save") }
+            TextButton(onClick = { onSave(text) }, enabled = text != saved) { Text(stringResource(R.string.agent_save)) }
         }
     }
 }
