@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="analytics_title">Insights</string>
+    <string name="analytics_subtitle">Counted on this phone from your chats</string>
+    <string name="analytics_empty_title">Nothing to count yet</string>
+    <string name="analytics_empty_body">Token use, reply times and tool calls show up here once you've chatted with Locus in this period.</string>
+    <string name="analytics_estimated_spend">Estimated spend</string>
+    <string name="analytics_spend_by_model">Spend by model</string>
+    <string name="analytics_spend_by_source">Spend by source</string>
+    <string name="analytics_by_model">By model</string>
+    <string name="analytics_where_tokens_went">Where tokens went</string>
+    <string name="analytics_tools">Tools</string>
+    <string name="analytics_slowest_tools">Slowest tools</string>
+    <string name="analytics_slowest_note">Timed on calls that ran without asking you.</string>
+    <string name="analytics_busiest_chats">Busiest chats</string>
+    <string name="analytics_scheduled_tasks">Scheduled tasks</string>
+    <string name="analytics_tokens">Tokens</string>
+    <string name="analytics_spend">Spend</string>
+    <string name="analytics_estimate">Estimate</string>
+    <string name="analytics_turn_on_prices">Turn on prices</string>
+    <string name="analytics_try_again">Try again</string>
+    <string name="analytics_today">Today</string>
+</resources>
