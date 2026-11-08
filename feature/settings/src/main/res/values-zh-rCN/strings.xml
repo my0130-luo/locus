@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">设置</string>
+    <string name="settings_providers">模型服务商</string>
+    <string name="settings_models">模型</string>
+    <string name="settings_needs_review">等待审核</string>
+    <string name="settings_set_up">尚未配置</string>
+    <string name="settings_signed_out">已退出登录</string>
+    <string name="settings_no_key">缺少密钥</string>
+    <string name="settings_helper_extras">辅助模型与其他选项</string>
+    <string name="settings_network">网络</string>
+    <string name="settings_how_locus_works">Locus 的工作方式</string>
+    <string name="settings_agent">智能体</string>
+    <string name="settings_permissions">权限</string>
+    <string name="settings_battery_heat">电池与温度</string>
+    <string name="settings_battery_summary">手机温度过高或电量较低时的运行策略</string>
+    <string name="settings_voice">语音</string>
+    <string name="settings_voice_summary">朗读速度与语音模式</string>
+    <string name="settings_automation">自动化</string>
+    <string name="settings_automation_summary">其他应用，以及将 Locus 设为你的助手</string>
+    <string name="settings_phone">手机</string>
+    <string name="settings_phone_summary">日历修改与提醒</string>
+    <string name="settings_connections">连接</string>
+    <string name="settings_integrations">集成与连接器</string>
+    <string name="settings_remote_on">远程模式已开启</string>
+    <string name="settings_telegram_remote_on">Telegram 远程模式已开启</string>
+    <string name="settings_ssh_machines">SSH 设备</string>
+    <string name="settings_saved_logins">已保存的登录信息</string>
+    <string name="settings_saved_logins_summary">Locus 可以代你登录的网站</string>
+    <string name="settings_data">数据</string>
+    <string name="settings_backup_restore">备份与恢复</string>
+    <string name="settings_backup_summary">由你自行保管的加密文件</string>
+    <string name="settings_about_privacy">关于与隐私</string>
+    <string name="settings_about_summary">了解哪些数据会离开手机，以及初始设置</string>
+</resources>
