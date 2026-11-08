@@ -173,4 +173,18 @@
     <string name="automation_developers">For app developers</string>
     <string name="automation_permission">Permission</string>
     <string name="automation_intents">Intents</string>
+    <string name="voice_settings_title">Voice</string>
+    <string name="voice_speaking">Speaking</string>
+    <string name="voice_speaking_body">For read-aloud and voice mode.</string>
+    <string name="voice_engine">Voice and speech engine</string>
+    <string name="voice_engine_body">Android\'s Text-to-speech settings: the engine, its voices and languages.</string>
+    <string name="voice_mode">Voice mode</string>
+    <string name="voice_speech_settings">Speech settings</string>
+    <string name="voice_listen_after_reply">Listen after each reply</string>
+    <string name="voice_listen_body">Keeps the conversation going hands-free. Off: tap the circle to talk each time.</string>
+    <string name="voice_status">Say what it\'s doing</string>
+    <string name="voice_status_body">A short spoken status while tools run, like “Working on it. Running a command.”</string>
+    <string name="voice_interrupt">Interrupt by speaking</string>
+    <string name="voice_interrupt_body">Talk over Locus to stop it and be heard. Turn off if it keeps hearing itself on the speaker; tapping always works.</string>
+    <string name="voice_no_recognizer">This phone has no speech recognizer, so voice mode can\'t listen.</string>
 </resources>
