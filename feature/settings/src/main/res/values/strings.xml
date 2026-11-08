@@ -160,4 +160,17 @@
     <string name="permissions_ask_actions_body">Actions set to Ask always ask you.</string>
     <string name="permissions_reviewer_mode_body">Checks actions set to Ask: runs the clearly fine ones, blocks the clearly wrong ones, asks you about the rest. Uses $model.</string>
     <string name="permissions_reviewer_all_changes_body">Also checks allowed actions that change something; any it doesn\'t clear come to you. Uses $model.</string>
+    <string name="automation_title">Automation</string>
+    <string name="automation_other_apps">Let other apps start tasks</string>
+    <string name="automation_other_apps_body">Tasker, Automate and similar apps can ask Locus to start a chat, run a workflow or run a scheduled task now.</string>
+    <string name="automation_assistant">Assistant</string>
+    <string name="automation_default_assistant">Default digital assistant</string>
+    <string name="automation_assistant_short">Locus. The assist gesture opens the ask bar.</string>
+    <string name="automation_answered_apps">Apps you answered for</string>
+    <string name="automation_always_allowed">Always allowed</string>
+    <string name="automation_never_allowed">Never allowed</string>
+    <string name="automation_forget">Forget</string>
+    <string name="automation_developers">For app developers</string>
+    <string name="automation_permission">Permission</string>
+    <string name="automation_intents">Intents</string>
 </resources>
