@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Settings</string>
+    <string name="settings_providers">Providers</string>
+    <string name="settings_models">Models</string>
+    <string name="settings_needs_review">Needs review</string>
+    <string name="settings_set_up">Set up</string>
+    <string name="settings_signed_out">Signed out</string>
+    <string name="settings_no_key">No key</string>
+    <string name="settings_helper_extras">Helper model &amp; extras</string>
+    <string name="settings_network">Network</string>
+    <string name="settings_how_locus_works">How Locus works</string>
+    <string name="settings_agent">Agent</string>
+    <string name="settings_permissions">Permissions</string>
+    <string name="settings_battery_heat">Battery &amp; heat</string>
+    <string name="settings_battery_summary">What waits when the phone is hot or low</string>
+    <string name="settings_voice">Voice</string>
+    <string name="settings_voice_summary">Read-aloud speed and voice mode</string>
+    <string name="settings_automation">Automation</string>
+    <string name="settings_automation_summary">Other apps, and Locus as your assistant</string>
+    <string name="settings_phone">Phone</string>
+    <string name="settings_phone_summary">Calendar edits and reminders</string>
+    <string name="settings_connections">Connections</string>
+    <string name="settings_integrations">Integrations &amp; connectors</string>
+    <string name="settings_remote_on">Remote on</string>
+    <string name="settings_telegram_remote_on">Telegram remote mode is on</string>
+    <string name="settings_ssh_machines">SSH machines</string>
+    <string name="settings_saved_logins">Saved logins</string>
+    <string name="settings_saved_logins_summary">Sites Locus can sign in to for you</string>
+    <string name="settings_data">Data</string>
+    <string name="settings_backup_restore">Backup &amp; restore</string>
+    <string name="settings_backup_summary">An encrypted file you keep</string>
+    <string name="settings_about_privacy">About &amp; privacy</string>
+    <string name="settings_about_summary">What leaves this phone, and setup</string>
+</resources>
