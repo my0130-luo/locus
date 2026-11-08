@@ -31,7 +31,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Modifier
+import dev.locus.feature.onboarding.R
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -63,33 +65,33 @@ import dev.locus.core.designsystem.Tone
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun ColumnScope.IdentityFields(state: OnboardingUiState, viewModel: OnboardingViewModel) {
-    StepHeading("Make it yours", "A few quick questions. Locus turns your answers into short notes your agent reads at the start of every chat.")
+    StepHeading(stringResource(R.string.onb_identity_make_yours), stringResource(R.string.onb_identity_intro))
     if (!viewModel.personaLoaded) {
-        StatusLine("Loading…", Tone.Neutral)
+        StatusLine(stringResource(R.string.onb_identity_loading), Tone.Neutral)
         return
     }
     val a = viewModel.answers
     var editing by rememberSaveable { mutableStateOf<String?>(null) }
     PersonaChanges(viewModel)
 
-    SectionLabel("Your agent")
+    SectionLabel(stringResource(R.string.onb_identity_agent))
     LocusCard {
         Column(verticalArrangement = Arrangement.spacedBy(Spacing.md)) {
             OutlinedTextField(
                 a.agentName,
                 { v -> viewModel.editAnswers { it.copy(agentName = v.take(40)) } },
-                label = { Text("Its name") },
+                label = { Text(stringResource(R.string.onb_identity_its_name)) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words, imeAction = ImeAction.Done),
                 modifier = Modifier.fillMaxWidth(),
             )
-            Question("How should it talk?")
+            Question(stringResource(R.string.onb_identity_talk_style))
             FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
                 TalkStyle.entries.forEach { s ->
                     Choice(s.label, selected = a.style == s) { viewModel.editAnswers { it.copy(style = s) } }
                 }
             }
-            Question("Before acting, it should…")
+            Question(stringResource(R.string.onb_identity_before_acting))
             Segmented(
                 Autonomy.entries.map { it.label },
                 selected = a.autonomy.ordinal,
@@ -111,7 +113,7 @@ internal fun ColumnScope.IdentityFields(state: OnboardingUiState, viewModel: Onb
         }
     }
 
-    SectionLabel("About you")
+    SectionLabel(stringResource(R.string.onb_identity_about_you))
     LocusCard {
         Column(verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
             Field(a.userName, "Your name", words = true) { v -> viewModel.editAnswers { it.copy(userName = v) } }
@@ -124,22 +126,22 @@ internal fun ColumnScope.IdentityFields(state: OnboardingUiState, viewModel: Onb
         }
     }
 
-    SectionLabel("Anything to always or never do?")
+    SectionLabel(stringResource(R.string.onb_identity_rules))
     LocusCard {
         Column(verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
-            Rules(a.always, "Always (optional)", "e.g. Use metric units") { v -> viewModel.editAnswers { it.copy(always = v) } }
-            Rules(a.never, "Never (optional)", "e.g. Email anyone without showing me the draft") { v -> viewModel.editAnswers { it.copy(never = v) } }
-            Hint("One per line.")
+            Rules(a.always, stringResource(R.string.onb_identity_always), stringResource(R.string.onb_identity_always_hint)) { v -> viewModel.editAnswers { it.copy(always = v) } }
+            Rules(a.never, stringResource(R.string.onb_identity_never), stringResource(R.string.onb_identity_never_hint)) { v -> viewModel.editAnswers { it.copy(never = v) } }
+            Hint(stringResource(R.string.onb_identity_one_per_line))
         }
     }
 
-    SectionLabel("Here's what ${a.agentName.trim().ifBlank { AgentHome.DEFAULT_NAME }} will remember", action = "Edit files", onAction = { editing = PersonaFile.IDENTITY.name })
+    SectionLabel("Here's what ${a.agentName.trim().ifBlank { AgentHome.DEFAULT_NAME }} will remember", action = stringResource(R.string.onb_identity_edit_files), onAction = { editing = PersonaFile.IDENTITY.name })
     val override = viewModel.personaOverride
     if (override != null) {
         Banner(
             "This is edited text, so changes to the answers above won't show up here until you switch back.",
             Tone.Caution,
-            actions = { TextButton(onClick = { viewModel.setPersonaText(null) }) { Text("Use answers") } },
+            actions = { TextButton(onClick = { viewModel.setPersonaText(null) }) { Text(stringResource(R.string.onb_identity_use_answers)) } },
         )
     }
     val preview = viewModel.personaPreview
@@ -148,7 +150,7 @@ internal fun ColumnScope.IdentityFields(state: OnboardingUiState, viewModel: Onb
             if (i > 0) GroupDivider()
             ListRow(
                 f.title(),
-                subtitle = preview[f].readable().ifBlank { "Nothing yet" },
+                subtitle = preview[f].readable().ifBlank { stringResource(R.string.onb_identity_nothing_yet) },
                 subtitleMaxLines = 5,
                 onClick = { editing = f.name },
                 trailing = { SupportingText(f.fileName, style = LocusType.mono) },
@@ -165,7 +167,7 @@ internal fun ColumnScope.IdentityFields(state: OnboardingUiState, viewModel: Onb
         JobStatus(viewModel.personaPolish, "Asking your model…")
     }
     Hint("Stored as plain files on this phone and sent to your model with each new chat. Keep secrets out of them.")
-    JobStatus(viewModel.identitySave, "Saving…")
+    JobStatus(viewModel.identitySave, stringResource(R.string.onb_identity_saving))
 
     editing?.let { name ->
         PersonaEditorSheet(
@@ -192,7 +194,7 @@ private fun PersonaChanges(viewModel: OnboardingViewModel) {
                 "Locus isn't using the change: new chats get the version you saved.",
             Tone.Critical,
             title = "${f.title()} changed outside Locus",
-            actions = { TextButton(onClick = { reviewing = f.name }) { Text("Review") } },
+            actions = { TextButton(onClick = { reviewing = f.name }) { Text(stringResource(R.string.onb_identity_review)) } },
         )
     }
     JobStatus(viewModel.personaReview, "Saving…")
@@ -212,7 +214,7 @@ private fun PersonaChanges(viewModel: OnboardingViewModel) {
             onClick = { reviewing = null; viewModel.discardPersonaChange(file) },
             enabled = !viewModel.personaReview.running,
             modifier = Modifier.fillMaxWidth(),
-        ) { Text("Discard change") }
+        ) { Text(stringResource(R.string.onb_identity_discard_change)) }
     }
 }
 
@@ -266,14 +268,14 @@ fun PersonaRoute(onBack: () -> Unit, viewModel: OnboardingViewModel = hiltViewMo
     BackHandler(onBack = onBack)
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
-        topBar = { LocusTopBar("Agent identity", onBack = onBack) },
+        topBar = { LocusTopBar(stringResource(R.string.onb_identity_agent_identity), onBack = onBack) },
         bottomBar = {
             Column(Modifier.fillMaxWidth().navigationBarsPadding().imePadding().padding(Spacing.lg)) {
                 Button(
                     onClick = { viewModel.saveIdentity(onBack) },
                     enabled = viewModel.personaLoaded && !viewModel.identitySave.running,
                     modifier = Modifier.fillMaxWidth().height(Sizes.touchTarget),
-                ) { Text(if (viewModel.identitySave.running) "Saving…" else "Save") }
+                ) { Text(if (viewModel.identitySave.running) stringResource(R.string.onb_identity_saving) else stringResource(R.string.onb_identity_save)) }
             }
         },
     ) { padding ->
