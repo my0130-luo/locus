@@ -301,4 +301,14 @@
     <string name="chatgpt_sign_out_confirm">Sign out of ChatGPT?</string>
     <string name="chatgpt_using_plan_title">You\'re using your ChatGPT plan</string>
     <string name="chatgpt_got_it">Got it</string>
+    <string name="ssh_title">SSH machines</string>
+    <string name="ssh_machines">Machines</string>
+    <string name="ssh_add_machine">Add a machine</string>
+    <string name="ssh_add_ssh_machine">Add SSH machine</string>
+    <string name="ssh_trust_save">Trust and save</string>
+    <string name="ssh_user">User</string>
+    <string name="ssh_host_key">Host key</string>
+    <string name="ssh_checking">Checking…</string>
+    <string name="ssh_check_host_key">Check host key</string>
+    <string name="ssh_remove_machine">Remove machine</string>
 </resources>
