@@ -152,11 +152,11 @@ fun WorkspaceRoute(
                     dev.locus.core.data.device.LinuxHeatAdvice.message(heatServices),
                     dev.locus.core.designsystem.Tone.Caution,
                     Modifier.navigationBarsPadding().padding(horizontal = Spacing.lg, vertical = Spacing.sm),
-                    title = "Phone is very hot",
+                    title = stringResource(R.string.ws_phone_hot),
                     actionsBelow = true,
                 ) {
-                    TextButton(onClick = viewModel::dismissHeatServices) { Text("Not now") }
-                    TextButton(onClick = viewModel::stopServicesForHeat) { Text("Stop services") }
+                    TextButton(onClick = viewModel::dismissHeatServices) { Text(stringResource(R.string.ws_not_now)) }
+                    TextButton(onClick = viewModel::stopServicesForHeat) { Text(stringResource(R.string.ws_stop_services)) }
                 }
             }
         },
@@ -200,7 +200,7 @@ fun WorkspaceRoute(
                                 TextButton(onClick = { showSource = !showSource }) { Text(if (showSource) "Preview" else "Source") }
                             }
                             Box {
-                                IconButton(onClick = { menuOpen = true }) { Icon(LocusIcons.More, contentDescription = "File actions") }
+                                IconButton(onClick = { menuOpen = true }) { Icon(LocusIcons.More, contentDescription = stringResource(R.string.ws_file_actions)) }
                                 DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                                     DropdownMenuItem(text = { Text(stringResource(R.string.workspace_open_with)) }, onClick = { menuOpen = false; openWith(context, open, feedback) })
                                     DropdownMenuItem(text = { Text(stringResource(R.string.workspace_share)) }, onClick = { menuOpen = false; share(context, open, feedback) })
@@ -213,7 +213,7 @@ fun WorkspaceRoute(
                                         })
                                     }
                                     DropdownMenuItem(
-                                        text = { Text("Delete", color = Locus.colors.critical) },
+                                        text = { Text(stringResource(R.string.ws_delete), color = Locus.colors.critical) },
                                         leadingIcon = { Icon(LocusIcons.Trash, contentDescription = null, tint = Locus.colors.critical) },
                                         onClick = { menuOpen = false; viewModel.delete(open.path) },
                                     )
@@ -221,14 +221,14 @@ fun WorkspaceRoute(
                             }
                         }
                         !state.showTrash -> {
-                            IconButton(onClick = onOpenTerminal) { Icon(LocusIcons.Terminal, contentDescription = "Terminal") }
-                            IconButton(onClick = onOpenBrowser) { Icon(LocusIcons.Globe, contentDescription = "Browser") }
+                            IconButton(onClick = onOpenTerminal) { Icon(LocusIcons.Terminal, contentDescription = stringResource(R.string.ws_terminal)) }
+                            IconButton(onClick = onOpenBrowser) { Icon(LocusIcons.Globe, contentDescription = stringResource(R.string.ws_browser)) }
                             if (inConnected == null) {
-                                IconButton(onClick = { importLauncher.launch(arrayOf("*/*")) }) { Icon(LocusIcons.Import, contentDescription = "Import files") }
+                                IconButton(onClick = { importLauncher.launch(arrayOf("*/*")) }) { Icon(LocusIcons.Import, contentDescription = stringResource(R.string.ws_import_files)) }
                             } else {
-                                IconButton(onClick = { viewModel.manage(inConnected.id) }) { Icon(LocusIcons.Settings, contentDescription = "${inConnected.name} settings") }
+                                IconButton(onClick = { viewModel.manage(inConnected.id) }) { Icon(LocusIcons.Settings, contentDescription = stringResource(R.string.ws_folder_settings, inConnected.name)) }
                             }
-                            IconButton(onClick = { viewModel.showTrash(true) }) { Icon(LocusIcons.Trash, contentDescription = "Trash") }
+                            IconButton(onClick = { viewModel.showTrash(true) }) { Icon(LocusIcons.Trash, contentDescription = stringResource(R.string.ws_trash)) }
                         }
                     }
                 },
@@ -257,13 +257,13 @@ fun WorkspaceRoute(
             )
             state.entries.isEmpty() && inConnected != null -> EmptyState(
                 title = stringResource(R.string.workspace_folder_empty),
-                body = "Files you or Locus add to ${inConnected.name} appear here, and in the app that keeps it.",
+                body = stringResource(R.string.ws_connected_empty, inConnected.name),
                 modifier = Modifier.padding(padding),
                 icon = LocusIcons.Folder,
             )
             state.entries.isEmpty() && state.folder != "." -> EmptyState(
-                title = "This folder is empty",
-                body = "Files Locus creates appear here. You can also import files, or open the workspace from your phone's Files app under “Locus workspace”.",
+                title = stringResource(R.string.ws_folder_empty),
+                body = stringResource(R.string.ws_folder_empty_body),
                 modifier = Modifier.padding(padding),
                 icon = LocusIcons.Folder,
             )
@@ -274,7 +274,7 @@ fun WorkspaceRoute(
                 // A connected folder says once, above its files, that Linux can't see it (docs/design/connected-folders.md).
                 if (inConnected != null) {
                     item(key = "connected-linux-note") {
-                        SectionNote("Linux can't see connected folders. Locus copies files into the workspace when a command needs them.", Modifier.padding(bottom = Spacing.sm))
+                        SectionNote(stringResource(R.string.ws_linux_connected_note), Modifier.padding(bottom = Spacing.sm))
                     }
                 }
                 // The workspace's root has Linux's card first (docs/design/linux-setup.md), then the files.
@@ -282,7 +282,7 @@ fun WorkspaceRoute(
                     item(key = "linux") { LinuxCard(onOpenTerminal, Modifier.padding(bottom = Spacing.lg), onOpenHealth = onOpenHealth) }
                     connectedFolders(state.connected, onConnect = { pickFolder(null) }, onOpen = viewModel::openConnected, onManage = { viewModel.manage(it) })
                     item(key = "connected-gap") { androidx.compose.foundation.layout.Spacer(Modifier.height(Spacing.lg)) }
-                    item(key = "files-label") { SectionLabel("Files", Modifier.padding(bottom = Spacing.sm)) }
+                    item(key = "files-label") { SectionLabel(stringResource(R.string.ws_files), Modifier.padding(bottom = Spacing.sm)) }
                     if (state.entries.isEmpty()) {
                         item(key = "files-empty") {
                             EmptyState(
@@ -356,8 +356,8 @@ private fun TrashList(state: WorkspaceUiState, onRestore: (String) -> Unit, onPu
                 subtitleMaxLines = 2,
                 leading = { FileTypeIcon(entry.originalPath, isDirectory = false) },
                 trailing = {
-                    CompactIconButton(LocusIcons.Restore, contentDescription = "Restore ${entry.originalPath.substringAfterLast('/')}", onClick = { onRestore(entry.id) }, tint = MaterialTheme.colorScheme.primary)
-                    CompactIconButton(LocusIcons.Close, contentDescription = "Delete ${entry.originalPath.substringAfterLast('/')} permanently", onClick = { purging = entry.id })
+                    CompactIconButton(LocusIcons.Restore, contentDescription = stringResource(R.string.ws_restore_file, entry.originalPath.substringAfterLast('/')), onClick = { onRestore(entry.id) }, tint = MaterialTheme.colorScheme.primary)
+                    CompactIconButton(LocusIcons.Close, contentDescription = stringResource(R.string.ws_delete_permanently, entry.originalPath.substringAfterLast('/')), onClick = { purging = entry.id })
                 },
             )
         }
