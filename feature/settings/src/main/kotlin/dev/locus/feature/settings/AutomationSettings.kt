@@ -9,6 +9,7 @@ import android.provider.Settings
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -121,14 +122,14 @@ internal fun AutomationSettings(
     assistant: Boolean? = null,
     onOpenAssistant: () -> Unit = {},
 ) {
-    SettingsPageScaffold("Automation", onBack) {
+    SettingsPageScaffold(stringResource(R.string.automation_title), onBack) {
         item {
             CardGroup {
                 SwitchRow(
-                    title = "Let other apps start tasks",
+                    title = stringResource(R.string.automation_other_apps),
                     checked = state.enabled,
                     onCheckedChange = { onSetEnabled(it) },
-                    subtitle = "Tasker, Automate and similar apps can ask Locus to start a chat, run a workflow or run a scheduled task now.",
+                    subtitle = stringResource(R.string.automation_other_apps_body),
                     icon = LocusIcons.Play,
                 )
             }
@@ -141,14 +142,14 @@ internal fun AutomationSettings(
                 NotePadding,
             )
         }
-        item { SectionLabel("Assistant", SectionPadding) }
+        item { SectionLabel(stringResource(R.string.automation_assistant), SectionPadding) }
         item {
             CardGroup {
                 ListRow(
-                    title = "Default digital assistant",
+                    title = stringResource(R.string.automation_default_assistant),
                     titleMaxLines = 2,
                     subtitle = when (assistant) {
-                        true -> "Locus. The assist gesture opens the ask bar."
+                        true -> stringResource(R.string.automation_assistant_short)
                         false -> "Pick Locus in Android's Default apps to open the ask bar with the assist gesture."
                         null -> "Pick Locus in Android's settings to open the ask bar with the assist gesture."
                     },
@@ -168,28 +169,28 @@ internal fun AutomationSettings(
             )
         }
         if (state.apps.isNotEmpty()) {
-            item { SectionLabel("Apps you answered for", SectionPadding) }
+            item { SectionLabel(stringResource(R.string.automation_answered_apps), SectionPadding) }
             item {
                 CardGroup {
                     state.apps.forEachIndexed { i, app ->
                         if (i > 0) GroupDivider(inset = Insets.iconRow)
                         ListRow(
                             title = app.label,
-                            subtitle = if (app.allowed) "Always allowed" else "Never allowed",
+                            subtitle = if (app.allowed) stringResource(R.string.automation_always_allowed) else stringResource(R.string.automation_never_allowed),
                             leading = { IconTile(if (app.allowed) LocusIcons.Check else LocusIcons.Close) },
-                            trailing = { TextButton(onClick = { onForget(app.packageName) }) { Text("Forget", maxLines = 1, overflow = TextOverflow.Ellipsis) } },
+                            trailing = { TextButton(onClick = { onForget(app.packageName) }) { Text(stringResource(R.string.automation_forget), maxLines = 1, overflow = TextOverflow.Ellipsis) } },
                         )
                     }
                 }
             }
         }
         // For whoever sets up the other app: the names it needs, labelled, in mono.
-        item { SectionLabel("For app developers", SectionPadding) }
+        item { SectionLabel(stringResource(R.string.automation_developers), SectionPadding) }
         item {
             CardGroup {
-                KeyValueRow("Permission", state.permission, mono = true)
+                KeyValueRow(stringResource(R.string.automation_permission), state.permission, mono = true)
                 GroupDivider()
-                KeyValueRow("Intents", "docs/design/android-bridge.md", mono = true)
+                KeyValueRow(stringResource(R.string.automation_intents), "docs/design/android-bridge.md", mono = true)
             }
         }
     }
