@@ -101,4 +101,14 @@
     <string name="tasks_on_wifi">On Wi-Fi</string>
     <string name="tasks_on_wifi_note">Not on mobile data or another metered network.</string>
     <string name="tasks_battery_not_low_note">Skips the time Android shows its low-battery warning.</string>
+    <string name="tasks_running_count">%1$d running</string>
+    <string name="tasks_active_count">%1$d of %2$d on</string>
+    <string name="tasks_empty_explanation">A task runs on its own, on a schedule or when something happens (a calendar entry coming up, an ntfy message, new mail). It looks things up, read-only (it never changes or sends anything), and notifies you with a short summary.</string>
+    <string name="tasks_battery_hint">Tasks run read-only and need a network connection. Android may delay runs and event checks to save battery, and Locus holds a run while the phone is hot or low. What waits is set in</string>
+    <string name="tasks_event_run_queued">Event run queued</string>
+    <string name="tasks_queued_connection">Queued: starts when there’s a connection</string>
+    <string name="tasks_running_for_event">Running for an event</string>
+    <string name="tasks_running_now">Running now</string>
+    <string name="tasks_enable_trigger_description">Run “%1$s” when its events arrive</string>
+    <string name="tasks_enable_schedule_description">Run “%1$s” on its schedule</string>
 </resources>
