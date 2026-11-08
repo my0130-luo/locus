@@ -82,6 +82,7 @@ import dev.locus.core.model.SettingsDestination
 import dev.locus.core.model.TaskConditions
 import dev.locus.core.model.TaskRunOutcome
 import dev.locus.core.model.TriggerSource
+import dev.locus.core.model.TriggerHealth
 import kotlinx.coroutines.launch
 
 @Composable
@@ -340,7 +341,7 @@ private fun TaskRow(
                     }
                 } else {
                     Text(
-                        taskStatusLine(task) { relativeTime(it) },
+                        localizedTaskStatusLine(task),
                         style = LocusType.rowSupporting,
                         color = if (red) Tone.Critical.color() else MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
