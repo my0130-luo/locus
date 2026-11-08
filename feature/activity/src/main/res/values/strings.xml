@@ -25,4 +25,13 @@
     <string name="activity_last_action">Last: %1$s</string>
     <string name="activity_in_chat">In “%1$s”</string>
     <string name="activity_empty_result">(empty)</string>
+    <string name="activity_failed">Failed</string>
+    <string name="activity_approved">Approved</string>
+    <string name="activity_reviewer_allowed">Reviewer allowed</string>
+    <string name="activity_remembered_approval">Remembered approval</string>
+    <string name="activity_declined">Declined</string>
+    <string name="activity_blocked">Blocked</string>
+    <string name="activity_reviewer_blocked">Reviewer blocked</string>
+    <string name="activity_invalid">Invalid</string>
+    <string name="activity_ran_automatically">Ran automatically</string>
 </resources>
