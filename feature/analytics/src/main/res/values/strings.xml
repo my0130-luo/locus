@@ -20,4 +20,20 @@
     <string name="analytics_turn_on_prices">Turn on prices</string>
     <string name="analytics_try_again">Try again</string>
     <string name="analytics_today">Today</string>
+    <string name="analytics_period_7_days">7 days</string>
+    <string name="analytics_period_30_days">30 days</string>
+    <string name="analytics_period_all_time">All time</string>
+    <string name="analytics_input_tokens">in %1$s</string>
+    <string name="analytics_output_tokens">out %1$s</string>
+    <string name="analytics_cached_percent">%1$d%% cached</string>
+    <string name="analytics_reasoning_tokens">of which %1$s thinking</string>
+    <string name="analytics_requests">Requests</string>
+    <string name="analytics_median_reply">Median reply</string>
+    <string name="analytics_slowest_five_percent">Slowest 5%</string>
+    <string name="analytics_approvals">Approvals</string>
+    <string name="analytics_calls">Calls</string>
+    <string name="analytics_succeeded">Succeeded</string>
+    <string name="analytics_failed">Failed</string>
+    <string name="analytics_paused">Paused</string>
+    <string name="analytics_removed">Removed</string>
 </resources>
