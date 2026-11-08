@@ -126,10 +126,12 @@ internal fun CodeViewer(text: String, syntax: SyntaxLanguage?, modifier: Modifie
         old - hOffset
     }
 
+    val cutLinesNotice = if (m.cutLines > 0) stringResource(R.string.preview_code_cut_lines, m.cutLines, "%,d".format(MAX_LINE_CHARS)) else null
+    val plainNotice = if (syntax != null && m.text.length > MAX_HIGHLIGHT_CHARS) stringResource(R.string.preview_code_plain) else null
     val allNotices = buildList {
         addAll(notices)
-        if (m.cutLines > 0) add(stringResource(R.string.preview_code_cut_lines, m.cutLines, "%,d".format(MAX_LINE_CHARS)))
-        if (syntax != null && m.text.length > MAX_HIGHLIGHT_CHARS) add(stringResource(R.string.preview_code_plain))
+        cutLinesNotice?.let(::add)
+        plainNotice?.let(::add)
     }
     val codeColor = MaterialTheme.colorScheme.onSurface
     // onSurfaceVariant, not a faded onSurface: line numbers stay readable (4.5:1) on the gutter's tint.
